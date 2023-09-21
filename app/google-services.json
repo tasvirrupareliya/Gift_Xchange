@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420751017545",
+    "project_id": "gift-xchange-9d815",
+    "storage_bucket": "gift-xchange-9d815.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420751017545:android:0bac76d0f937a630c6a198",
+        "android_client_info": {
+          "package_name": "com.app.giftxchange"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGK-fjAWJX6NPpLq34mD1Y12PWw_sfpto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
