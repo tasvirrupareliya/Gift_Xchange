@@ -5,6 +5,9 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,10 +40,21 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-       /* FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             reload();
-        }*/
+        }
+
+
+        SharedPreferences sharedPreference = getSharedPreferences(String.valueOf(R.string.share_key), MODE_PRIVATE);
+        String share_username = sharedPreference.getString(String.valueOf(R.string.share_username), null);
+        String share_email = sharedPreference.getString(String.valueOf(R.string.share_email), null);
+        String share_password = sharedPreference.getString(String.valueOf(R.string.share_password), null);
+
+        if (share_email != null && share_password != null) {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
 
         binding.fitRegister.registerAlready.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,84 +72,105 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        String register_email = binding.fitRegister.rEmail.getText().toString();
-        String register_name = binding.fitRegister.rName.getText().toString();
-        String register_password = binding.fitRegister.rPassword.getText().toString();
-        String login_email = binding.fitLogin.lEmail.getText().toString();
-        String login_password = binding.fitLogin.lPassword.getText().toString();
-
         binding.fitRegister.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAccount("registeremail@gmail.com", "Gcshu@4543");
-
-                /*if (register_name.isEmpty() && register_password.isEmpty() && register_email.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Something is missing", Toast.LENGTH_SHORT).show();
-                } else {
-                    createAccount("registeremail@gmail.com", "Gcshu@4543");
-                }*/
+                createAccount(binding.fitRegister.rName.getText().toString(), binding.fitRegister.rEmail.getText().toString(), binding.fitRegister.rPassword.getText().toString());
             }
         });
 
         binding.fitLogin.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (login_email.equals("")) {
-                    Toast.makeText(MainActivity.this, "Enter Email Address", Toast.LENGTH_LONG).show();
-                } else if (login_password.equals("")) {
-                    Toast.makeText(MainActivity.this, "Enter Password", Toast.LENGTH_LONG).show();
-                } else {
-                    signIn("registeremail@gmail.com", "Gcshu@4543");
-                }
+                signIn(binding.fitLogin.lEmail.getText().toString(), binding.fitLogin.lPassword.getText().toString());
             }
         });
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String name, String email, String password) {
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.e("111", "ds");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, user.getEmail(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e("111", "error");
-                            Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                    }
+        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        try {
+            if (name.equals("")) {
+                Toast.makeText(MainActivity.this, R.string.please_enter_your_name, Toast.LENGTH_LONG).show();
+            } else if (email.equals("")) {
+                Toast.makeText(MainActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+            } else if (password.equals("")) {
+                Toast.makeText(MainActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+            } else {
+                progressDialog.setMessage("Please Wait..");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("111", e.toString());
-                    }
-                });
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+
+                                    SharedPreferences sharedPreferences = getSharedPreferences(String.valueOf(R.string.share_key), MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                    editor.putString(getString(R.string.share_username), binding.fitRegister.rName.getText().toString().trim());
+                                    editor.putString(getString(R.string.share_email), binding.fitRegister.rEmail.getText().toString().trim());
+                                    editor.putString(getString(R.string.share_password), binding.fitRegister.rPassword.getText().toString().trim());
+                                    editor.apply();
+
+                                    binding.fitRegister.viewRegister.setVisibility(View.GONE);
+                                    binding.fitLogin.viewLogin.setVisibility(View.VISIBLE);
+
+                                    binding.fitRegister.rName.setText("");
+                                    binding.fitRegister.rEmail.setText("");
+                                    binding.fitRegister.rPassword.setText("");
+
+                                    Toast.makeText(MainActivity.this, "You Registered", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(MainActivity.this, "Please Enter Valid Email Address.", Toast.LENGTH_SHORT).show();
+                                    //updateUI(null);
+                                }
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            progressDialog.dismiss();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void signIn(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "successful", Toast.LENGTH_SHORT).show();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+        if (email.equals("")) {
+            Toast.makeText(MainActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+        } else if (password.equals("")) {
+            Toast.makeText(MainActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+        } else {
+            final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Please Wait..");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+
+                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                finish();
+                                startActivity(intent);
+
+                                Toast.makeText(MainActivity.this, "You Successfully Sign In", Toast.LENGTH_SHORT).show();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(MainActivity.this, "Please Enter Correct Information", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
 

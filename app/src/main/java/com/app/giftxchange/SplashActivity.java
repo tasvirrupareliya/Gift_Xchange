@@ -2,7 +2,12 @@ package com.app.giftxchange;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -21,6 +26,31 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
-        startActivity(new Intent(this, MainActivity.class));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                NetworkInfo activeNetwork = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))
+                        .getActiveNetworkInfo();
+
+                if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+                    builder.setTitle("Error")
+                            .setMessage("Please check your network connection")
+                            .setCancelable(false)
+                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            });
+                    builder.show();
+                }
+            }
+        }, 1200);
     }
 }

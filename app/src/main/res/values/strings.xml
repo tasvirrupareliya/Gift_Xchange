@@ -7,4 +7,11 @@
     <string name="signup_login_hint">Already have an account? Sign In</string>
     <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
     <string name="login">LOGIN</string>
+    <string name="please_enter_email_address">Please Enter Email Address</string>
+    <string name="please_enter_password">PLease Enter Password</string>
+    <string name="please_enter_your_name">Please Enter Your Name</string>
+    <string name="share_username">Username</string>
+    <string name="share_password">Password</string>
+    <string name="share_email">Email</string>
+    <string name="share_key">Userdata</string>
 </resources>
