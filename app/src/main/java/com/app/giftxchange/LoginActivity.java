@@ -1,41 +1,34 @@
 package com.app.giftxchange;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.app.giftxchange.databinding.ActivityLoginBinding;
 import com.app.giftxchange.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    ActivityMainBinding binding;
+    ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mAuth = FirebaseAuth.getInstance();
@@ -45,16 +38,10 @@ public class MainActivity extends AppCompatActivity {
             reload();
         }
 
-
         SharedPreferences sharedPreference = getSharedPreferences(String.valueOf(R.string.share_key), MODE_PRIVATE);
         String share_username = sharedPreference.getString(String.valueOf(R.string.share_username), null);
         String share_email = sharedPreference.getString(String.valueOf(R.string.share_email), null);
         String share_password = sharedPreference.getString(String.valueOf(R.string.share_password), null);
-
-        if (share_email != null && share_password != null) {
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(intent);
-        }
 
         binding.fitRegister.registerAlready.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,16 +74,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void createAccount(String name, String email, String password) {
 
-        ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         try {
             if (name.equals("")) {
-                Toast.makeText(MainActivity.this, R.string.please_enter_your_name, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.please_enter_your_name, Toast.LENGTH_LONG).show();
             } else if (email.equals("")) {
-                Toast.makeText(MainActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
             } else if (password.equals("")) {
-                Toast.makeText(MainActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
             } else {
                 progressDialog.setMessage("Please Wait..");
                 progressDialog.setCancelable(false);
@@ -110,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     FirebaseUser user = mAuth.getCurrentUser();
 
-                                    SharedPreferences sharedPreferences = getSharedPreferences(String.valueOf(R.string.share_key), MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                                    editor.putString(getString(R.string.share_username), binding.fitRegister.rName.getText().toString().trim());
-                                    editor.putString(getString(R.string.share_email), binding.fitRegister.rEmail.getText().toString().trim());
-                                    editor.putString(getString(R.string.share_password), binding.fitRegister.rPassword.getText().toString().trim());
+                                    // Save user ID to SharedPreferences
+                                    SharedPreferences preferences = getSharedPreferences(String.valueOf(R.string.share_key), Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString(getString(R.string.share_email), email); // firebaseUserId is the ID you get from Firebase Auth
+                                    editor.putString(getString(R.string.share_username), name); // firebaseUserId is the ID you get from Firebase Auth
+                                    editor.putString(getString(R.string.share_password), password); // firebaseUserId is the ID you get from Firebase Auth
                                     editor.apply();
 
                                     binding.fitRegister.viewRegister.setVisibility(View.GONE);
@@ -125,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
                                     binding.fitRegister.rEmail.setText("");
                                     binding.fitRegister.rPassword.setText("");
 
-                                    Toast.makeText(MainActivity.this, "You Registered", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "You Registered", Toast.LENGTH_SHORT).show();
 
                                 } else {
                                     progressDialog.dismiss();
-                                    Toast.makeText(MainActivity.this, "Please Enter Valid Email Address.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Please Enter Valid Email Address.", Toast.LENGTH_SHORT).show();
                                     //updateUI(null);
                                 }
                             }
@@ -143,11 +131,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void signIn(String email, String password) {
         if (email.equals("")) {
-            Toast.makeText(MainActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
         } else if (password.equals("")) {
-            Toast.makeText(MainActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
         } else {
-            final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
             progressDialog.setMessage("Please Wait..");
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -163,10 +151,10 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                                 startActivity(intent);
 
-                                Toast.makeText(MainActivity.this, "You Successfully Sign In", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "You Successfully Sign In", Toast.LENGTH_SHORT).show();
                             } else {
                                 progressDialog.dismiss();
-                                Toast.makeText(MainActivity.this, "Please Enter Correct Information", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Please Enter Correct Information", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -189,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reload() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void updateUI(FirebaseUser user) {

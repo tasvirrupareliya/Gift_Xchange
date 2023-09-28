@@ -11,7 +11,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.app.giftxchange.databinding.ActivitySplashBinding;
 import com.google.firebase.FirebaseApp;
 
 public class SplashActivity extends AppCompatActivity {
@@ -35,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
 
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
