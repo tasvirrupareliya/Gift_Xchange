@@ -8,7 +8,6 @@
     android:layout_marginTop="@dimen/loginViewsMargin"
     android:layout_marginBottom="@dimen/loginViewsMargin"
     android:background="@color/white"
-    android:elevation="5dp"
     app:cardCornerRadius="@dimen/loginCardRadius">
 
     <LinearLayout
@@ -57,10 +56,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:text="Forgot Password?"
-            android:textSize="@dimen/newsMoreTextSize"
-            android:visibility="gone" />
+            android:layout_marginTop="@dimen/_11sdp"
+            android:id="@+id/forgot_password"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:text="@string/forgot_password"
+            android:textSize="@dimen/newsMoreTextSize" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_btn"
@@ -68,9 +69,20 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:background="@drawable/link_pastedesign"
+            android:background="@drawable/btn_round"
             android:text="@string/login"
             android:textColor="@color/white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_googlesignin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/loginViewsMargin"
+            android:background="@drawable/signbtn_design"
+            android:drawableStart="@drawable/ic_google"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_30sdp"
+            android:text="@string/google" />
 
         <TextView
             android:id="@+id/login_already"
@@ -79,6 +91,7 @@
             android:layout_marginTop="@dimen/loginViewsMargin"
             android:text="@string/login_signup_hint"
             android:textAlignment="center"
+            android:textSize="@dimen/size_oftextsignup"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold" />
 

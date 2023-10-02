@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "420751017545",
+    "firebase_url": "https://gift-xchange-9d815-default-rtdb.firebaseio.com",
     "project_id": "gift-xchange-9d815",
     "storage_bucket": "gift-xchange-9d815.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.app.giftxchange"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "420751017545-jqcchfda776sc9igufk9t2fdnmh1bdh4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.giftxchange",
+            "certificate_hash": "10474cc959b1a671dec0db4108748ae9da034d2a"
+          }
+        },
+        {
+          "client_id": "420751017545-5v2ahu10l0a76q40innk0g2ojoll9908.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCGK-fjAWJX6NPpLq34mD1Y12PWw_sfpto"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "420751017545-5v2ahu10l0a76q40innk0g2ojoll9908.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

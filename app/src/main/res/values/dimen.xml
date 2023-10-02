@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="headerTextSize">22sp</dimen>
-    <dimen name="newsMoreTextSize">14sp</dimen>
-    <dimen name="loginCardRadius">20dp</dimen>
-    <dimen name="loginViewsMargin">20dp</dimen>
-    <dimen name="loginbottomeMargin">15dp</dimen>
-    <dimen name="loginpadding_margin">20dp</dimen>
-    <dimen name="signup_text_margin_top">10dp</dimen>
+    <dimen name="headerTextSize">@dimen/_22ssp</dimen>
+    <dimen name="newsMoreTextSize">@dimen/_11ssp</dimen>
+    <dimen name="loginCardRadius">@dimen/_18sdp</dimen>
+    <dimen name="loginViewsMargin">@dimen/_18sdp</dimen>
+    <dimen name="loginbottomeMargin">@dimen/_13sdp</dimen>
+    <dimen name="loginpadding_margin">@dimen/_18sdp</dimen>
+    <dimen name="signup_text_margin_top">@dimen/_8sdp</dimen>
     <dimen name="fab_margin">10dp</dimen>
+    <dimen name="size_oftextsignup">@dimen/_12ssp</dimen>
 </resources>

@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.app.giftxchange.databinding.ActivitySplashBinding;
 import com.google.firebase.FirebaseApp;
 
 public class SplashActivity extends AppCompatActivity {

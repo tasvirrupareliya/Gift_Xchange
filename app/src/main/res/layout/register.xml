@@ -9,7 +9,6 @@
     android:layout_marginTop="@dimen/loginViewsMargin"
     android:layout_marginBottom="@dimen/loginViewsMargin"
     android:background="@color/white"
-    android:elevation="5dp"
     android:visibility="gone"
     app:cardCornerRadius="@dimen/loginCardRadius">
 
@@ -71,7 +70,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:background="@drawable/link_pastedesign"
+            android:background="@drawable/btn_round"
             android:text="@string/register"
             android:textColor="@color/white" />
 
@@ -80,10 +79,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:onClick="@layout/login"
             android:text="@string/signup_login_hint"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/size_oftextsignup"
             android:textStyle="bold" />
 
     </LinearLayout>
