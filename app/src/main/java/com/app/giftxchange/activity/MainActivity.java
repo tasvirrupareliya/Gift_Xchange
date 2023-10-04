@@ -1,36 +1,39 @@
-package com.app.giftxchange;
+package com.app.giftxchange.activity;
 
-import androidx.appcompat.app.AlertDialog;
+import static com.app.giftxchange.Utils.setToast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.app.giftxchange.databinding.ActivityHomeBinding;
-import com.app.giftxchange.databinding.DialogAddGiftcardBinding;
+import com.app.giftxchange.R;
+import com.app.giftxchange.databinding.ActivityMainBinding;
+import com.app.giftxchange.fragment.AddFragment;
+import com.app.giftxchange.fragment.ChatFragment;
+import com.app.giftxchange.fragment.HomeFragment;
+import com.app.giftxchange.fragment.MyListFragment;
+import com.app.giftxchange.fragment.ProfileFragment;
+import com.app.giftxchange.itemCard;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    ActivityHomeBinding binding;
+    ActivityMainBinding binding;
     List<itemCard> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
+        /*binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -87,6 +90,65 @@ public class HomeActivity extends AppCompatActivity {
                 finish();
                 Toast.makeText(HomeActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
             }
+        });*/
+
+        binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if (item.getItemId() == R.id.navigation_home) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(binding.contentLayout.getId(), new HomeFragment())
+                            .commit();
+                    setSelected(R.id.navigation_home);
+                }
+                if (item.getItemId() == R.id.navigation_chat) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(binding.contentLayout.getId(), new ChatFragment())
+                            .commit();
+                    setSelected(R.id.navigation_chat);
+                }
+                if (item.getItemId() == R.id.navigation_mylist) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(binding.contentLayout.getId(), new MyListFragment())
+                            .commit();
+                    setSelected(R.id.navigation_mylist);
+                }
+              /*  if (item.getItemId() == R.id.navigation_plus) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(binding.contentLayout.getId(), new AddFragment())
+                            .commit();
+                }*/
+                if (item.getItemId() == R.id.navigation_profile) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(binding.contentLayout.getId(), new ProfileFragment())
+                            .commit();
+                    setSelected(R.id.navigation_profile);
+                }
+                return false;
+            }
         });
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setToast(MainActivity.this,"Add Button");
+            }
+        });
+    }
+
+    public void setSelected(int optionID) {
+        binding.navigation.getMenu().findItem(optionID).setChecked(true);
+        getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().putInt("selectedNav", optionID).commit();
+    }
+
+    public int getSelectedNav() {
+        return getSharedPreferences(getPackageName(), MODE_PRIVATE).getInt("selectedNav", R.id.navigation_home);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 }

@@ -1,4 +1,4 @@
-package com.app.giftxchange;
+package com.app.giftxchange.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 

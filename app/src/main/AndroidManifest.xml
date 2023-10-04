@@ -15,10 +15,25 @@
         android:theme="@style/Theme.GiftXchange"
         tools:targetApi="31">
         <activity
-            android:name=".HomeActivity"
+            android:name=".fragment.AddFragment"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".fragment.ProfileFragment"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.MyListFragment"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.ChatFragment"
+            android:exported="false" />
+        <activity
+            android:name=".fragment.HomeFragment"
+            android:exported="false" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,8 +42,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:exported="false"></activity>
+            android:name=".activity.LoginActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

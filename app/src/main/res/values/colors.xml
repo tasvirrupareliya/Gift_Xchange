@@ -8,4 +8,6 @@
     <color name="colorPrimary">#D85635</color>
     <color name="colorPrimaryDark">#D82F04</color>
     <color name="colorPrimary2">#ECDCDC</color>
+    <color name="unselected_color">#000000</color>
+    <color name="selected_color">#9A513A</color>
 </resources>

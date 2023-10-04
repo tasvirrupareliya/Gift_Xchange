@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.AddFragment">
+
+
+    <com.google.android.material.circularreveal.CircularRevealFrameLayout
+        android:id="@+id/revealLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+          <LinearLayout android:id="@+id/secondView"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="gone"
+              android:gravity="bottom"
+              tools:visibility="visible"
+              android:layout_marginBottom="56dp"
+              android:background="#CC000000">
+
+              <FrameLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/white"
+                  android:foreground="?attr/selectableItemBackground">
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:drawableLeft="@drawable/baseline_add_24"
+                      android:drawablePadding="20dp"
+                      android:gravity="center_vertical"
+                      android:text="Add Review"
+                      android:padding="20dp" />
+
+              </FrameLayout>
+
+              <FrameLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/white"
+                  android:foreground="?attr/selectableItemBackground">
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:drawableLeft="@drawable/baseline_add_24"
+                      android:drawablePadding="20dp"
+                      android:gravity="center_vertical"
+                      android:text="Add Photos"
+                      android:padding="20dp" />
+
+              </FrameLayout>
+
+          </LinearLayout>
+
+
+        <!-- Main View -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="56dp">
+
+            </FrameLayout>
+
+
+            <!-- Bottom Nav -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.bottomnavigation.BottomNavigationView
+                        android:id="@+id/bnve"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="#33373d"
+                        app:itemIconTint="@color/colorPrimary2"
+                        app:itemTextColor="@color/colorPrimary"
+                        app:menu="@menu/navigation" />
+
+                </FrameLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/baseline_add_24" />
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+
+    </com.google.android.material.circularreveal.CircularRevealFrameLayout>
+
+
+</RelativeLayout>

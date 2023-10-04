@@ -1,28 +1,27 @@
-package com.app.giftxchange;
+package com.app.giftxchange.activity;
 
-import static android.content.ContentValues.TAG;
+import static com.app.giftxchange.Utils.hideProgressDialog;
+import static com.app.giftxchange.Utils.setToast;
+import static com.app.giftxchange.Utils.showProgressDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Toast;
 
+import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     DocumentReference ref;
     FirebaseFirestore firebaseFirestore;
+    private SharedPreferences sharedPreferences;
     private static final int RC_SIGN_IN = 9001;
 
     @Override
@@ -58,13 +58,25 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-      /*  if (currentUser != null) {
+        if (currentUser != null) {
             reload_nextActivity();
+
+            String uid = currentUser.getUid();
+
+           /* SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            String name = sharedPreferences.getString(getString(R.string.name), "");
+            String email = sharedPreferences.getString(getString(R.string.email), "");
+            String age = sharedPreferences.getString(getString(R.string.age), "");
+            String password = sharedPreferences.getString(getString(R.string.password), "");
+            String id = sharedPreferences.getString(getString(R.string.userid), null);
+
+            editor.apply();*/
         }
-*/
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -122,61 +134,51 @@ public class LoginActivity extends AppCompatActivity {
         String email = binding.fitLogin.lEmail.getText().toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show();
+            setToast(this, getString(R.string.please_enter_email_address));
             return;
         }
 
         Query query = FirebaseFirestore.getInstance().collection("RegisterUser")
-                .whereEqualTo("email", email);
+                .whereEqualTo("Email", email);
 
         query.get().addOnCompleteListener(task -> {
+            showProgressDialog(this);
             if (task.isSuccessful()) {
                 if (!task.getResult().isEmpty()) {
-                    // Email exists in Firestore, proceed with sending the reset email
                     mAuth.sendPasswordResetEmail(email)
                             .addOnCompleteListener(this, resetTask -> {
                                 if (resetTask.isSuccessful()) {
-                                    Toast.makeText(this, "Password reset email sent. Please check your email.", Toast.LENGTH_SHORT).show();
+                                    hideProgressDialog(this);
+                                    setToast(this, getString(R.string.password_reset_email_sent_please_check_your_email));
                                 } else {
-                                    Toast.makeText(this, "Failed to send password reset email. Please check your email address.", Toast.LENGTH_SHORT).show();
+                                    hideProgressDialog(this);
+                                    setToast(this, getString(R.string.failed_to_send_password_reset_email_please_check_your_email_address));
                                 }
                             });
                 } else {
-                    // Email does not exist in Firestore
-                    Toast.makeText(this, "User with this email does not exist.", Toast.LENGTH_SHORT).show();
+                    hideProgressDialog(this);
+                    setToast(this, getString(R.string.user_with_this_email_does_not_exist));
                 }
             } else {
-                // Handle the Firestore query failure
-                Toast.makeText(this, "Error checking email existence. Please try again later.", Toast.LENGTH_SHORT).show();
+                hideProgressDialog(this);
+                setToast(this, getString(R.string.error_checking_email_existence_please_try_again_later));
             }
         });
-
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Password reset email sent. Please check your email.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Failed to send password reset email. Please check your email address.", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
 
     private void createAccount(String name, String email, String password) {
-        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         try {
             if (name.equals("")) {
-                Toast.makeText(LoginActivity.this, R.string.please_enter_your_name, Toast.LENGTH_LONG).show();
+                setToast(this, getString(R.string.please_enter_your_name));
             } else if (email.equals("")) {
-                Toast.makeText(LoginActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+                setToast(this, getString(R.string.please_enter_email_address));
             } else if (password.equals("")) {
-                Toast.makeText(LoginActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+                setToast(this, getString(R.string.please_enter_password));
             } else if (!isValidEmail(email)) {
-                Toast.makeText(LoginActivity.this, R.string.please_enter_valid_email, Toast.LENGTH_LONG).show();
+                setToast(this, getString(R.string.please_enter_valid_email));
             } else {
-                progressDialog.setMessage("Please Wait..");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+                showProgressDialog(this);
 
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -199,32 +201,38 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     DocumentSnapshot document = task.getResult();
                                                     if (document.exists()) {
-                                                        progressDialog.dismiss();
-                                                        Toast.makeText(LoginActivity.this, "Username already exists. Please use another username.", Toast.LENGTH_LONG).show();
+                                                        hideProgressDialog(LoginActivity.this);
+                                                        setToast(LoginActivity.this, getString(R.string.username_already_exists_please_use_another_username));
                                                     } else {
                                                         Map<String, Object> reg_entry = new HashMap<String, Object>();
                                                         reg_entry.put("Name", name);
                                                         reg_entry.put("Email", email);
+                                                        reg_entry.put("Age", "");
+                                                        reg_entry.put("Password", password);
 
                                                         ref.set(reg_entry, SetOptions.merge())
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void unused) {
-                                                                        progressDialog.dismiss();
-                                                                        Toast.makeText(LoginActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+
+                                                                        binding.fitRegister.viewRegister.setVisibility(View.GONE);
+                                                                        binding.fitLogin.viewLogin.setVisibility(View.VISIBLE);
+
+                                                                        hideProgressDialog(LoginActivity.this);
+                                                                        setToast(LoginActivity.this, getString(R.string.user_registered_successfully));
                                                                     }
                                                                 })
                                                                 .addOnFailureListener(new OnFailureListener() {
                                                                     @Override
                                                                     public void onFailure(@NonNull Exception e) {
-                                                                        progressDialog.dismiss();
-                                                                        Toast.makeText(LoginActivity.this, "Failed to create user document", Toast.LENGTH_SHORT).show();
+                                                                        hideProgressDialog(LoginActivity.this);
+                                                                        setToast(LoginActivity.this, getString(R.string.failed_to_create_user_document_in_firestore));
                                                                     }
                                                                 });
                                                     }
                                                 } else {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(LoginActivity.this, "Error checking username existence", Toast.LENGTH_SHORT).show();
+                                                    hideProgressDialog(LoginActivity.this);
+                                                    setToast(LoginActivity.this, getString(R.string.error_checking_username_existence));
                                                 }
                                             }
                                         });
@@ -234,41 +242,46 @@ public class LoginActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(LoginActivity.this, "Email is already exist Use other email", Toast.LENGTH_SHORT).show();
+                                hideProgressDialog(LoginActivity.this);
+                                setToast(LoginActivity.this, getString(R.string.email_is_already_exist_use_other_email));
                             }
                         });
             }
         } catch (Exception e) {
-            progressDialog.dismiss();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            hideProgressDialog(LoginActivity.this);
+            setToast(LoginActivity.this, e.toString());
         }
     }
 
 
     private void signIn(String email, String password) {
         if (email.equals("")) {
-            Toast.makeText(LoginActivity.this, R.string.please_enter_email_address, Toast.LENGTH_LONG).show();
+            setToast(this, getString(R.string.please_enter_email_address));
         } else if (password.equals("")) {
-            Toast.makeText(LoginActivity.this, R.string.please_enter_password, Toast.LENGTH_LONG).show();
+            setToast(this, getString(R.string.please_enter_password));
         } else if (!isValidEmail(email)) {
-            Toast.makeText(LoginActivity.this, R.string.please_enter_valid_email, Toast.LENGTH_LONG).show();
+            setToast(this, getString(R.string.please_enter_valid_email));
         } else {
-            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
-            progressDialog.setMessage("Please Wait..");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+            showProgressDialog(this);
 
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                progressDialog.dismiss();
+                                hideProgressDialog(LoginActivity.this);
 
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 if (user != null) {
                                     String uid = user.getUid();
+
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString(getString(R.string.userid), uid);
+                                    editor.putString(getString(R.string.name), user.getDisplayName());
+                                    editor.putString(getString(R.string.email), email);
+                                    editor.putString(getString(R.string.age), "");
+                                    editor.putString(getString(R.string.password), password);
+                                    editor.apply();
 
                                     DocumentReference userDocRef = firebaseFirestore.collection("RegisterUser").document(uid);
 
@@ -280,18 +293,18 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (document.exists()) {
                                                     reload_nextActivity();
                                                 } else {
-                                                    Toast.makeText(LoginActivity.this, "User is not exist!", Toast.LENGTH_SHORT).show();
+                                                    setToast(LoginActivity.this, getString(R.string.user_is_not_exist));
                                                 }
                                             } else {
-                                                Toast.makeText(LoginActivity.this, "Error retrieving user document", Toast.LENGTH_SHORT).show();
+                                                setToast(LoginActivity.this, getString(R.string.error_retrieving_user_document));
                                             }
                                         }
                                     });
                                 }
-                                Toast.makeText(LoginActivity.this, "You Successfully Sign In", Toast.LENGTH_SHORT).show();
+                                setToast(LoginActivity.this, getString(R.string.you_successfully_sign_in));
                             } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(LoginActivity.this, "User not exist! Please Enter Correct Information", Toast.LENGTH_SHORT).show();
+                                hideProgressDialog(LoginActivity.this);
+                                setToast(LoginActivity.this, getString(R.string.user_not_exist_please_enter_correct_information));
                             }
                         }
                     });
@@ -299,7 +312,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void reload_nextActivity() {
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -317,9 +330,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Email verification sent. Please check your email.", Toast.LENGTH_SHORT).show();
+                            setToast(LoginActivity.this, getString(R.string.email_verification_sent_please_check_your_email));
                         } else {
-                            Toast.makeText(LoginActivity.this, "Failed to send email verification.", Toast.LENGTH_SHORT).show();
+                            setToast(LoginActivity.this, getString(R.string.failed_to_send_email_verification));
                         }
                     }
                 });
@@ -335,8 +348,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                Log.e("111", e.toString());
-                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+                setToast(LoginActivity.this, e.toString());
             }
         }
     }
@@ -355,10 +367,19 @@ public class LoginActivity extends AppCompatActivity {
                                 String name = user.getDisplayName();
                                 String email = user.getEmail();
 
-                                // Create a user document in Firestore
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString(getString(R.string.userid), uid);
+                                editor.putString(getString(R.string.name), name);
+                                editor.putString(getString(R.string.email), email);
+                                editor.putString(getString(R.string.age), "");
+                                editor.putString(getString(R.string.password), "");
+                                editor.apply();
+
                                 Map<String, Object> userEntry = new HashMap<>();
                                 userEntry.put("Name", name);
                                 userEntry.put("Email", email);
+                                userEntry.put("Age", "");
+                                userEntry.put("Password", "");
 
                                 FirebaseFirestore.getInstance()
                                         .collection("RegisterUser")
@@ -368,19 +389,18 @@ public class LoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 reload_nextActivity();
-                                                Toast.makeText(LoginActivity.this, "User data stored in Firestore", Toast.LENGTH_SHORT).show();
+                                                setToast(LoginActivity.this, getString(R.string.user_data_stored_in_firestore));
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                // Handle Firestore document creation failure
-                                                Toast.makeText(LoginActivity.this, "Failed to create user document in Firestore", Toast.LENGTH_SHORT).show();
+                                                setToast(LoginActivity.this, getString(R.string.failed_to_create_user_document_in_firestore));
                                             }
                                         });
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), "Firebase Authentication failed", Toast.LENGTH_SHORT).show();
+                            setToast(LoginActivity.this, getString(R.string.firebase_authentication_failed));
                         }
                     }
                 });

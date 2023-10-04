@@ -1,4 +1,4 @@
-package com.app.giftxchange;
+package com.app.giftxchange.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.app.giftxchange.R;
+import com.app.giftxchange.itemCard;
 
 import java.util.List;
 
