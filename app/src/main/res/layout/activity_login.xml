@@ -53,11 +53,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="@dimen/_35sdp"
                     android:text="@string/app_name"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/_18ssp"
                     android:textStyle="bold" />
 
                 <include
@@ -70,13 +70,16 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_45sdp"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="25dp"
-                android:src="@drawable/ic_launcher_background" />
+                android:layout_marginTop="20dp"
+                android:src="@drawable/icon"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="@dimen/_2sdp"
+                app:civ_border_overlay="true"/>
         </RelativeLayout>
     </ScrollView>
 

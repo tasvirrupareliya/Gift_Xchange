@@ -24,7 +24,7 @@
             android:layout_marginBottom="@dimen/loginbottomeMargin"
             android:text="@string/login"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/black"
             android:textSize="@dimen/headerTextSize"
             android:textStyle="bold" />
 

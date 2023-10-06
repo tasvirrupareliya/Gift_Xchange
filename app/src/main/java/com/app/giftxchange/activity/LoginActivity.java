@@ -1,6 +1,8 @@
 package com.app.giftxchange.activity;
 
+import static com.app.giftxchange.Utils.getSharedData;
 import static com.app.giftxchange.Utils.hideProgressDialog;
+import static com.app.giftxchange.Utils.saveSharedData;
 import static com.app.giftxchange.Utils.setToast;
 import static com.app.giftxchange.Utils.showProgressDialog;
 
@@ -17,6 +19,7 @@ import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityLoginBinding;
+import com.app.giftxchange.model.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,8 +50,8 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     DocumentReference ref;
     FirebaseFirestore firebaseFirestore;
-    private SharedPreferences sharedPreferences;
     private static final int RC_SIGN_IN = 9001;
+    User newUser = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +61,22 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
+        String userid = getSharedData(this, getString(R.string.key_userid), null);
+        String useremail = getSharedData(this, getString(R.string.key_email), null);
+
+
+        if (useremail != null && userid != null) {
             reload_nextActivity();
-
-            String uid = currentUser.getUid();
-
-           /* SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            String name = sharedPreferences.getString(getString(R.string.name), "");
-            String email = sharedPreferences.getString(getString(R.string.email), "");
-            String age = sharedPreferences.getString(getString(R.string.age), "");
-            String password = sharedPreferences.getString(getString(R.string.password), "");
-            String id = sharedPreferences.getString(getString(R.string.userid), null);
-
-            editor.apply();*/
         }
+
+       /* if (currentUser != null) {
+            reload_nextActivity();
+            saveSharedData(LoginActivity.this, getString(R.string.key_userid), currentUser.getUid());
+            saveSharedData(LoginActivity.this, getString(R.string.key_email), currentUser. ());
+        }*/
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        Query query = FirebaseFirestore.getInstance().collection("RegisterUser")
+        Query query = FirebaseFirestore.getInstance().collection(getString(R.string.c_registeruser))
                 .whereEqualTo("Email", email);
 
         query.get().addOnCompleteListener(task -> {
@@ -188,13 +188,15 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
 
                                     if (user != null) {
-                                        /*if (!user.isEmailVerified()) {
-                                            sendEmailVerification();
-                                        }*/
-
                                         String uid = user.getUid();
 
-                                        ref = firebaseFirestore.collection("RegisterUser").document(uid);
+                                        newUser.setUserID(uid);
+                                        newUser.setUserEmail(email);
+                                        newUser.setUserName(name);
+                                        newUser.setUserPassword(password);
+                                        newUser.setUserAge("");
+
+                                        ref = firebaseFirestore.collection(getString(R.string.c_registeruser)).document(uid);
                                         ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -204,13 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         hideProgressDialog(LoginActivity.this);
                                                         setToast(LoginActivity.this, getString(R.string.username_already_exists_please_use_another_username));
                                                     } else {
-                                                        Map<String, Object> reg_entry = new HashMap<String, Object>();
-                                                        reg_entry.put("Name", name);
-                                                        reg_entry.put("Email", email);
-                                                        reg_entry.put("Age", "");
-                                                        reg_entry.put("Password", password);
-
-                                                        ref.set(reg_entry, SetOptions.merge())
+                                                        ref.set(newUser, SetOptions.merge())
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void unused) {
@@ -220,6 +216,10 @@ public class LoginActivity extends AppCompatActivity {
 
                                                                         hideProgressDialog(LoginActivity.this);
                                                                         setToast(LoginActivity.this, getString(R.string.user_registered_successfully));
+
+                                                                        binding.fitRegister.rEmail.setText("");
+                                                                        binding.fitRegister.rPassword.setText("");
+                                                                        binding.fitRegister.rName.setText("");
                                                                     }
                                                                 })
                                                                 .addOnFailureListener(new OnFailureListener() {
@@ -275,16 +275,9 @@ public class LoginActivity extends AppCompatActivity {
                                 if (user != null) {
                                     String uid = user.getUid();
 
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString(getString(R.string.userid), uid);
-                                    editor.putString(getString(R.string.name), user.getDisplayName());
-                                    editor.putString(getString(R.string.email), email);
-                                    editor.putString(getString(R.string.age), "");
-                                    editor.putString(getString(R.string.password), password);
-                                    editor.apply();
+                                    saveSharedData(LoginActivity.this, getString(R.string.key_userid), uid);
 
-                                    DocumentReference userDocRef = firebaseFirestore.collection("RegisterUser").document(uid);
-
+                                    DocumentReference userDocRef = firebaseFirestore.collection(getString(R.string.c_registeruser)).document(uid);
                                     userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -364,27 +357,18 @@ public class LoginActivity extends AppCompatActivity {
                             if (user != null) {
 
                                 String uid = user.getUid();
-                                String name = user.getDisplayName();
-                                String email = user.getEmail();
+                                saveSharedData(LoginActivity.this, getString(R.string.key_userid), uid);
 
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(getString(R.string.userid), uid);
-                                editor.putString(getString(R.string.name), name);
-                                editor.putString(getString(R.string.email), email);
-                                editor.putString(getString(R.string.age), "");
-                                editor.putString(getString(R.string.password), "");
-                                editor.apply();
-
-                                Map<String, Object> userEntry = new HashMap<>();
-                                userEntry.put("Name", name);
-                                userEntry.put("Email", email);
-                                userEntry.put("Age", "");
-                                userEntry.put("Password", "");
+                                newUser.setUserID(uid);
+                                newUser.setUserEmail(user.getEmail());
+                                newUser.setUserName(user.getDisplayName());
+                                newUser.setUserPassword("");
+                                newUser.setUserAge("");
 
                                 FirebaseFirestore.getInstance()
-                                        .collection("RegisterUser")
+                                        .collection(getString(R.string.c_registeruser))
                                         .document(uid)
-                                        .set(userEntry)
+                                        .set(newUser)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {

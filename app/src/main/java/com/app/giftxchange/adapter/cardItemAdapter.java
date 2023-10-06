@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.itemCard;
+import com.app.giftxchange.model.itemCard;
 
 import java.util.List;
 

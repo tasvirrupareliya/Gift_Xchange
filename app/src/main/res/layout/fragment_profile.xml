@@ -1,19 +1,434 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".fragment.ProfileFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile"
-        android:textSize="25sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:background="@drawable/half_circle" />
+
+        <RelativeLayout
+            android:id="@+id/imagelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:paddingTop="3dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/Iconimage2"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="55dp"
+                android:layout_marginEnd="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile"
+                app:civ_border_color="@color/border"
+                app:civ_border_width="5dp" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Iconimage2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="UserName"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/circleLayouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagelayout"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="-20dp">
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/BoostButton"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34dp"
+                android:layout_marginEnd="10dp"
+                android:elevation="5dp"
+                android:src="@drawable/baseline_info_24"
+                android:tint="@color/colorPrimary"
+                app:cb_color="#efefef"
+                app:cb_pressedRingWidth="3dip" />
+
+
+            <TextView
+                android:id="@+id/tv_Boost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/BoostButton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:gravity="center"
+                android:text="About"
+                android:textColor="#444"
+                android:textSize="12sp" />
+
+            <RelativeLayout
+                android:id="@+id/editprofile_button_rlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="65dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@+id/BoostButton"
+                android:gravity="center">
+
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/EditButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:elevation="5dp"
+                    android:src="@drawable/baseline_edit_24"
+                    android:tint="@color/colorPrimary"
+                    app:cb_color="#efefef"
+                    app:cb_pressedRingWidth="3dip" />
+
+                <TextView
+                    android:id="@+id/tv_Edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/EditButton"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="3dp"
+                    android:text="Edit"
+                    android:textAlignment="center"
+                    android:textColor="#444"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/settings_button_rlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="65dp"
+                android:clickable="true"
+                android:gravity="center">
+
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/SettingsButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:elevation="5dp"
+                    android:src="@drawable/baseline_settings_24"
+                    android:tint="@color/colorPrimary"
+                    app:cb_color="#efefef"
+                    app:cb_pressedRingWidth="3dip" />
+
+                <TextView
+                    android:id="@+id/settingstextview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/SettingsButton"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="3dp"
+                    android:text="Setting"
+                    android:textAlignment="center"
+                    android:textColor="#444"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/StFirstLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/circleLayouts"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:id="@+id/StImage1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_settings_24" />
+
+            <TextView
+                android:id="@+id/St_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage1"
+                android:gravity="start"
+                android:text="Rate Us"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/d_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage1"
+                android:gravity="start"
+                android:text="Rate our app"
+                android:textColor="#777"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/StsecoundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StFirstLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/StImage2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_info_24" />
+
+            <TextView
+                android:id="@+id/St_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage2"
+                android:gravity="start"
+                android:text="Help &amp; Support"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/d_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage2"
+                android:gravity="start"
+                android:text="Help center and legal terms"
+                android:textColor="#777"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <!-- <RelativeLayout
+            android:id="@+id/StthirdLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StsecoundLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/StImage3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_help_outline" />
+
+            <TextView
+                android:id="@+id/St_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage3"
+                android:gravity="start"
+                android:text="@string/Lbl_NeedHelp"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/d_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage3"
+                android:gravity="start"
+                android:text="@string/Lbl_ContactUs_Privacy"
+                android:textColor="#777"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/StFourthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StthirdLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/StImage31"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_system_update"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/St_31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage31"
+                android:gravity="start"
+                android:text="@string/Lbl_Update"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/d_31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage31"
+                android:gravity="start"
+                android:text="@string/Lbl_Version_update"
+                android:textColor="#777"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/StFifthLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StFourthLayout"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/StImage32"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_privacy"
+                android:tint="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/St_32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage32"
+                android:gravity="start"
+                android:text="@string/Lbl_Privacy"
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/d_32"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@+id/StImage32"
+                android:gravity="start"
+                android:text="@string/Lbl_privacy_policy"
+                android:textColor="#777"
+                android:textSize="14sp" />
+        </RelativeLayout>-->
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

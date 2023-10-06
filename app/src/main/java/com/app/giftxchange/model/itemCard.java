@@ -1,4 +1,4 @@
-package com.app.giftxchange;
+package com.app.giftxchange.model;
 
 public class itemCard {
     private String cardName;

@@ -1,23 +1,33 @@
 package com.app.giftxchange.activity;
 
+import static android.content.ContentValues.TAG;
 import static com.app.giftxchange.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainBinding;
-import com.app.giftxchange.fragment.AddFragment;
 import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
 import com.app.giftxchange.fragment.ProfileFragment;
-import com.app.giftxchange.itemCard;
+import com.app.giftxchange.model.itemCard;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +35,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<itemCard> itemList = new ArrayList<>();
 
     @Override
@@ -92,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        setDefaultFragment();
+
         binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -114,11 +127,6 @@ public class MainActivity extends AppCompatActivity {
                             .commit();
                     setSelected(R.id.navigation_mylist);
                 }
-              /*  if (item.getItemId() == R.id.navigation_plus) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(binding.contentLayout.getId(), new AddFragment())
-                            .commit();
-                }*/
                 if (item.getItemId() == R.id.navigation_profile) {
                     getSupportFragmentManager().beginTransaction()
                             .replace(binding.contentLayout.getId(), new ProfileFragment())
@@ -132,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setToast(MainActivity.this,"Add Button");
+                setToast(MainActivity.this, "Add Button");
             }
         });
     }
@@ -146,9 +154,67 @@ public class MainActivity extends AppCompatActivity {
         return getSharedPreferences(getPackageName(), MODE_PRIVATE).getInt("selectedNav", R.id.navigation_home);
     }
 
+    private void setDefaultFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(binding.contentLayout.getId(), new HomeFragment())
+                .commit();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+        handler.removeCallbacks(runnable);
+    }
+
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            setuserData_SharedPreference();
+
+            handler.postDelayed(this, 100);
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.post(runnable);
+    }
+
+    public void setuserData_SharedPreference() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userID = sharedPreferences.getString(getString(R.string.key_userid), null);
+
+        DocumentReference userDocRef = db.collection(getString(R.string.c_registeruser)).document(userID);
+        userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String userName = document.getString(getString(R.string.fs_name));
+                        String userEmail = document.getString(getString(R.string.fs_email));
+                        String userPassword = document.getString(getString(R.string.fs_password));
+                        String userAge = document.getString(getString(R.string.fs_age));
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(getString(R.string.key_name), userName);
+                        editor.putString(getString(R.string.key_password), userPassword);
+                        editor.putString(getString(R.string.key_age), userAge);
+                        editor.putString(getString(R.string.key_email), userEmail);
+                        editor.apply();
+                    } else {
+                        // The document doesn't exist.
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    // An error occurred while fetching the document.
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
