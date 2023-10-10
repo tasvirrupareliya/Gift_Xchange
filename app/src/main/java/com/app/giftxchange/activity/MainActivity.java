@@ -1,30 +1,52 @@
 package com.app.giftxchange.activity;
 
 import static android.content.ContentValues.TAG;
+import static com.app.giftxchange.Utils.getSharedData;
+import static com.app.giftxchange.Utils.saveSharedData;
 import static com.app.giftxchange.Utils.setToast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import androidx.fragment.app.FragmentManager;
+
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.adapter.cardItemAdapter;
 import com.app.giftxchange.databinding.ActivityMainBinding;
+import com.app.giftxchange.fragment.AddFragment;
 import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
 import com.app.giftxchange.fragment.ProfileFragment;
-import com.app.giftxchange.model.itemCard;
+import com.app.giftxchange.model.Listing;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    List<itemCard> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,106 +65,56 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        /*binding.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-                builder.setTitle("Add Gift Card");
-
-                // Inflate a custom layout for the dialog
-                DialogAddGiftcardBinding dialogView;
-                dialogView = DialogAddGiftcardBinding.inflate(getLayoutInflater());
-                builder.setView(dialogView.getRoot());
-
-                // Set positive button to handle the input
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Retrieve the values from the EditText fields in the dialog
-                        String cardName = dialogView.cardNameInput.getText().toString();
-                        String amount = dialogView.amountInput.getText().toString();
-                        String brandName = dialogView.brandNameInput.getText().toString();
-
-                        // Validate the input (you can add more validation)
-                        if (TextUtils.isEmpty(cardName) || TextUtils.isEmpty(amount) || TextUtils.isEmpty(brandName)) {
-                            // Handle validation error
-                            Toast.makeText(HomeActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                        } else {
-                            itemCard newItem = new itemCard(cardName, brandName, Double.parseDouble(amount));
-                            itemList.add(newItem);
-                            cardItemAdapter adapter = new cardItemAdapter(itemList);
-                            binding.recyclerview.setAdapter(adapter);
-                            binding.recyclerview.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-                            adapter.notifyDataSetChanged();
-                            Toast.makeText(HomeActivity.this, "Gift card item added", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
-
-        binding.logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences preferences = getSharedPreferences(String.valueOf(R.string.share_key), Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.remove(getString(R.string.share_email));
-                editor.clear();
-                editor.commit();
-                finish();
-                Toast.makeText(HomeActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         setDefaultFragment();
-
         binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 if (item.getItemId() == R.id.navigation_home) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(binding.contentLayout.getId(), new HomeFragment())
-                            .commit();
-                    setSelected(R.id.navigation_home);
+                    setTitle("Dashboard");
+                    replaceFragment(new HomeFragment());
                 }
                 if (item.getItemId() == R.id.navigation_chat) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(binding.contentLayout.getId(), new ChatFragment())
-                            .commit();
-                    setSelected(R.id.navigation_chat);
+                    setTitle("Chat");
+                    replaceFragment(new ChatFragment());
                 }
                 if (item.getItemId() == R.id.navigation_mylist) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(binding.contentLayout.getId(), new MyListFragment())
-                            .commit();
-                    setSelected(R.id.navigation_mylist);
+                    setTitle("My List");
+                    replaceFragment(new MyListFragment());
                 }
                 if (item.getItemId() == R.id.navigation_profile) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(binding.contentLayout.getId(), new ProfileFragment())
-                            .commit();
-                    setSelected(R.id.navigation_profile);
+                    setTitle("Profile");
+                    replaceFragment(new ProfileFragment());
                 }
-                return false;
-            }
-        });
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setToast(MainActivity.this, "Add Button");
+                return true;
             }
         });
     }
+
+   /* public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case 0:
+                replaceFragment(new ProfileFragment());
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }*/
 
     public void setSelected(int optionID) {
         binding.navigation.getMenu().findItem(optionID).setChecked(true);
@@ -157,6 +128,14 @@ public class MainActivity extends AppCompatActivity {
     private void setDefaultFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(binding.contentLayout.getId(), new HomeFragment())
+                .commit();
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_layout, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 

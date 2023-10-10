@@ -7,11 +7,20 @@ public class Listing {
     private String userID;
     private String listTitle;
     private double listPrice;
-    private Date listDate;
+    private String listDate;
     private String listLocation;
     private String listType;
     private boolean isBuy;
     private boolean isSell;
+
+    public Listing(String userID, String listTitle, double listPrice, String listDate, String listLocation, String listType) {
+        this.userID = userID;
+        this.listTitle = listTitle;
+        this.listPrice = listPrice;
+        this.listDate = listDate;
+        this.listLocation = listLocation;
+        this.listType = listType;
+    }
 
     public String getListID() {
         return listID;
@@ -45,11 +54,11 @@ public class Listing {
         this.listPrice = listPrice;
     }
 
-    public Date getListDate() {
+    public String getListDate() {
         return listDate;
     }
 
-    public void setListDate(Date listDate) {
+    public void setListDate(String listDate) {
         this.listDate = listDate;
     }
 

@@ -1,25 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="4dp"
+    android:orientation="vertical"
+    android:transitionName="ExampleTransition"
+    app:cardCornerRadius="12dp">
 
-    <TextView
-        android:id="@+id/card_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Card Name" />
 
-    <TextView
-        android:id="@+id/brand_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Brand Name" />
+    <RelativeLayout
+        android:id="@+id/frame_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_editprofile"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingTop="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="12dp">
 
-    <TextView
-        android:id="@+id/price_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:text="Price" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/l_card_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cloud Computing"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/l_price_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l_card_name"
+            android:text="Third year CSE"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/l_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l_price_text"
+            android:text="students: 0"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/l_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l_date"
+            android:text="students: 0"
+            android:textColor="@color/white" />
+
+
+        <TextView
+            android:id="@+id/l_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l_location"
+            android:text="students: 0"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

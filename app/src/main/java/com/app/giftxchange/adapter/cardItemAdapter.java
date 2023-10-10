@@ -1,38 +1,44 @@
 package com.app.giftxchange.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.model.itemCard;
+import com.app.giftxchange.databinding.LayoutItemcardBinding;
+import com.app.giftxchange.model.Listing;
 
 import java.util.List;
 
 public class cardItemAdapter extends RecyclerView.Adapter<cardItemAdapter.ViewHolder> {
-    private List<itemCard> itemList;
+    private List<Listing> itemList;
 
-    public cardItemAdapter(List<itemCard> itemList) {
+    public cardItemAdapter(List<Listing> itemList) {
         this.itemList = itemList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_itemcard, parent, false);
-        return new ViewHolder(view);
+        LayoutItemcardBinding binding = LayoutItemcardBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        itemCard item = itemList.get(position);
-        holder.cardNameTextView.setText(item.getCardName());
-        holder.brandNameTextView.setText(item.getBrandName());
-        holder.priceTextView.setText(String.valueOf(item.getPrice()));
+        Listing item = itemList.get(position);
+
+        holder.binding.lCardName.setText(item.getListTitle());
+        holder.binding.lPriceText.setText(String.valueOf(item.getListPrice()));
+        holder.binding.lDate.setText(item.getListDate());
+        holder.binding.lLocation.setText(item.getListLocation());
+        holder.binding.lType.setText(item.getListType());
     }
 
     @Override
@@ -41,15 +47,12 @@ public class cardItemAdapter extends RecyclerView.Adapter<cardItemAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView cardNameTextView;
-        TextView brandNameTextView;
-        TextView priceTextView;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            cardNameTextView = itemView.findViewById(R.id.card_name_text);
-            brandNameTextView = itemView.findViewById(R.id.brand_name_text);
-            priceTextView = itemView.findViewById(R.id.price_text);
+        LayoutItemcardBinding binding; // Use the View Binding object
+
+        public ViewHolder(LayoutItemcardBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

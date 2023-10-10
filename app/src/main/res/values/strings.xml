@@ -67,4 +67,5 @@
 
     <!--Firebase collections name-->
     <string name="c_registeruser">RegisterUser</string>
+    <string name="done">Done</string>
 </resources>
