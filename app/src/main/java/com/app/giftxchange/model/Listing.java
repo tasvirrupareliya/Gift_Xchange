@@ -3,25 +3,27 @@ package com.app.giftxchange.model;
 import java.util.Date;
 
 public class Listing {
-    private String listID;
     private String userID;
-    private String listTitle;
-    private double listPrice;
+    private String cardName;
+    private String cardAmount;
     private String listDate;
     private String listLocation;
     private String listType;
+    private String listStatus;
     private boolean isBuy;
     private boolean isSell;
 
-    public Listing(String userID, String listTitle, double listPrice, String listDate, String listLocation, String listType) {
+    public Listing(String userID, String cardName, String cardAmount, String listDate, String listLocation, String listType, String listStatus) {
         this.userID = userID;
-        this.listTitle = listTitle;
-        this.listPrice = listPrice;
+        this.cardName = cardName;
+        this.cardAmount = cardAmount;
         this.listDate = listDate;
         this.listLocation = listLocation;
         this.listType = listType;
+        this.listStatus = listStatus;
     }
 
+/*
     public String getListID() {
         return listID;
     }
@@ -29,6 +31,7 @@ public class Listing {
     public void setListID(String listID) {
         this.listID = listID;
     }
+*/
 
     public String getUserID() {
         return userID;
@@ -39,19 +42,19 @@ public class Listing {
     }
 
     public String getListTitle() {
-        return listTitle;
+        return cardName;
     }
 
-    public void setListTitle(String listTitle) {
-        this.listTitle = listTitle;
+    public void setListTitle(String cardName) {
+        this.cardName = cardName;
     }
 
-    public double getListPrice() {
-        return listPrice;
+    public String getListPrice() {
+        return cardAmount;
     }
 
-    public void setListPrice(double listPrice) {
-        this.listPrice = listPrice;
+    public void setListPrice(String cardAmount) {
+        this.cardAmount = cardAmount;
     }
 
     public String getListDate() {
@@ -76,5 +79,13 @@ public class Listing {
 
     public void setListType(String listType) {
         this.listType = listType;
+    }
+
+    public String getListStatus() {
+        return listStatus;
+    }
+
+    public void setListStatus(String listStatus) {
+        this.listStatus = listStatus;
     }
 }

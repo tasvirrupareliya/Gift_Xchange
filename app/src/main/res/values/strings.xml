@@ -67,5 +67,8 @@
 
     <!--Firebase collections name-->
     <string name="c_registeruser">RegisterUser</string>
+    <string name="c_giftcardlisting">GiftCardListing</string>
+
+
     <string name="done">Done</string>
 </resources>

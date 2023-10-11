@@ -1,58 +1,36 @@
 package com.app.giftxchange.activity;
 
 import static android.content.ContentValues.TAG;
-import static com.app.giftxchange.Utils.getSharedData;
-import static com.app.giftxchange.Utils.saveSharedData;
-import static com.app.giftxchange.Utils.setToast;
+
+import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.saveSharedData;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
-import androidx.fragment.app.FragmentManager;
-
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.adapter.cardItemAdapter;
 import com.app.giftxchange.databinding.ActivityMainBinding;
-import com.app.giftxchange.fragment.AddFragment;
 import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
 import com.app.giftxchange.fragment.ProfileFragment;
-import com.app.giftxchange.model.Listing;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -116,15 +94,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
-    public void setSelected(int optionID) {
-        binding.navigation.getMenu().findItem(optionID).setChecked(true);
-        getSharedPreferences(getPackageName(), MODE_PRIVATE).edit().putInt("selectedNav", optionID).commit();
-    }
-
-    public int getSelectedNav() {
-        return getSharedPreferences(getPackageName(), MODE_PRIVATE).getInt("selectedNav", R.id.navigation_home);
-    }
-
     private void setDefaultFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(binding.contentLayout.getId(), new HomeFragment())
@@ -164,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setuserData_SharedPreference() {
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String userID = sharedPreferences.getString(getString(R.string.key_userid), null);
+        String userID = getSharedData(this, getString(R.string.key_userid), null);
 
         DocumentReference userDocRef = db.collection(getString(R.string.c_registeruser)).document(userID);
         userDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -179,12 +147,10 @@ public class MainActivity extends AppCompatActivity {
                         String userPassword = document.getString(getString(R.string.fs_password));
                         String userAge = document.getString(getString(R.string.fs_age));
 
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(getString(R.string.key_name), userName);
-                        editor.putString(getString(R.string.key_password), userPassword);
-                        editor.putString(getString(R.string.key_age), userAge);
-                        editor.putString(getString(R.string.key_email), userEmail);
-                        editor.apply();
+                        saveSharedData(MainActivity.this,getString(R.string.key_name), userName);
+                        saveSharedData(MainActivity.this,getString(R.string.key_password), userPassword);
+                        saveSharedData(MainActivity.this,getString(R.string.key_age), userAge);
+                        saveSharedData(MainActivity.this,getString(R.string.key_email), userEmail);
                     } else {
                         // The document doesn't exist.
                         Log.d(TAG, "No such document");

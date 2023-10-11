@@ -8,5 +8,5 @@ public class Address {
     private String province;
     private String postalCode;
     private String userID;
-    private String listID;
+   /* private String listID;*/
 }

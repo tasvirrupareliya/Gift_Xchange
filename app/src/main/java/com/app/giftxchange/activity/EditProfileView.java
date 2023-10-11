@@ -1,21 +1,16 @@
 package com.app.giftxchange.activity;
 
-import static com.app.giftxchange.Utils.getSharedData;
-import static com.app.giftxchange.Utils.setToast;
-
-import static java.security.AccessController.getContext;
+import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityEditProfileViewBinding;
-import com.app.giftxchange.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;

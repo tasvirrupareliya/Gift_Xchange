@@ -10,7 +10,6 @@
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Base.Theme.GiftXchange"
         tools:ignore="MissingConstraints">
 
         <androidx.appcompat.widget.Toolbar

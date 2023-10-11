@@ -10,5 +10,7 @@
     <color name="unselected_color">#000000</color>
     <color name="selected_color">#fd751d</color>
     <color name="grey">#9C8F8F</color>
+    <color name="locationtextcolor">#6E6464</color>
     <color name="border">#4A4848</color>
+    <color name="activecolor">#4CAF50</color>
 </resources>

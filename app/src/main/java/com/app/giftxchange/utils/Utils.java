@@ -1,4 +1,4 @@
-package com.app.giftxchange;
+package com.app.giftxchange.utils;
 
 import android.app.Activity;
 import android.app.Dialog;
