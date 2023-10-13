@@ -5,12 +5,16 @@
     <color name="whiteTextColor">#fff</color>
     <color name="primaryTextColor">#198754</color>
     <color name="loginBkColor">#f0f0f0</color>
-    <color name="colorPrimary">#fe8e46</color>
-    <color name="colorPrimaryDark">#fd751d</color>
+    <color name="colorPrimary">#df696a</color>
+    <color name="colorPrimaryDark">#df696a</color>
     <color name="unselected_color">#000000</color>
     <color name="selected_color">#fd751d</color>
     <color name="grey">#9C8F8F</color>
     <color name="locationtextcolor">#6E6464</color>
     <color name="border">#4A4848</color>
     <color name="activecolor">#4CAF50</color>
+    <color name="linecolor">#39817070</color>
+    <color name="startcolor">#c4776f</color>
+    <color name="endcolor">#df696a</color>
+
 </resources>

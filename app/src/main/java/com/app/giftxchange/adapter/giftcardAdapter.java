@@ -1,21 +1,37 @@
 package com.app.giftxchange.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.app.giftxchange.ItemClickListenee;
+import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.LayoutItemcardBinding;
 import com.app.giftxchange.model.Listing;
 
 import java.util.List;
+import java.util.Random;
 
 public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHolder> {
     private List<Listing> itemList;
 
-    public giftcardAdapter(List<Listing> itemList) {
+    private int[] imageResources = {
+            R.drawable.g1,
+            R.drawable.g2,
+            R.drawable.g3,
+            R.drawable.g4,
+            R.drawable.g5,
+            R.drawable.g6,
+            R.drawable.g7
+    };
+    private ItemClickListenee itemClickListener;
+
+    public giftcardAdapter(List<Listing> itemList, ItemClickListenee itemClickListener) {
         this.itemList = itemList;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -30,10 +46,21 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
         Listing item = itemList.get(position);
 
         holder.binding.lCardName.setText(item.getListTitle());
-        holder.binding.lPriceText.setText(String.valueOf(item.getListPrice()));
+        holder.binding.lPriceText.setText(item.getListPrice());
         holder.binding.lDate.setText(item.getListDate());
         holder.binding.lLocation.setText(item.getListLocation());
         holder.binding.listStatus.setText(item.getListStatus());
+       // holder.binding.imageview.setImageResource(item.getDrawable());
+
+
+        int randomImageResource = getRandomImageResource();
+        holder.binding.imageview.setImageResource(randomImageResource);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.onItemClick(item);
+            }
+        });
     }
 
     @Override
@@ -49,5 +76,12 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    private int getRandomImageResource() {
+        // Use a random number generator to select a random image resource
+        Random random = new Random();
+        int randomIndex = random.nextInt(imageResources.length);
+        return imageResources[randomIndex];
     }
 }

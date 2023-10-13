@@ -11,7 +11,7 @@
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navigation"/>
+        android:layout_above="@id/navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -22,6 +22,6 @@
         android:background="@color/white"
         app:itemRippleColor="@color/colorPrimary"
         app:itemTextColor="@color/black"
-        app:menu="@menu/navigation"/>
+        app:menu="@menu/navigation" />
 
 </RelativeLayout>

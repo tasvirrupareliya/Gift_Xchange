@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +21,7 @@
             <ImageView
                 android:id="@+id/imageview"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/_110sdp"
                 android:scaleType="centerCrop"
                 android:src="@color/grey" />
 
@@ -107,60 +106,4 @@
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-    <!--<RelativeLayout
-        android:id="@+id/frame_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_editprofile"
-        android:orientation="vertical"
-        android:paddingLeft="12dp"
-        android:paddingTop="12dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="12dp">
-
-        <TextView
-            android:id="@+id/l_card_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cloud Computing"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/l_price_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/l_card_name"
-            android:text="Third year CSE"
-            android:textColor="@color/white"
-            android:textSize="15dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/l_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/l_price_text"
-            android:text="students: 0"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/l_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/l_date"
-            android:text="students: 0"
-            android:textColor="@color/white" />
-
-
-        <TextView
-            android:id="@+id/l_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/l_location"
-            android:text="students: 0"
-            android:textColor="@color/white" />
-    </RelativeLayout>-->
 </LinearLayout>

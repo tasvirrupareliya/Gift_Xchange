@@ -6,10 +6,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
 
 public class Utils {
 
@@ -58,4 +62,9 @@ public class Utils {
         return getSharedPreferences(context).getString(key, defaultValue);
     }
 
+    public static void setTitleWithColor(ActionBar actionBar, String title, int color) {
+        SpannableString spannableTitle = new SpannableString(title);
+        spannableTitle.setSpan(new ForegroundColorSpan(color), 0, spannableTitle.length(), 0);
+        actionBar.setTitle(spannableTitle);
+    }
 }

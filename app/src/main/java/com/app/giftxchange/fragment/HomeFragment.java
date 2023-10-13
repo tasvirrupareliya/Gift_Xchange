@@ -2,6 +2,7 @@ package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
 import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,14 +23,24 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.adapter.CustomSpinnerAdapter;
 import com.app.giftxchange.databinding.DialogAddgiftCardBinding;
 import com.app.giftxchange.databinding.FragmentHomeBinding;
 import com.app.giftxchange.model.Listing;
+import com.app.giftxchange.model.cardItem;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -38,7 +49,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +63,7 @@ public class HomeFragment extends Fragment {
     private LocationManager locationManager;
     private LocationListener locationListener;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+    private SellFragment sellFragment;
 
     public HomeFragment() {
     }
@@ -58,6 +72,7 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
+        setHasOptionsMenu(true);
         /*DesignToolbarBinding designToolbarBinding = DesignToolbarBinding.inflate(getLayoutInflater());
         designToolbarBinding.toolbar.setTitle("dvdvd");
         designToolbarBinding.getRoot();*/
@@ -103,6 +118,30 @@ public class HomeFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.action_search) {
+
+            return true;
+        } else if (id == R.id.action_settings) {
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private static class MyFragmentStateAdapter extends FragmentStateAdapter {
@@ -166,8 +205,9 @@ public class HomeFragment extends Fragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String cardName = dialogbinding.cardName.getText().toString();
+
                         String cardPrice = dialogbinding.listprice.getText().toString();
+                        String cardName = dialogbinding.cardName.getText().toString();
                         String listDate = getCurrentDate();
                         String location = getCurrentLocation();
 

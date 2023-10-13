@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/loginViewsMargin"
     android:layout_marginBottom="@dimen/loginViewsMargin"
     android:background="@color/white"
-    android:visibility="gone"
+    android:visibility="visible"
     app:cardCornerRadius="@dimen/loginCardRadius">
 
     <LinearLayout
@@ -70,9 +70,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:background="@drawable/btn_round"
-            android:text="@string/register"
-            android:textColor="@color/white" />
+            style="@style/AllButton"
+            android:text="@string/register" />
 
         <TextView
             android:id="@+id/register_already"

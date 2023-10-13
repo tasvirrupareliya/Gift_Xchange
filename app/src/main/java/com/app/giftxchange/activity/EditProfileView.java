@@ -28,6 +28,8 @@ public class EditProfileView extends AppCompatActivity {
         binding = ActivityEditProfileViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         String userEmail = getSharedData(this, getString(R.string.key_email), null);
         String userAge = getSharedData(this, getString(R.string.key_age), null);
         String userName = getSharedData(this, getString(R.string.key_name), null);

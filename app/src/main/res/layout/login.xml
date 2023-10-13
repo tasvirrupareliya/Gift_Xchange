@@ -69,9 +69,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            android:background="@drawable/btn_round"
-            android:text="@string/login"
-            android:textColor="@color/white" />
+            style="@style/AllButton"
+            android:text="@string/login"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_googlesignin"

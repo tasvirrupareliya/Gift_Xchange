@@ -1,5 +1,7 @@
 package com.app.giftxchange.model;
 
+import android.graphics.drawable.Drawable;
+
 import java.util.Date;
 
 public class Listing {
@@ -10,6 +12,7 @@ public class Listing {
     private String listLocation;
     private String listType;
     private String listStatus;
+    private int drawable;
     private boolean isBuy;
     private boolean isSell;
 
@@ -32,6 +35,14 @@ public class Listing {
         this.listID = listID;
     }
 */
+
+    public int getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(int drawable) {
+        this.drawable = drawable;
+    }
 
     public String getUserID() {
         return userID;

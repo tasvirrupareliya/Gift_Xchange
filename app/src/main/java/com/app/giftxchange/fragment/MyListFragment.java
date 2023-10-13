@@ -13,13 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.ItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.databinding.FragmentHomeBinding;
 import com.app.giftxchange.databinding.FragmentMyListBinding;
@@ -34,7 +37,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyListFragment extends Fragment {
+public class MyListFragment extends Fragment implements ItemClickListenee {
 
     FragmentMyListBinding binding;
     public static ArrayList<Listing> list = new ArrayList<>();
@@ -47,7 +50,7 @@ public class MyListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         binding = FragmentMyListBinding.inflate(inflater, container, false);
-        adapter = new giftcardAdapter(list);
+        adapter = new giftcardAdapter(list, this);
 
         binding.swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(requireContext(), R.color.colorPrimary)
@@ -72,5 +75,20 @@ public class MyListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+    }
+
+    @Override
+    public void onItemClick(Listing item) {
+        // Create a new fragment to display the item details.
+        Intent intent = new Intent(requireContext(), ItemClickViewActivity.class);
+
+        // Pass the item data as extras in the intent.
+        intent.putExtra("title", item.getListTitle());
+        intent.putExtra("price", item.getListPrice());
+        intent.putExtra("location", item.getListLocation());
+        intent.putExtra("date", item.getListDate());
+
+        // Start the activity.
+        startActivity(intent);
     }
 }

@@ -26,6 +26,8 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
+        getSupportActionBar().hide();
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
