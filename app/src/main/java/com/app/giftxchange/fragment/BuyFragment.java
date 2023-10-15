@@ -1,6 +1,7 @@
 package com.app.giftxchange.fragment;
 
-import static com.app.giftxchange.utils.FireStoreHelper.loadDataExchangeFromFirestore;
+import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
+import static com.app.giftxchange.utils.Utils.getSharedData;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,13 +16,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.MainItemClickViewActivity;
 import com.app.giftxchange.activity.MyListItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
-import com.app.giftxchange.databinding.FragmentExchangeFragmentBinding;
+import com.app.giftxchange.databinding.FragmentBuyFragmentBinding;
 import com.app.giftxchange.model.Listing;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,19 +33,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class ExchangeFragment extends Fragment implements ItemClickListenee {
-
-    FragmentExchangeFragmentBinding binding;
+public class BuyFragment extends Fragment implements ItemClickListenee {
+    FragmentBuyFragmentBinding binding;
     public static ArrayList<Listing> list = new ArrayList<>();
     giftcardAdapter adapter;
 
-    public ExchangeFragment() {
+    public BuyFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentExchangeFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentBuyFragmentBinding.inflate(inflater, container, false);
 
         adapter = new giftcardAdapter(list, this);
 
@@ -52,30 +53,29 @@ public class ExchangeFragment extends Fragment implements ItemClickListenee {
         );
 
         binding.swipeRefreshLayout.setRefreshing(true);
-        loadDataExchangeFromFirestore(list, adapter, binding.swipeRefreshLayout, getString(R.string.exchange));
+        loadDataSellFromFirestore(list, adapter, binding.swipeRefreshLayout, getString(R.string.buy));
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadDataExchangeFromFirestore(list, adapter, binding.swipeRefreshLayout, getString(R.string.exchange));
+                loadDataSellFromFirestore(list, adapter, binding.swipeRefreshLayout, getString(R.string.buy));
             }
         });
 
-        binding.recyclerviewExchage.setAdapter(adapter);
-        binding.recyclerviewExchage.setLayoutManager(new GridLayoutManager(getContext(),2));
+        binding.recyclerviewSell.setAdapter(adapter);
+        binding.recyclerviewSell.setLayoutManager(new GridLayoutManager(getContext(),2));
         adapter.notifyDataSetChanged();
 
         return binding.getRoot();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onItemClick(Listing item) {
+        getIDfromItemList(item);
     }
 
     @Override
-    public void onItemClick(Listing item) {
-        getIDfromItemList(item);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void getIDfromItemList(Listing list) {

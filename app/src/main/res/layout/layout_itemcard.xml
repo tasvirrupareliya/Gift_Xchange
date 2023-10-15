@@ -30,26 +30,23 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageview"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="-45dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginTop="-35dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/round"
                 android:padding="4dp">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_today_black_24dp" />
 
                 <TextView
                     android:id="@+id/l_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
                     android:text="10/10/2023"
-                    android:textColor="#5E5D5D" />
+                    android:textColor="#5E5D5D"
+                    android:textSize="@dimen/_9ssp" />
 
             </LinearLayout>
 
@@ -58,9 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageview"
-                android:layout_marginLeft="16dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="16dp"
                 android:text="Walmart Card"
                 android:textSize="17sp" />
 
@@ -69,9 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_below="@+id/l_card_name"
-                android:layout_marginLeft="16dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginRight="16dp"
                 android:text="120"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -81,9 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_below="@+id/l_price_text"
-                android:layout_marginStart="16dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="Toronto, ON, CA"
@@ -94,15 +88,15 @@
                 android:id="@+id/listStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/l_card_name"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="26dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
                 android:maxLines="1"
                 android:text="Active"
                 android:textColor="@color/activecolor"
-                android:textSize="15sp"
-                android:textStyle="italic" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

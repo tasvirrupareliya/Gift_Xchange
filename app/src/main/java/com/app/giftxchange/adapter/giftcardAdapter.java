@@ -11,12 +11,15 @@ import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.LayoutItemcardBinding;
 import com.app.giftxchange.model.Listing;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 import java.util.Random;
 
 public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHolder> {
-    private List<Listing> itemList;
+    public List<Listing> itemList;
 
     private int[] imageResources = {
             R.drawable.g1,
@@ -50,7 +53,7 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
         holder.binding.lDate.setText(item.getListDate());
         holder.binding.lLocation.setText(item.getListLocation());
         holder.binding.listStatus.setText(item.getListStatus());
-       // holder.binding.imageview.setImageResource(item.getDrawable());
+        // holder.binding.imageview.setImageResource(item.getDrawable());
 
 
         int randomImageResource = getRandomImageResource();
@@ -75,6 +78,13 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
         public ViewHolder(LayoutItemcardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+        }
+    }
+
+    public void removeItem(int position) {
+        if (position >= 0 && position < itemList.size()) {
+            itemList.remove(position);
+            notifyItemRemoved(position);
         }
     }
 

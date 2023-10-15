@@ -12,7 +12,6 @@ public class Listing {
     private String listLocation;
     private String listType;
     private String listStatus;
-    private int drawable;
     private boolean isBuy;
     private boolean isSell;
 
@@ -26,24 +25,15 @@ public class Listing {
         this.listStatus = listStatus;
     }
 
-/*
-    public String getListID() {
-        return listID;
-    }
+    /*
+        public String getListID() {
+            return listID;
+        }
 
-    public void setListID(String listID) {
-        this.listID = listID;
-    }
-*/
-
-    public int getDrawable() {
-        return drawable;
-    }
-
-    public void setDrawable(int drawable) {
-        this.drawable = drawable;
-    }
-
+        public void setListID(String listID) {
+            this.listID = listID;
+        }
+    */
     public String getUserID() {
         return userID;
     }

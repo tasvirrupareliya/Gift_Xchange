@@ -83,7 +83,6 @@ public class FireStoreHelper {
                                 list.add(newItem);
                             }
                             swipeRefreshLayout.setRefreshing(false);
-
                         }
                         // Notify the adapter that the data has changed
                         adapter.notifyDataSetChanged();
@@ -93,8 +92,6 @@ public class FireStoreHelper {
                     @Override
                     public void onFailure(Exception e) {
                         swipeRefreshLayout.setRefreshing(false);
-                        // Handle any errors that occurred during the data retrieval
-                        // You can log an error message or show a Toast message here
                     }
                 });
     }

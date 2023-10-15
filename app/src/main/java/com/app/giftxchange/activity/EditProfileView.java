@@ -22,6 +22,7 @@ import java.util.Map;
 public class EditProfileView extends AppCompatActivity {
 
     ActivityEditProfileViewBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -72,4 +72,10 @@
 
     <string name="done">Done</string>
     <string name="search">Search</string>
+    <string name="buy">Buy</string>
+    <string name="exchange">Exchange</string>
+    <string name="payment">Payment</string>
+    <string name="canada">Canada</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

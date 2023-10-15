@@ -9,13 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.FragmentChatBinding;
 
 public class ChatFragment extends Fragment {
 
-
     FragmentChatBinding binding;
+
 
     public ChatFragment() {
     }
@@ -26,9 +25,9 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
     }
-
 }

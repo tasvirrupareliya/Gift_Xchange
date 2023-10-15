@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.ItemClickViewActivity">
+    tools:context=".activity.MainItemClickViewActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_10sdp"
-                        android:text="Canada"
+                        android:text="@string/canada"
                         android:textSize="@dimen/_11ssp" />
 
                     <View
@@ -190,7 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_weight="1"
-            android:text="Chat"
+            android:text="@string/chat"
             android:textSize="@dimen/_12ssp" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -200,7 +200,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_weight="1"
-            android:text="Payment"
+            android:text="@string/payment"
             android:textSize="@dimen/_12ssp" />
     </LinearLayout>
+
 </LinearLayout>

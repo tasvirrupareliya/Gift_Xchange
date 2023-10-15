@@ -1,23 +1,35 @@
 package com.app.giftxchange.activity;
 
 import static android.content.ContentValues.TAG;
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainBinding;
@@ -25,6 +37,10 @@ import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
 import com.app.giftxchange.fragment.ProfileFragment;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }*/
 
+
+
     private void setDefaultFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(binding.contentLayout.getId(), new HomeFragment())
@@ -147,10 +167,10 @@ public class MainActivity extends AppCompatActivity {
                         String userPassword = document.getString(getString(R.string.fs_password));
                         String userAge = document.getString(getString(R.string.fs_age));
 
-                        saveSharedData(MainActivity.this,getString(R.string.key_name), userName);
-                        saveSharedData(MainActivity.this,getString(R.string.key_password), userPassword);
-                        saveSharedData(MainActivity.this,getString(R.string.key_age), userAge);
-                        saveSharedData(MainActivity.this,getString(R.string.key_email), userEmail);
+                        saveSharedData(MainActivity.this, getString(R.string.key_name), userName);
+                        saveSharedData(MainActivity.this, getString(R.string.key_password), userPassword);
+                        saveSharedData(MainActivity.this, getString(R.string.key_age), userAge);
+                        saveSharedData(MainActivity.this, getString(R.string.key_email), userEmail);
                     } else {
                         // The document doesn't exist.
                         Log.d(TAG, "No such document");

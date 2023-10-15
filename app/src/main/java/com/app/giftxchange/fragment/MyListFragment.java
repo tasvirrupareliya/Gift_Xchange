@@ -1,41 +1,29 @@
 package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataMyListFromFirestore;
-import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
-import static com.app.giftxchange.utils.Utils.getSharedData;
-import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
-import com.app.giftxchange.activity.ItemClickViewActivity;
+import com.app.giftxchange.activity.MyListItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
-import com.app.giftxchange.databinding.FragmentHomeBinding;
 import com.app.giftxchange.databinding.FragmentMyListBinding;
 import com.app.giftxchange.model.Listing;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyListFragment extends Fragment implements ItemClickListenee {
 
@@ -66,7 +54,7 @@ public class MyListFragment extends Fragment implements ItemClickListenee {
         });
 
         binding.myListRecyclerview.setAdapter(adapter);
-        binding.myListRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.myListRecyclerview.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter.notifyDataSetChanged();
 
         return binding.getRoot();
@@ -80,7 +68,7 @@ public class MyListFragment extends Fragment implements ItemClickListenee {
     @Override
     public void onItemClick(Listing item) {
         // Create a new fragment to display the item details.
-        Intent intent = new Intent(requireContext(), ItemClickViewActivity.class);
+        Intent intent = new Intent(requireContext(), MyListItemClickViewActivity.class);
 
         // Pass the item data as extras in the intent.
         intent.putExtra("title", item.getListTitle());
