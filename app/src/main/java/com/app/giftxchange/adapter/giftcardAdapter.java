@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -35,6 +36,10 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
     public giftcardAdapter(List<Listing> itemList, ItemClickListenee itemClickListener) {
         this.itemList = itemList;
         this.itemClickListener = itemClickListener;
+    }
+
+    public giftcardAdapter() {
+
     }
 
     @NonNull
@@ -81,17 +86,15 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
         }
     }
 
-    public void removeItem(int position) {
-        if (position >= 0 && position < itemList.size()) {
-            itemList.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
     private int getRandomImageResource() {
         // Use a random number generator to select a random image resource
         Random random = new Random();
         int randomIndex = random.nextInt(imageResources.length);
         return imageResources[randomIndex];
+    }
+
+    public void filterList(ArrayList<Listing> filteredList) {
+        itemList = filteredList;
+        notifyDataSetChanged();
     }
 }

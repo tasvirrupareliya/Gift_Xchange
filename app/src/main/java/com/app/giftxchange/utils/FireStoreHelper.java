@@ -37,10 +37,11 @@ public class FireStoreHelper {
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
+                            String listID = document.getString("listID");
 
                             if (type.equals(tabType)) {
                                 String formattedPrice = "$" + cardPrice;
-                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus);
+                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
                                 list.add(newItem);
                             }
                             swipeRefreshLayout.setRefreshing(false);
@@ -76,10 +77,11 @@ public class FireStoreHelper {
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
+                            String listID = document.getString("listID");
 
                             if (type.equals(tabType)) {
                                 String formattedPrice = "$" + cardPrice;
-                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus);
+                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
                                 list.add(newItem);
                             }
                             swipeRefreshLayout.setRefreshing(false);
@@ -118,9 +120,10 @@ public class FireStoreHelper {
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
+                            String listID = document.getString("listID");
 
                             String formattedPrice = "$" + cardPrice;
-                            Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus);
+                            Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
                             list.add(newItem);
                             swipeRefreshLayout.setRefreshing(false);
                         }

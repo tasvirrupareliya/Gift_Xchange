@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:hint="Card Name" />
+        android:hint="@string/card_name" />
 
 
     <EditText
@@ -17,7 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:hint="Price"
+        android:hint="@string/price"
         android:inputType="number" />
+
+    <Spinner
+        android:id="@+id/spinner_listType"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

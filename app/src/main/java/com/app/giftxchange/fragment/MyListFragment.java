@@ -1,6 +1,8 @@
 package com.app.giftxchange.fragment;
 
+
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataMyListFromFirestore;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,7 +64,6 @@ public class MyListFragment extends Fragment implements ItemClickListenee {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -75,7 +76,8 @@ public class MyListFragment extends Fragment implements ItemClickListenee {
         intent.putExtra("price", item.getListPrice());
         intent.putExtra("location", item.getListLocation());
         intent.putExtra("date", item.getListDate());
-
+        intent.putExtra("listID", item.getListID());
+        intent.putExtra("listType", item.getListType());
         // Start the activity.
         startActivity(intent);
     }

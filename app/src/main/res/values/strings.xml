@@ -54,6 +54,10 @@
     <string name="fs_email">userEmail</string>
     <string name="fs_age">userAge</string>
     <string name="fs_password">userPassword</string>
+    <string name="fs_listname">listTitle</string>
+    <string name="fs_listprice">listPrice</string>
+    <string name="fs_listType">listType</string>
+    <string name="fs_listDate">listDate</string>
 
     <string name="update_profile">Update Profile</string>
     <string name="postal_code">Postal Code</string>
@@ -78,4 +82,8 @@
     <string name="canada">Canada</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="card_name">Card Name</string>
+    <string name="price">Price</string>
+    <string name="close">Close</string>
+    <string name="exit">Exit</string>
 </resources>

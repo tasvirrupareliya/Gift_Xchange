@@ -58,11 +58,8 @@ public class MainItemClickViewActivity extends AppCompatActivity {
         String currentuserID = getSharedData(MainItemClickViewActivity.this, getString(R.string.key_userid), null);
 
         if (currentuserID.equals(userID)) {
-            setToast(getApplicationContext(),"success");
             binding.btnChat.setVisibility(View.GONE);
             binding.btnPayment.setVisibility(View.GONE);
-        }else{
-            setToast(getApplicationContext(),"failure");
         }
     }
 

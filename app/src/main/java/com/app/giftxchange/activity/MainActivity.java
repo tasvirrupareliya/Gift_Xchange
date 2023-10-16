@@ -8,6 +8,7 @@ import static com.app.giftxchange.utils.Utils.saveSharedData;
 import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -25,6 +26,8 @@ import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.provider.SyncStateContract;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,6 +36,8 @@ import android.widget.Toast;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainBinding;
+import com.app.giftxchange.databinding.DialogAddgiftCardBinding;
+import com.app.giftxchange.databinding.ExitViewBinding;
 import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
@@ -52,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
 
     @Override
@@ -111,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }*/
-
 
 
     private void setDefaultFragment() {
@@ -181,5 +184,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        ExitViewBinding dialogbinding = ExitViewBinding.inflate(LayoutInflater.from(MainActivity.this));
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setView(dialogbinding.getRoot());
+
+        AlertDialog exitDialog = builder.create();
+        dialogbinding.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+            }
+        });
+
+        dialogbinding.btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        exitDialog.show();
     }
 }

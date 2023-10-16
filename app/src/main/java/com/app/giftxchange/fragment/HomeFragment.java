@@ -1,6 +1,5 @@
 package com.app.giftxchange.fragment;
 
-import static com.app.giftxchange.activity.MainActivity.LOCATION_PERMISSION_REQUEST_CODE;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.setToast;
 
@@ -13,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,11 +19,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +29,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+
+import androidx.appcompat.widget.SearchView;
+
 import android.widget.Toast;
 
 import com.app.giftxchange.R;
@@ -54,6 +50,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -89,8 +86,8 @@ public class HomeFragment extends Fragment {
         binding.btnAddlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showDialog();
-                getLastLocation();
+                showDialog();
+                //getLastLocation();
             }
         });
 
@@ -190,22 +187,16 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        inflater.inflate(R.menu.menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_search) {
-
-            return true;
-        } else if (id == R.id.action_logout) {
+        if (id == R.id.action_logout) {
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             editor.clear();
             editor.apply();
@@ -217,6 +208,38 @@ public class HomeFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchQuery(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchQuery(newText);
+                return false;
+            }
+        });
+    }
+
+    private void searchQuery(String query) {
+        Fragment fragment = getChildFragmentManager().getFragments().get(binding.viewPager.getCurrentItem());
+
+        if (fragment instanceof BuyFragment && binding.viewPager.getCurrentItem() == 0) {
+            ((BuyFragment) fragment).filterData(query);
+        } else if (fragment instanceof ExchangeFragment && binding.viewPager.getCurrentItem() == 1) {
+            ((ExchangeFragment) fragment).filterData(query);
+        }
+    }
+
     private static class MyFragmentStateAdapter extends FragmentStateAdapter {
 
         public MyFragmentStateAdapter(Fragment fragment) {
@@ -226,7 +249,6 @@ public class HomeFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            // Create and return SellFragment for position 0 or ExchangeFragment for position 1
             if (position == 0) {
                 return new BuyFragment();
             } else {
@@ -276,7 +298,7 @@ public class HomeFragment extends Fragment {
                             }
                             String listStatus = "Active";
 
-                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, "location", tabType, listStatus);
+                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, "location", tabType, listStatus, "");
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             db.collection(getString(R.string.c_giftcardlisting))
@@ -285,6 +307,9 @@ public class HomeFragment extends Fragment {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
                                             // Item added successfully
+                                            String generatedDocumentID = documentReference.getId();
+                                            newItem.setListID(generatedDocumentID);
+                                            updateFirestoreDocument(db, generatedDocumentID, newItem);
                                             Toast.makeText(getContext(), "Item added Successfully", Toast.LENGTH_SHORT).show();
                                         }
                                     })
@@ -307,6 +332,28 @@ public class HomeFragment extends Fragment {
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+
+    private void updateFirestoreDocument(FirebaseFirestore db, String documentId, Listing newItem) {
+        newItem.setListID(documentId);
+
+        db.collection(getString(R.string.c_giftcardlisting))
+                .document(documentId)
+                .set(newItem)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getContext(), "Document updated successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(getContext(), "Failed to update document", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private String getCurrentDate() {

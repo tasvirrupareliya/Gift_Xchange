@@ -158,7 +158,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/StFirstLayout"
+            android:id="@+id/rateus_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/circleLayouts"
@@ -166,7 +166,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackground"
-            android:clickable="true"
             android:gravity="center_vertical"
             android:padding="5dp"
             android:paddingEnd="10dp">
@@ -181,7 +180,7 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/baseline_settings_24"
+                android:src="@drawable/baseline_star_rate_24"
                 app:tint="@color/black" />
 
             <TextView
@@ -216,7 +215,7 @@
             android:id="@+id/StsecoundLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/StFirstLayout"
+            android:layout_below="@+id/rateus_view"
             android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"

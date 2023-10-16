@@ -12,10 +12,11 @@ public class Listing {
     private String listLocation;
     private String listType;
     private String listStatus;
+    private String listID;
     private boolean isBuy;
     private boolean isSell;
 
-    public Listing(String userID, String cardName, String cardAmount, String listDate, String listLocation, String listType, String listStatus) {
+    public Listing(String userID, String cardName, String cardAmount, String listDate, String listLocation, String listType, String listStatus, String listID) {
         this.userID = userID;
         this.cardName = cardName;
         this.cardAmount = cardAmount;
@@ -23,17 +24,17 @@ public class Listing {
         this.listLocation = listLocation;
         this.listType = listType;
         this.listStatus = listStatus;
+        this.listID = listID;
     }
 
-    /*
-        public String getListID() {
-            return listID;
-        }
+    public String getListID() {
+        return listID;
+    }
 
-        public void setListID(String listID) {
-            this.listID = listID;
-        }
-    */
+    public void setListID(String listID) {
+        this.listID = listID;
+    }
+
     public String getUserID() {
         return userID;
     }

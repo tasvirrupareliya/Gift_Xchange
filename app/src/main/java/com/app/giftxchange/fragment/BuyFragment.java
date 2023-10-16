@@ -118,4 +118,15 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
                     }
                 });
     }
+
+    public void filterData(String query) {
+        ArrayList<Listing> filteredList = new ArrayList<>();
+
+        for (Listing listing : list) {
+            if (listing.getListTitle().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(listing);
+            }
+        }
+        adapter.filterList(filteredList);
+    }
 }
