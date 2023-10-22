@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.ContactUsView;
 import com.app.giftxchange.activity.EditProfileView;
 import com.app.giftxchange.databinding.FragmentProfileBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -65,6 +66,13 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        binding.contactView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ContactUsView.class));
             }
         });
 

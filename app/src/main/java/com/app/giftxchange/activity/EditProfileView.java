@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.databinding.ActivityEditProfileViewBinding;
+import com.app.giftxchange.databinding.EditProfileViewBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,12 +21,12 @@ import java.util.Map;
 
 public class EditProfileView extends AppCompatActivity {
 
-    ActivityEditProfileViewBinding binding;
+    EditProfileViewBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityEditProfileViewBinding.inflate(getLayoutInflater());
+        binding = EditProfileViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

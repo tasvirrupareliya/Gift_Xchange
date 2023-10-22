@@ -83,6 +83,8 @@ public class HomeFragment extends Fragment {
                     }
                 }).attach();
 
+        getpermission();
+
         binding.btnAddlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +94,38 @@ public class HomeFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    private void getpermission() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                try {
+                                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    /*lattitude.setText("Lattitude: " + addresses.get(0).getLatitude());
+                                    longitude.setText("Longitude: " + addresses.get(0).getLongitude());
+                                    address.setText("Address: " + addresses.get(0).getAddressLine(0));
+                                    city.setText("City: " + addresses.get(0).getLocality());
+                                    country.setText("Country: " + addresses.get(0).getCountryName());*/
+
+                                    setToast(getContext(), addresses.get(0).getAddressLine(0));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+        } else {
+            askPermission();
+        }
+    }
+
+    private void askPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
     }
 
     private void getLastLocation() {
@@ -125,7 +159,7 @@ public class HomeFragment extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
             } else {
-                setToast(getContext(), "Required Permission");
+                Toast.makeText(getContext(), "Please provide the required permission", Toast.LENGTH_SHORT).show();
             }
         }
     }

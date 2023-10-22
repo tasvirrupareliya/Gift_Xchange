@@ -19,21 +19,27 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ExitActivity"
+            android:name=".activity.ContactUsView"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".fragment.ProfileFragment"
             android:exported="false" />
         <activity
             android:name=".activity.MainItemClickViewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MyListItemClickViewActivity"
             android:exported="false"
-            android:parentActivityName=".fragment.MyListFragment" />
+            android:parentActivityName=".fragment.MyListFragment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".fragment.ExchangeFragment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".fragment.BuyFragment"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.EditProfileView"
             android:exported="false"

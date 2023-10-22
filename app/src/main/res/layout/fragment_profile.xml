@@ -212,7 +212,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/StsecoundLayout"
+            android:id="@+id/contact_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rateus_view"
@@ -234,7 +234,7 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="10dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/baseline_info_24" />
+                android:src="@drawable/baseline_contact_support_24" />
 
             <TextView
                 android:id="@+id/St_2"
@@ -245,7 +245,7 @@
                 android:layout_marginBottom="0dp"
                 android:layout_toEndOf="@+id/StImage2"
                 android:gravity="start"
-                android:text="Help &amp; Support"
+                android:text="Contact Us"
                 android:textColor="#444"
                 android:textSize="14sp" />
 
@@ -259,7 +259,7 @@
                 android:layout_marginBottom="0dp"
                 android:layout_toEndOf="@+id/StImage2"
                 android:gravity="start"
-                android:text="Help center and legal terms"
+                android:text="Help to Contact Us"
                 android:textColor="#777"
                 android:textSize="14sp" />
         </RelativeLayout>

@@ -1,5 +1,8 @@
 package com.app.giftxchange.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,30 +39,27 @@ public class SplashActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        new Handler().postDelayed(() -> {
+            NetworkInfo activeNetwork = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
-                NetworkInfo activeNetwork = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))
-                        .getActiveNetworkInfo();
-
-                if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
-                    builder.setTitle("Error")
-                            .setMessage("Please check your network connection")
-                            .setCancelable(false)
-                            .setPositiveButton("Close", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
-                            });
-                    builder.show();
-                }
+            if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+                startLoginActivity();
+            } else {
+                showErrorDialog("Please check your network connection");
             }
         }, 1200);
+    }
+
+    private void startLoginActivity() {
+        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+        finish();
+    }
+    private void showErrorDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+        builder.setTitle("Error")
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Close", (dialog, which) -> finish());
+        builder.show();
     }
 }

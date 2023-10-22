@@ -37,6 +37,7 @@
             android:background="@drawable/border"
             android:hint="@string/register_name"
             android:inputType="text"
+            android:maxLength="20"
             android:padding="@dimen/loginpadding_margin"
             android:textSize="@dimen/newsMoreTextSize" />
 
@@ -66,11 +67,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/register_btn"
+            style="@style/AllButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"
-            style="@style/AllButton"
             android:text="@string/register" />
 
         <TextView

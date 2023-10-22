@@ -58,6 +58,9 @@
     <string name="fs_listprice">listPrice</string>
     <string name="fs_listType">listType</string>
     <string name="fs_listDate">listDate</string>
+    <string name="fs_userEmail">listPrice</string>
+    <string name="fs_userMessage">listType</string>
+    <string name="fs_userName">listDate</string>
 
     <string name="update_profile">Update Profile</string>
     <string name="postal_code">Postal Code</string>
@@ -72,7 +75,7 @@
     <!--Firebase collections name-->
     <string name="c_registeruser">RegisterUser</string>
     <string name="c_giftcardlisting">GiftCardListing</string>
-
+    <string name="c_contactus">ContactUs</string>
 
     <string name="done">Done</string>
     <string name="search">Search</string>
@@ -86,4 +89,10 @@
     <string name="price">Price</string>
     <string name="close">Close</string>
     <string name="exit">Exit</string>
+    <string name="your_name">Your Name</string>
+    <string name="your_email">Your Email</string>
+    <string name="message">Message</string>
+    <string name="contactnumber">(226)-223-1122</string>
+    <string name="contact_address">22 Duke Street West, \n Kitchener, ON, CA - N2H 3A0</string>
+    <string name="get_in_touch">Get In Touch</string>
 </resources>
