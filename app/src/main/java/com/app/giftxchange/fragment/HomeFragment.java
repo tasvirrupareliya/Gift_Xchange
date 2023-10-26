@@ -1,7 +1,9 @@
 package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
-import static com.app.giftxchange.utils.Utils.setToast;
+import static com.app.giftxchange.utils.Utils.hideProgressDialog;
+import static com.app.giftxchange.utils.Utils.saveSharedData;
+import static com.app.giftxchange.utils.Utils.showProgressDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +18,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,13 +37,16 @@ import androidx.appcompat.widget.SearchView;
 
 import android.widget.Toast;
 
+import com.app.giftxchange.utils.FetchAddressIntentServices;
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.LoginActivity;
-import com.app.giftxchange.activity.MainActivity;
 import com.app.giftxchange.databinding.DialogAddgiftCardBinding;
 import com.app.giftxchange.databinding.FragmentHomeBinding;
 import com.app.giftxchange.model.Listing;
-import com.google.android.gms.location.FusedLocationProviderClient;
+import com.app.giftxchange.utils.Utils;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,19 +54,15 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
     FragmentHomeBinding binding;
-    FusedLocationProviderClient fusedLocationClient;
-    private final static int REQUEST_CODE = 100;
+    ResultReceiver resultReceiver;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     public HomeFragment() {
     }
@@ -71,8 +73,7 @@ public class HomeFragment extends Fragment {
 
         setHasOptionsMenu(true);
         binding.viewPager.setAdapter(new MyFragmentStateAdapter(this));
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        resultReceiver = new AddressResultReceiver(new Handler());
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
@@ -83,141 +84,20 @@ public class HomeFragment extends Fragment {
                     }
                 }).attach();
 
-        getpermission();
-
         binding.btnAddlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
-                //getLastLocation();
+                if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+                } else {
+                    showDialog();
+                    getCurrentLocation();
+                }
             }
         });
 
         return binding.getRoot();
     }
-
-    private void getpermission() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                try {
-                                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    /*lattitude.setText("Lattitude: " + addresses.get(0).getLatitude());
-                                    longitude.setText("Longitude: " + addresses.get(0).getLongitude());
-                                    address.setText("Address: " + addresses.get(0).getAddressLine(0));
-                                    city.setText("City: " + addresses.get(0).getLocality());
-                                    country.setText("Country: " + addresses.get(0).getCountryName());*/
-
-                                    setToast(getContext(), addresses.get(0).getAddressLine(0));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-        } else {
-            askPermission();
-        }
-    }
-
-    private void askPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-    }
-
-    private void getLastLocation() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                                try {
-                                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                                    setToast(getContext(), addresses.get(0).getAddressLine(0));
-                                    Log.e("111", addresses.get(0).getAddressLine(0));
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            } else {
-                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-                            }
-                        }
-                    });
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
-            } else {
-                Toast.makeText(getContext(), "Please provide the required permission", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    /* private void getUserLocationAndSave() {
-
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
-            }
-            return;
-        }
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(requireActivity(), location -> {
-                    if (location != null) {
-                        // Store the location in SharedPreferences
-                        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(KEY_LATITUDE, String.valueOf(location.getLatitude()));
-                        editor.putString(KEY_LONGITUDE, String.valueOf(location.getLongitude()));
-                        editor.apply();
-                    }
-                });
-    }*/
-
-    /*private void locationEnabled() {
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (!gps_enabled && !network_enabled) {
-            new AlertDialog.Builder(getContext())
-                    .setTitle("Enable GPS Service")
-                    .setMessage("We need your GPS location to show Near Places around you.")
-                    .setCancelable(false)
-                    .setPositiveButton("Enable", new
-                            DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                }
-                            })
-                    .setNegativeButton("Cancel", null)
-                    .show();
-        }*/
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -301,7 +181,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void showDialog() {
-
         DialogAddgiftCardBinding dialogbinding = DialogAddgiftCardBinding.inflate(LayoutInflater.from(getContext()));
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -314,7 +193,6 @@ public class HomeFragment extends Fragment {
                         String cardPrice = dialogbinding.listprice.getText().toString();
                         String cardName = dialogbinding.cardName.getText().toString();
                         String listDate = getCurrentDate();
-                        // String location = "";//getCurrentLocation(getContext());
 
                         if (TextUtils.isEmpty(cardName)) {
                             Toast.makeText(getContext(), "Please fill in the CardName", Toast.LENGTH_SHORT).show();
@@ -332,7 +210,8 @@ public class HomeFragment extends Fragment {
                             }
                             String listStatus = "Active";
 
-                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, "location", tabType, listStatus, "");
+                            String location = getSharedData(getContext(), "address", null);
+                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, listStatus, "");
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             db.collection(getString(R.string.c_giftcardlisting))
@@ -396,4 +275,94 @@ public class HomeFragment extends Fragment {
         return sdf.format(currentDate);
     }
 
+    private class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (resultCode == Utils.SUCCESS_RESULT) {
+               /* address.setText(resultData.getString(Utils.ADDRESS));
+                locaity.setText(resultData.getString(Utils.LOCAITY));
+                state.setText(resultData.getString(Utils.STATE));
+                district.setText(resultData.getString(Utils.DISTRICT));
+                country.setText(resultData.getString(Utils.COUNTRY));
+                postcode.setText(resultData.getString(Utils.POST_CODE));*/
+
+                String city = resultData.getString(Utils.LOCAITY);
+                String street = resultData.getString(Utils.ADDRESS);
+                String state = resultData.getString(Utils.STATE);
+                String country = resultData.getString(Utils.COUNTRY);
+                String province_code = resultData.getString(Utils.POST_CODE);
+
+                state = state.substring(0, 2);
+                country = country.substring(0, 2);
+
+                String address = city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
+                saveSharedData(getContext(), "address", address);
+
+                //return city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
+                //Log.e("111", resultData.getString(Utils.ADDRESS) + "|" + resultData.getString(Utils.LOCAITY) + "|" + resultData.getString(Utils.STATE) + "|" + resultData.getString(Utils.DISTRICT) + "|" + resultData.getString(Utils.COUNTRY) + "|" + resultData.getString(Utils.POST_CODE));
+            } else {
+                Toast.makeText(getContext(), resultData.getString(Utils.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
+            }
+            hideProgressDialog(getActivity());
+        }
+    }
+
+
+    private void getCurrentLocation() {
+        showProgressDialog(getActivity());
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(getContext())
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext())
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            int latestlocIndex = locationResult.getLocations().size() - 1;
+                            double lati = locationResult.getLocations().get(latestlocIndex).getLatitude();
+                            double longi = locationResult.getLocations().get(latestlocIndex).getLongitude();
+                            //textLatLong.setText(String.format("Latitude : %s\n Longitude: %s", lati, longi));
+                            //setToast(getContext(), String.valueOf(lati + longi));
+
+                            Location location = new Location("providerNA");
+                            location.setLongitude(longi);
+                            location.setLatitude(lati);
+                            fetchaddressfromlocation(location);
+
+                        } else {
+                            hideProgressDialog(getActivity());
+                        }
+                    }
+                }, Looper.getMainLooper());
+
+    }
+
+    private void fetchaddressfromlocation(Location location) {
+        Intent intent = new Intent(getContext(), FetchAddressIntentServices.class);
+        intent.putExtra(Utils.RECEVIER, resultReceiver);
+        intent.putExtra(Utils.LOCATION_DATA_EXTRA, location);
+        getContext().startService(intent);
+    }
 }

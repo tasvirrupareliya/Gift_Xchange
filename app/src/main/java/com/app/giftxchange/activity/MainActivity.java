@@ -58,7 +58,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    private final int REQUEST_LOCATION_PERMISSION = 1;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 

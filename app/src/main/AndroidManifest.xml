@@ -80,9 +80,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB23ykiyEaSW7rj8Z06xVK1gMP4ZDnt5wQ" />
+        <service android:name=".utils.FetchAddressIntentServices" />
     </application>
 
 </manifest>
