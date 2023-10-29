@@ -89,7 +89,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void showPermissionRationaleDialog() {
+    public void showPermissionRationaleDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Permission Needed");
         builder.setMessage("This app needs your location permission for feature. Please grant the permission.");
@@ -119,34 +119,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     }
-
-    private void showSettingsDialog() {
-        // we are displaying an alert dialog for permissions
-        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
-
-        // below line is the title for our alert dialog.
-        builder.setTitle("Need Permissions");
-
-        // below line is our message for our dialog
-        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
-        builder.setPositiveButton("GOTO SETTINGS", (dialog, which) -> {
-            // this method is called on click on positive button and on clicking shit button
-            // we are redirecting our user from our app to the settings page of our app.
-            dialog.cancel();
-            // below is the intent from which we are redirecting our user.
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
-            intent.setData(uri);
-            startActivityForResult(intent, 101);
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            // this method is called when user click on negative button.
-            dialog.cancel();
-        });
-        // below line is used to display our dialog
-        builder.show();
-    }
-
     private void showErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
         builder.setTitle("Error")

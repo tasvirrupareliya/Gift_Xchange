@@ -3,6 +3,7 @@ package com.app.giftxchange.activity;
 import static android.content.ContentValues.TAG;
 import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 
+import static com.app.giftxchange.utils.Utils.clearSession;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
 import static com.app.giftxchange.utils.Utils.setToast;
@@ -30,6 +31,7 @@ import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -44,6 +46,8 @@ import com.app.giftxchange.fragment.ChatFragment;
 import com.app.giftxchange.fragment.HomeFragment;
 import com.app.giftxchange.fragment.MyListFragment;
 import com.app.giftxchange.fragment.ProfileFragment;
+import com.app.giftxchange.utils.FetchAddressIntentServices;
+import com.app.giftxchange.utils.Utils;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -58,7 +62,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-
+    ResultReceiver resultReceiver;
+    private boolean isHomeFragmentVisible = true; // Track if the home fragment is visible
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -74,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         setDefaultFragment();
+        resultReceiver = new AddressResultReceiver(new Handler());
+
+        getCurrentLocation();
+
         binding.navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -99,25 +108,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-   /* public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            editor.clear();
+            editor.apply();
 
-        switch (item.getItemId()) {
-
-            case 0:
-                replaceFragment(new ProfileFragment());
-                break;
-            default:
-                break;
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 
     private void setDefaultFragment() {
@@ -126,12 +136,35 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        MenuItem logoutMenuItem = menu.findItem(R.id.action_logout);
+
+        if (isHomeFragmentVisible) {
+            // Show the menu items in the home fragment
+            searchMenuItem.setVisible(true);
+            logoutMenuItem.setVisible(true);
+        } else {
+            // Hide the menu items in other fragments
+            searchMenuItem.setVisible(false);
+            logoutMenuItem.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+
+        if (fragment instanceof HomeFragment) {
+            isHomeFragmentVisible = true;
+        } else {
+            isHomeFragmentVisible = false;
+        }
     }
 
     @Override
@@ -145,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            getCurrentLocation();
             setuserData_SharedPreference();
 
             handler.postDelayed(this, 100);
@@ -190,6 +224,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearSession();
+    }
+
+    @Override
     public void onBackPressed() {
 
         ExitViewBinding dialogbinding = ExitViewBinding.inflate(LayoutInflater.from(MainActivity.this));
@@ -208,8 +248,103 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                clearSession();
             }
         });
         exitDialog.show();
+    }
+
+    private class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            super.onReceiveResult(resultCode, resultData);
+            if (resultCode == Utils.SUCCESS_RESULT) {
+
+               /* address.setText(resultData.getString(Utils.ADDRESS));
+                locaity.setText(resultData.getString(Utils.LOCAITY));
+                state.setText(resultData.getString(Utils.STATE));
+                district.setText(resultData.getString(Utils.DISTRICT));
+                country.setText(resultData.getString(Utils.COUNTRY));
+                postcode.setText(resultData.getString(Utils.POST_CODE));*/
+
+                String city = resultData.getString(Utils.LOCAITY);
+                String street = resultData.getString(Utils.ADDRESS);
+                String state = resultData.getString(Utils.STATE);
+                String country = resultData.getString(Utils.COUNTRY);
+                String postalCode = resultData.getString(Utils.POST_CODE);
+
+                saveSharedData(MainActivity.this, getString(R.string.fulladdress_street), street);
+                saveSharedData(MainActivity.this, getString(R.string.fulladdress_city), city);
+                saveSharedData(MainActivity.this, getString(R.string.fulladdress_state), state);
+                saveSharedData(MainActivity.this, getString(R.string.fulladdress_country), country);
+                saveSharedData(MainActivity.this, getString(R.string.fulladdress_postalcode_code), postalCode);
+
+                state = state.substring(0, 2);
+                country = country.substring(0, 2);
+
+                String address = city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
+                saveSharedData(MainActivity.this, getString(R.string.addressforGiftCard), address);
+
+            } else {
+                Toast.makeText(MainActivity.this, resultData.getString(Utils.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
+            }
+            //hideProgressDialog(getActivity());
+        }
+    }
+
+
+    private void getCurrentLocation() {
+        //showProgressDialog(getActivity(), "Retrieve Current Location");
+
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(getApplicationContext())
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            //isLocationObtained = true;
+                            int latestlocIndex = locationResult.getLocations().size() - 1;
+                            double lati = locationResult.getLocations().get(latestlocIndex).getLatitude();
+                            double longi = locationResult.getLocations().get(latestlocIndex).getLongitude();
+
+                            Location location = new Location("providerNA");
+                            location.setLongitude(longi);
+                            location.setLatitude(lati);
+                            fetchaddressfromlocation(location);
+
+                        } else {
+                            //hideProgressDialog(getActivity());
+                        }
+                    }
+                }, Looper.getMainLooper());
+
+    }
+
+    private void fetchaddressfromlocation(Location location) {
+        Intent intent = new Intent(MainActivity.this, FetchAddressIntentServices.class);
+        intent.putExtra(Utils.RECEVIER, resultReceiver);
+        intent.putExtra(Utils.LOCATION_DATA_EXTRA, location);
+        startService(intent);
     }
 }

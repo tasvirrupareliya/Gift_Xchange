@@ -1,5 +1,6 @@
 package com.app.giftxchange.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -45,14 +46,14 @@ public class Utils {
             R.drawable.g7
     };
 
-    public static void showProgressDialog(Activity activity) {
+    public static void showProgressDialog(Activity activity, String title) {
         if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
         }
         progressDialog = new ProgressDialog(activity);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Please Wait..");
+        progressDialog.setMessage(title);
         if (!progressDialog.isShowing() && !activity.isFinishing()) {
             progressDialog.show();
         }
@@ -86,6 +87,12 @@ public class Utils {
 
     public static String getSharedData(Context context, String key, String defaultValue) {
         return getSharedPreferences(context).getString(key, defaultValue);
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public static void clearSession(){
+        sharedPreferences.edit().clear();
+        sharedPreferences.edit().apply();
     }
 
     public static void setTitleWithColor(ActionBar actionBar, String title, int color) {

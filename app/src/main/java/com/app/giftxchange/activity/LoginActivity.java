@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                 .whereEqualTo("Email", email);
 
         query.get().addOnCompleteListener(task -> {
-            showProgressDialog(this);
+            showProgressDialog(this, getString(R.string.please_wait));
             if (task.isSuccessful()) {
                 if (!task.getResult().isEmpty()) {
                     mAuth.sendPasswordResetEmail(email)
@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
             } else if (!isValidEmail(email)) {
                 setToast(this, getString(R.string.please_enter_valid_email));
             } else {
-                showProgressDialog(this);
+                showProgressDialog(this, getString(R.string.please_wait));
 
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -257,7 +257,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (!isValidEmail(email)) {
             setToast(this, getString(R.string.please_enter_valid_email));
         } else {
-            showProgressDialog(this);
+            showProgressDialog(this, getString(R.string.please_wait));
 
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

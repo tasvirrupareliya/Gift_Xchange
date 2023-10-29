@@ -52,8 +52,8 @@ public class ContactUsView extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a data object with the user's information
         Map<String, Object> userContactData = new HashMap<>();
-        userContactData.put(getString(R.string.fs_userName), userName);
-        userContactData.put(getString(R.string.fs_userEmail), userEmail);
+        userContactData.put(getString(R.string.fs_name), userName);
+        userContactData.put(getString(R.string.fs_email), userEmail);
         userContactData.put(getString(R.string.fs_userMessage), userMessage);
 
         // Add the user's contact information to Firestore

@@ -3,6 +3,7 @@ package com.app.giftxchange.fragment;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.hideProgressDialog;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 import static com.app.giftxchange.utils.Utils.showProgressDialog;
 
 import androidx.annotation.NonNull;
@@ -61,8 +62,6 @@ import java.util.Date;
 public class HomeFragment extends Fragment {
 
     FragmentHomeBinding binding;
-    ResultReceiver resultReceiver;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     public HomeFragment() {
     }
@@ -73,7 +72,6 @@ public class HomeFragment extends Fragment {
 
         setHasOptionsMenu(true);
         binding.viewPager.setAdapter(new MyFragmentStateAdapter(this));
-        resultReceiver = new AddressResultReceiver(new Handler());
 
         new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> {
@@ -87,30 +85,17 @@ public class HomeFragment extends Fragment {
         binding.btnAddlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-                } else {
-                    showDialog();
-                    getCurrentLocation();
-                }
+                showDialog();
             }
         });
-
         return binding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_logout) {
+        /*if (id == R.id.action_logout) {
             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             editor.clear();
             editor.apply();
@@ -118,7 +103,7 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(getContext(), LoginActivity.class));
             getActivity().finish();
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -210,7 +195,7 @@ public class HomeFragment extends Fragment {
                             }
                             String listStatus = "Active";
 
-                            String location = getSharedData(getContext(), "address", null);
+                            String location = getSharedData(getContext(), getString(R.string.addressforGiftCard), null);
                             Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, listStatus, "");
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -275,7 +260,7 @@ public class HomeFragment extends Fragment {
         return sdf.format(currentDate);
     }
 
-    private class AddressResultReceiver extends ResultReceiver {
+    /*private class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
         }
@@ -284,37 +269,43 @@ public class HomeFragment extends Fragment {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             super.onReceiveResult(resultCode, resultData);
             if (resultCode == Utils.SUCCESS_RESULT) {
-               /* address.setText(resultData.getString(Utils.ADDRESS));
+
+               *//* address.setText(resultData.getString(Utils.ADDRESS));
                 locaity.setText(resultData.getString(Utils.LOCAITY));
                 state.setText(resultData.getString(Utils.STATE));
                 district.setText(resultData.getString(Utils.DISTRICT));
                 country.setText(resultData.getString(Utils.COUNTRY));
-                postcode.setText(resultData.getString(Utils.POST_CODE));*/
+                postcode.setText(resultData.getString(Utils.POST_CODE));*//*
 
                 String city = resultData.getString(Utils.LOCAITY);
                 String street = resultData.getString(Utils.ADDRESS);
                 String state = resultData.getString(Utils.STATE);
                 String country = resultData.getString(Utils.COUNTRY);
-                String province_code = resultData.getString(Utils.POST_CODE);
+                String postalCode = resultData.getString(Utils.POST_CODE);
+
+                saveSharedData(getContext(), getString(R.string.fulladdress_street), street);
+                saveSharedData(getContext(), getString(R.string.fulladdress_city), city);
+                saveSharedData(getContext(), getString(R.string.fulladdress_state), state);
+                saveSharedData(getContext(), getString(R.string.fulladdress_country), country);
+                saveSharedData(getContext(), getString(R.string.fulladdress_postalcode_code), postalCode);
 
                 state = state.substring(0, 2);
                 country = country.substring(0, 2);
 
                 String address = city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
-                saveSharedData(getContext(), "address", address);
+                saveSharedData(getContext(), getString(R.string.addressforGiftCard), address);
 
                 //return city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
-                //Log.e("111", resultData.getString(Utils.ADDRESS) + "|" + resultData.getString(Utils.LOCAITY) + "|" + resultData.getString(Utils.STATE) + "|" + resultData.getString(Utils.DISTRICT) + "|" + resultData.getString(Utils.COUNTRY) + "|" + resultData.getString(Utils.POST_CODE));
             } else {
                 Toast.makeText(getContext(), resultData.getString(Utils.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
             }
-            hideProgressDialog(getActivity());
+            //hideProgressDialog(getActivity());
         }
     }
 
 
     private void getCurrentLocation() {
-        showProgressDialog(getActivity());
+        //showProgressDialog(getActivity(), "Retrieve Current Location");
 
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
@@ -340,11 +331,10 @@ public class HomeFragment extends Fragment {
                         LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext())
                                 .removeLocationUpdates(this);
                         if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            //isLocationObtained = true;
                             int latestlocIndex = locationResult.getLocations().size() - 1;
                             double lati = locationResult.getLocations().get(latestlocIndex).getLatitude();
                             double longi = locationResult.getLocations().get(latestlocIndex).getLongitude();
-                            //textLatLong.setText(String.format("Latitude : %s\n Longitude: %s", lati, longi));
-                            //setToast(getContext(), String.valueOf(lati + longi));
 
                             Location location = new Location("providerNA");
                             location.setLongitude(longi);
@@ -352,7 +342,7 @@ public class HomeFragment extends Fragment {
                             fetchaddressfromlocation(location);
 
                         } else {
-                            hideProgressDialog(getActivity());
+                            //hideProgressDialog(getActivity());
                         }
                     }
                 }, Looper.getMainLooper());
@@ -364,5 +354,5 @@ public class HomeFragment extends Fragment {
         intent.putExtra(Utils.RECEVIER, resultReceiver);
         intent.putExtra(Utils.LOCATION_DATA_EXTRA, location);
         getContext().startService(intent);
-    }
+    }*/
 }

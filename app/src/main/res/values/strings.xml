@@ -47,27 +47,36 @@
     <string name="key_email">email</string>
     <string name="key_age">age</string>
     <string name="key_password">password</string>
+    <string name="addressforGiftCard">addressforGiftCard</string>
+    <string name="fulladdress_city">fulladdress_city</string>
+    <string name="fulladdress_street">fulladdress_street</string>
+    <string name="fulladdress_state">fulladdress_state</string>
+    <string name="fulladdress_country">fulladdress_country</string>
+    <string name="fulladdress_postalcode_code">fulladdress_postalcode_code</string>
 
     <!--Firebase object Key-->
     <string name="fs_userid">userID</string>
     <string name="fs_name">userName</string>
     <string name="fs_email">userEmail</string>
     <string name="fs_age">userAge</string>
+    <string name="fs_city">city</string>
+    <string name="fs_postalCode">postalCode</string>
+    <string name="fs_province">province</string>
+    <string name="fs_streetName">streetName</string>
+    <string name="fs_unitNo">unitNo</string>
     <string name="fs_password">userPassword</string>
     <string name="fs_listname">listTitle</string>
     <string name="fs_listprice">listPrice</string>
     <string name="fs_listType">listType</string>
     <string name="fs_listDate">listDate</string>
-    <string name="fs_userEmail">listPrice</string>
-    <string name="fs_userMessage">listType</string>
-    <string name="fs_userName">listDate</string>
+    <string name="fs_userMessage">userMessage</string>
 
     <string name="update_profile">Update Profile</string>
     <string name="postal_code">Postal Code</string>
     <string name="province">Province</string>
     <string name="city">City</string>
     <string name="street_name">Street Name</string>
-    <string name="apt_no">Apt. No</string>
+    <string name="apt_no">Unit No</string>
     <string name="user_age">User Age</string>
     <string name="user_email">Email</string>
     <string name="user_name">User Name</string>
@@ -76,6 +85,7 @@
     <string name="c_registeruser">RegisterUser</string>
     <string name="c_giftcardlisting">GiftCardListing</string>
     <string name="c_contactus">ContactUs</string>
+    <string name="c_address">Address</string>
 
     <string name="done">Done</string>
     <string name="search">Search</string>
@@ -95,4 +105,5 @@
     <string name="contactnumber">(226)-223-1122</string>
     <string name="contact_address">22 Duke Street West, \n Kitchener, ON, CA - N2H 3A0</string>
     <string name="get_in_touch">Get In Touch</string>
+    <string name="please_wait">Please Wait...</string>
 </resources>
