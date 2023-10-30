@@ -14,8 +14,11 @@ import android.view.View;
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
 import com.app.giftxchange.model.Listing;
+import com.app.giftxchange.model.UserModel;
+import com.app.giftxchange.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,6 +33,7 @@ public class MainItemClickViewActivity extends AppCompatActivity {
 
     ActivityMainItemClickViewBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,29 +42,36 @@ public class MainItemClickViewActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-        String price = intent.getStringExtra("price");
-        String location = intent.getStringExtra("location");
-        String date = intent.getStringExtra("date");
-        String userEmail = intent.getStringExtra("userEmail");
-        String userName = intent.getStringExtra("userName");
-        String userID = intent.getStringExtra("userID");
-
-        binding.tvItemPrice.setText(price);
-        binding.tvItemTitle.setText(title);
-        binding.itemLocation.setText(location);
-        binding.itemUsername.setText(userName);
-        binding.tvItemdate.setText(formatDate(date));
+        binding.tvItemPrice.setText(getSharedData(this, getString(R.string.ll_price), null));
+        binding.tvItemTitle.setText(getSharedData(this, getString(R.string.ll_title), null));
+        binding.itemLocation.setText(getSharedData(this, getString(R.string.ll_location), null));
+        binding.itemUsername.setText(getSharedData(this, getString(R.string.ll_userName), null));
+        binding.tvItemdate.setText(formatDate(getSharedData(this, getString(R.string.ll_date), null)));
         binding.itemImageview.setImageResource(getRandomImageResource());
-        binding.itemUseremail.setText(formatEmail(userEmail));
+        binding.itemUseremail.setText(formatEmail(getSharedData(this, getString(R.string.ll_userEmail), null)));
 
         String currentuserID = getSharedData(MainItemClickViewActivity.this, getString(R.string.key_userid), null);
+        String otheruserID = getSharedData(MainItemClickViewActivity.this, getString(R.string.ll_userID), null);
 
-        if (currentuserID.equals(userID)) {
+        if (currentuserID.equals(getSharedData(this, getString(R.string.ll_userID), null))) {
             binding.btnChat.setVisibility(View.GONE);
             binding.btnPayment.setVisibility(View.GONE);
         }
+
+        binding.btnChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainItemClickViewActivity.this, FirebaseActivity.class);
+
+                String message = "Hello, Second Activity!";
+                intent.putExtra("msg", message);
+                intent.putExtra("status", "User");
+                intent.putExtra("userId", currentuserID);
+                intent.putExtra("clientId", otheruserID);
+                startActivity(intent);
+                //startActivity(new Intent(MainItemClickViewActivity.this, ChatActivity.class));
+            }
+        });
     }
 
     private String formatEmail(String email) {

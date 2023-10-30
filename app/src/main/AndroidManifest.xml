@@ -19,10 +19,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ContactUsView"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".fragment.ProfileFragment"
+            android:name=".activity.FirebaseActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false"
+            android:parentActivityName=".activity.MainItemClickViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ContactUsView"
+            android:exported="false"
+            android:parentActivityName=".fragment.ProfileFragment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainItemClickViewActivity"
             android:exported="false"

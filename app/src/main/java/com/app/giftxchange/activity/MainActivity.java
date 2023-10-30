@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            getCurrentLocation();
             setuserData_SharedPreference();
 
             handler.postDelayed(this, 100);

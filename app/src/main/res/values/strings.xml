@@ -53,6 +53,13 @@
     <string name="fulladdress_state">fulladdress_state</string>
     <string name="fulladdress_country">fulladdress_country</string>
     <string name="fulladdress_postalcode_code">fulladdress_postalcode_code</string>
+    <string name="ll_title">ll_title</string>
+    <string name="ll_price">ll_price</string>
+    <string name="ll_location">ll_location</string>
+    <string name="ll_date">ll_date</string>
+    <string name="ll_userEmail">ll_userEmail</string>
+    <string name="ll_userName">ll_userName</string>
+    <string name="ll_userID">ll_userID</string>
 
     <!--Firebase object Key-->
     <string name="fs_userid">userID</string>

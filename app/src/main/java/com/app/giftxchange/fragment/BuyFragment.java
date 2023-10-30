@@ -2,6 +2,8 @@ package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
 import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.saveSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +23,19 @@ import android.widget.Toast;
 
 import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.MainActivity;
 import com.app.giftxchange.activity.MainItemClickViewActivity;
 import com.app.giftxchange.activity.MyListItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.databinding.FragmentBuyFragmentBinding;
 import com.app.giftxchange.model.Listing;
+import com.app.giftxchange.model.UserModel;
+import com.app.giftxchange.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,6 +46,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
     FragmentBuyFragmentBinding binding;
     public static ArrayList<Listing> list = new ArrayList<>();
     giftcardAdapter adapter;
+    UserModel userModel;
 
     public BuyFragment() {
     }
@@ -63,7 +73,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
         });
 
         binding.recyclerviewSell.setAdapter(adapter);
-        binding.recyclerviewSell.setLayoutManager(new GridLayoutManager(getContext(),2));
+        binding.recyclerviewSell.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter.notifyDataSetChanged();
 
         return binding.getRoot();
@@ -92,16 +102,15 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
                             String userEmail = document.getString("userEmail");
                             String userName = document.getString("userName");
 
-                            Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
+                            saveSharedData(getActivity(), getString(R.string.ll_title), list.getListTitle());
+                            saveSharedData(getActivity(), getString(R.string.ll_price), list.getListPrice());
+                            saveSharedData(getActivity(), getString(R.string.ll_location), list.getListLocation());
+                            saveSharedData(getActivity(), getString(R.string.ll_date), list.getListDate());
+                            saveSharedData(getActivity(), getString(R.string.ll_userEmail), userEmail);
+                            saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
+                            saveSharedData(getActivity(), getString(R.string.ll_userID), userID);
 
-                            intent.putExtra("title", list.getListTitle());
-                            intent.putExtra("price", list.getListPrice());
-                            intent.putExtra("location", list.getListLocation());
-                            intent.putExtra("date", list.getListDate());
-                            intent.putExtra("userEmail", userEmail);
-                            intent.putExtra("userName", userName);
-                            intent.putExtra("userID", userID);
-
+                            Intent intent = new Intent(getContext(), MainItemClickViewActivity.class);
                             startActivity(intent);
 
                             binding.swipeRefreshLayout.setRefreshing(false);

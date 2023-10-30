@@ -1,6 +1,7 @@
 package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataExchangeFromFirestore;
+import static com.app.giftxchange.utils.Utils.saveSharedData;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,7 +63,7 @@ public class ExchangeFragment extends Fragment implements ItemClickListenee {
         });
 
         binding.recyclerviewExchage.setAdapter(adapter);
-        binding.recyclerviewExchage.setLayoutManager(new GridLayoutManager(getContext(),2));
+        binding.recyclerviewExchage.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter.notifyDataSetChanged();
 
         return binding.getRoot();
@@ -92,16 +93,15 @@ public class ExchangeFragment extends Fragment implements ItemClickListenee {
                             String userEmail = document.getString("userEmail");
                             String userName = document.getString("userName");
 
+                            saveSharedData(getActivity(), getString(R.string.ll_title), list.getListTitle());
+                            saveSharedData(getActivity(), getString(R.string.ll_price), list.getListPrice());
+                            saveSharedData(getActivity(), getString(R.string.ll_location), list.getListLocation());
+                            saveSharedData(getActivity(), getString(R.string.ll_date), list.getListDate());
+                            saveSharedData(getActivity(), getString(R.string.ll_userEmail), userEmail);
+                            saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
+                            saveSharedData(getActivity(), getString(R.string.ll_userID), userID);
+
                             Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
-
-                            intent.putExtra("title", list.getListTitle());
-                            intent.putExtra("price", list.getListPrice());
-                            intent.putExtra("location", list.getListLocation());
-                            intent.putExtra("date", list.getListDate());
-                            intent.putExtra("userEmail", userEmail);
-                            intent.putExtra("userName", userName);
-                            intent.putExtra("userID", userID);
-
                             startActivity(intent);
 
                             binding.swipeRefreshLayout.setRefreshing(false);
