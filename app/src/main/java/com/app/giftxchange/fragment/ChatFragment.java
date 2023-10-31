@@ -2,12 +2,10 @@ package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.activity.FirebaseMessageListAdapter;
-import com.app.giftxchange.activity.MainItemClickViewActivity;
-import com.app.giftxchange.activity.MessageModel;
+import com.app.giftxchange.adapter.FirebaseMessageListAdapter;
+import com.app.giftxchange.model.MessageModel;
 import com.app.giftxchange.databinding.FragmentChatBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

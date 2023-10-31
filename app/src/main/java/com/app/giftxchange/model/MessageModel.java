@@ -1,4 +1,4 @@
-package com.app.giftxchange.activity;
+package com.app.giftxchange.model;
 
 public class MessageModel {
     String userId ;

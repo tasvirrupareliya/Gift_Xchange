@@ -1,41 +1,29 @@
 package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
-import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
-import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
-import com.app.giftxchange.activity.MainActivity;
 import com.app.giftxchange.activity.MainItemClickViewActivity;
-import com.app.giftxchange.activity.MyListItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.databinding.FragmentBuyFragmentBinding;
 import com.app.giftxchange.model.Listing;
-import com.app.giftxchange.model.UserModel;
-import com.app.giftxchange.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -46,7 +34,6 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
     FragmentBuyFragmentBinding binding;
     public static ArrayList<Listing> list = new ArrayList<>();
     giftcardAdapter adapter;
-    UserModel userModel;
 
     public BuyFragment() {
     }

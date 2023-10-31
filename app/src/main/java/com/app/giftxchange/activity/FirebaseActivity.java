@@ -3,39 +3,27 @@ package com.app.giftxchange.activity;
 import static com.app.giftxchange.utils.FireStoreHelper.fetchUsernameFromFire;
 import static com.app.giftxchange.utils.Utils.setToast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import com.app.giftxchange.R;
+import com.app.giftxchange.adapter.FirebaseListAdapter;
 import com.app.giftxchange.databinding.ActivityFirebaseBinding;
-import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
-import com.app.giftxchange.utils.Utils;
+import com.app.giftxchange.model.MessageEntry;
+import com.app.giftxchange.model.MessageModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class FirebaseActivity extends AppCompatActivity {

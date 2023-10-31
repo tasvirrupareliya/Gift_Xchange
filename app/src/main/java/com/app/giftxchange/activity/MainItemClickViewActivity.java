@@ -2,7 +2,6 @@ package com.app.giftxchange.activity;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.imageResources;
-import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,15 +12,6 @@ import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
-import com.app.giftxchange.model.Listing;
-import com.app.giftxchange.model.UserModel;
-import com.app.giftxchange.utils.Utils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.app.giftxchange.activity;
+package com.app.giftxchange.adapter;
 
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.model.MessageEntry;
 
 import java.time.Instant;
 import java.time.ZoneId;

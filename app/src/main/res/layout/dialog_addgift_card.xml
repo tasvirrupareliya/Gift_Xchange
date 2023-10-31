@@ -20,10 +20,4 @@
         android:hint="@string/price"
         android:inputType="number" />
 
-    <Spinner
-        android:id="@+id/spinner_listType"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
-
 </LinearLayout>
