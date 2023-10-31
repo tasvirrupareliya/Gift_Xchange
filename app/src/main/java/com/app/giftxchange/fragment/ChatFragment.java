@@ -67,14 +67,6 @@ public class ChatFragment extends Fragment {
                         if (Objects.equals(parts[1], userId)) {
                             clientList.add(new MessageModel(parts[0], parts[1], "Client"));
                         }
-
-/*
-                        // Iterate through the sub-keys (key1, key2) of each MainKey
-                        for (DataSnapshot subKeyChild : mainKeyChild.getChildren()) {
-                            String subKey = subKeyChild.getKey();
-                            System.out.println("SubKey: " + subKey);
-                            //Log.d("TAG", "onDataChange: ............................2............."+subKey);
-                        }*/
                     }
                     Log.d("TAG", "onDataChange: ............................2............." + clientList.size());
                     messageListAdapter.notifyDataSetChanged();

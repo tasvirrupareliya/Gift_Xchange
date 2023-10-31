@@ -63,8 +63,6 @@ public class MainItemClickViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainItemClickViewActivity.this, FirebaseActivity.class);
 
-                String message = "Hello, Second Activity!";
-                intent.putExtra("msg", message);
                 intent.putExtra("status", "User");
                 intent.putExtra("userId", currentuserID);
                 intent.putExtra("clientId", otheruserID);

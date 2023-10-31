@@ -3,15 +3,21 @@ package com.app.giftxchange.utils;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 
 import android.content.Context;
+import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.model.Listing;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -139,5 +145,47 @@ public class FireStoreHelper {
                         // You can log an error message or show a Toast message here
                     }
                 });
+    }
+
+    static String usernameget;
+
+    public static void fetchUsernameFromFire(String userID, TextView userNameText, Context context) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference usersCollection = db.collection(context.getString(R.string.c_registeruser)); // Replace "users" with your Firestore collection name
+
+        Query query = usersCollection.whereEqualTo("userID", userID); // Replace "userID" with the actual field name in your Firestore
+        String fetchedUsername;
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        // Assuming there's only one user with the provided userID
+                        DocumentSnapshot userDocument = querySnapshot.getDocuments().get(0);
+                        String username = userDocument.getString("userName");
+
+                        if (username != null) {
+                            // You've got the username for the given userID
+                            // Use the username as needed
+                            String fetchedUsername = username;
+                            usernameget = fetchedUsername;
+                            userNameText.setText(fetchedUsername);
+                        } else {
+                            // Handle the case where the username is not found
+                        }
+                    } else {
+                        // Handle the case where no user document matches the provided userID
+                    }
+                } else {
+                    // Handle errors when querying Firestore
+                }
+            }
+        });
+    }
+
+    public static String username() {
+        return usernameget;
     }
 }

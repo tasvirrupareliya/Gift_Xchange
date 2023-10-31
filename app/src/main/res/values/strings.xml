@@ -113,4 +113,5 @@
     <string name="contact_address">22 Duke Street West, \n Kitchener, ON, CA - N2H 3A0</string>
     <string name="get_in_touch">Get In Touch</string>
     <string name="please_wait">Please Wait...</string>
+    <string name="write_message_here">Write message here</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.app.giftxchange.activity;
 
+import static com.app.giftxchange.utils.FireStoreHelper.fetchUsernameFromFire;
+import static com.app.giftxchange.utils.Utils.setToast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -12,8 +15,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.databinding.ActivityFirebaseBinding;
+import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
+import com.app.giftxchange.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,36 +39,33 @@ import java.util.List;
 import java.util.Map;
 
 public class FirebaseActivity extends AppCompatActivity {
-    EditText txtinput;
-    AppCompatButton send;
-    RecyclerView rvMessage;
-
-    FirebaseListAdapter firebaseListAdapter;
-
     String userId, clientId;
     String msg, status;
+    FirebaseListAdapter firebaseListAdapter;
     private ArrayList<MessageEntry> messageList;
     private ArrayList<MessageModel> clientList;
+
+    ActivityFirebaseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_firebase);
+        binding = ActivityFirebaseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         getDataFromIntent();
 
-        txtinput = findViewById(R.id.textinput);
-        send = findViewById(R.id.send);
-        rvMessage = findViewById(R.id.rvMessage);
-        txtinput.setText(msg);
-        //   rvMessage.setLayoutManager(new LinearLayoutManager(FirebaseActivity.this));
-
+        binding.textinput.setText(msg);
 
         messageList = new ArrayList<>();
         clientList = new ArrayList<>();
         firebaseListAdapter = new FirebaseListAdapter(messageList, FirebaseActivity.this, userId, clientId, status);
-        rvMessage.setAdapter(firebaseListAdapter);
-        rvMessage.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvMessage.setAdapter(firebaseListAdapter);
+        binding.rvMessage.setLayoutManager(new LinearLayoutManager(this));
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String path;
@@ -70,6 +74,13 @@ public class FirebaseActivity extends AppCompatActivity {
         } else {
             path = String.valueOf(userId + "|" + clientId);
         }
+
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         Log.d("TAG", "onCreate:............................. " + path);
         DatabaseReference myRef = database.getReference("message").child(path);
@@ -100,7 +111,6 @@ public class FirebaseActivity extends AppCompatActivity {
                     });
                     firebaseListAdapter.notifyDataSetChanged();
                     scrollToBottom();
-                    txtinput.setText("");
                 }
             }
 
@@ -112,55 +122,56 @@ public class FirebaseActivity extends AppCompatActivity {
         };
         myRef.addValueEventListener(postListener);
 
-        send.setOnClickListener(new View.OnClickListener() {
+        binding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("message");
-                Long tsLong = System.currentTimeMillis() / 1000;
-                String ts;
-                String path;
-
-                if (status.equals("User")) {
-                    Log.d("TAG", "onClick: .........................." + status);
-                    ts = userId + "|" + tsLong.toString();
-                    path = String.valueOf(userId + "|" + clientId);
-                } else if (status.equals("Client")) {
-                    Log.d("TAG", "onClick: .........................." + status);
-                    Log.d("TAG", "onClick: .........................." + clientId);
-
-                    ts = clientId + "|" + tsLong.toString();
-                    Log.d("TAG", "onClick: .........................." + ts);
-                    path = String.valueOf(userId + "|" + clientId);
+                if (binding.textinput.getText().toString().equals("")) {
+                    setToast(FirebaseActivity.this, "Please Write Message!");
                 } else {
-                    Log.d("TAG", "onClick: .........................." + status);
-                    ts = userId + "|" + tsLong.toString();
-                    path = String.valueOf(userId + "|" + clientId);
-                }
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("message");
+                    Long tsLong = System.currentTimeMillis() / 1000;
+                    String ts;
+                    String path;
 
-                myRef.child(path).child(ts).setValue(txtinput.getText().toString());
+                    if (status.equals("User")) {
+                        Log.d("TAG", "onClick: .........................." + status);
+                        ts = userId + "|" + tsLong.toString();
+                        path = String.valueOf(userId + "|" + clientId);
+                    } else if (status.equals("Client")) {
+                        Log.d("TAG", "onClick: .........................." + status);
+                        Log.d("TAG", "onClick: .........................." + clientId);
+
+                        ts = clientId + "|" + tsLong.toString();
+                        Log.d("TAG", "onClick: .........................." + ts);
+                        path = String.valueOf(userId + "|" + clientId);
+                    } else {
+                        Log.d("TAG", "onClick: .........................." + status);
+                        ts = userId + "|" + tsLong.toString();
+                        path = String.valueOf(userId + "|" + clientId);
+                    }
+
+                    myRef.child(path).child(ts).setValue(binding.textinput.getText().toString());
+                }
             }
         });
-
-
     }
 
     private void getDataFromIntent() {
 
         Intent intent = getIntent();
         if (intent != null) {
-
-            msg = intent.getStringExtra("msg");
             status = intent.getStringExtra("status");
             userId = intent.getStringExtra("userId");
             clientId = intent.getStringExtra("clientId");
+            fetchUsernameFromFire(clientId, binding.otherUsername, this);
             Log.d("TAG", "getDataFromIntent:............................. " + status + "..........." + userId + "............" + clientId);
 
         }
     }
 
     private void scrollToBottom() {
-        rvMessage.scrollToPosition(firebaseListAdapter.getItemCount() - 1);
+        binding.rvMessage.scrollToPosition(firebaseListAdapter.getItemCount() - 1);
     }
 }
