@@ -1,6 +1,8 @@
 package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.hideProgressDialog;
+import static com.app.giftxchange.utils.Utils.showProgressDialog;
 
 import android.os.Bundle;
 
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.ChatActivity;
 import com.app.giftxchange.adapter.FirebaseMessageListAdapter;
 import com.app.giftxchange.model.MessageModel;
 import com.app.giftxchange.databinding.FragmentChatBinding;
@@ -38,6 +41,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(getLayoutInflater());
+
         // Inflate the layout for this fragment
         getDataFromIntent();
 
@@ -46,6 +50,7 @@ public class ChatFragment extends Fragment {
         binding.rvMsgList.setAdapter(messageListAdapter);
         binding.rvMsgList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        showProgressDialog(getActivity(), getString(R.string.please_wait));
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("message");
 
@@ -59,9 +64,11 @@ public class ChatFragment extends Fragment {
                         System.out.println("MainKey: " + mainKey);
                         String[] parts = mainKey.split("\\|");
                         if (Objects.equals(parts[0], userId)) {
+                            hideProgressDialog(getActivity());
                             clientList.add(new MessageModel(parts[0], parts[1], "User"));
                         }
                         if (Objects.equals(parts[1], userId)) {
+                            hideProgressDialog(getActivity());
                             clientList.add(new MessageModel(parts[0], parts[1], "Client"));
                         }
                     }
@@ -73,6 +80,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle errors
+                hideProgressDialog(getActivity());
             }
         });
 

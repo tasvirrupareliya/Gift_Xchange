@@ -87,7 +87,7 @@
     <string name="city">City</string>
     <string name="street_name">Street Name</string>
     <string name="apt_no">Unit No</string>
-    <string name="user_age">User Age</string>
+    <string name="user_age">Age</string>
     <string name="user_email">Email</string>
     <string name="user_name">User Name</string>
 

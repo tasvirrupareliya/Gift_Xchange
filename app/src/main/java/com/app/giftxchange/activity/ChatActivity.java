@@ -1,7 +1,9 @@
 package com.app.giftxchange.activity;
 
 import static com.app.giftxchange.utils.FireStoreHelper.fetchUsernameFromFire;
+import static com.app.giftxchange.utils.Utils.hideProgressDialog;
 import static com.app.giftxchange.utils.Utils.setToast;
+import static com.app.giftxchange.utils.Utils.showProgressDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.app.giftxchange.R;
 import com.app.giftxchange.adapter.MessageListAdapter;
 import com.app.giftxchange.databinding.ActivityChatBinding;
 import com.app.giftxchange.model.MessageEntry;
@@ -47,8 +50,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         getDataFromIntent();
-
         binding.textinput.setText(msg);
+
+        showProgressDialog(this, getString(R.string.please_wait));
 
         messageList = new ArrayList<>();
         clientList = new ArrayList<>();
@@ -74,7 +78,6 @@ public class ChatActivity extends AppCompatActivity {
         Log.d("TAG", "onCreate:............................. " + path);
         DatabaseReference myRef = database.getReference("message").child(path);
 
-
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -89,7 +92,6 @@ public class ChatActivity extends AppCompatActivity {
 
                         String[] parts = key.split("\\|");
 
-
                         messageList.add(new MessageEntry(parts[0], message, Long.parseLong(parts[1])));
                     }
                     Collections.sort(messageList, new Comparator<MessageEntry>() {
@@ -100,11 +102,13 @@ public class ChatActivity extends AppCompatActivity {
                     });
                     firebaseListAdapter.notifyDataSetChanged();
                     scrollToBottom();
+                    hideProgressDialog(ChatActivity.this);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                hideProgressDialog(ChatActivity.this);
                 // Getting Post failed, log a message
                 Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
             }
