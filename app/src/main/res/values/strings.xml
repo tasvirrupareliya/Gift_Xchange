@@ -77,6 +77,9 @@
     <string name="fs_listType">listType</string>
     <string name="fs_listDate">listDate</string>
     <string name="fs_userMessage">userMessage</string>
+    <string name="fs_cardCVV">cardCVV</string>
+    <string name="fs_cardExpiryDate">cardExpiryDate</string>
+    <string name="fs_cardNumber">cardNumber</string>
 
     <string name="update_profile">Update Profile</string>
     <string name="postal_code">Postal Code</string>
@@ -114,4 +117,7 @@
     <string name="get_in_touch">Get In Touch</string>
     <string name="please_wait">Please Wait...</string>
     <string name="write_message_here">Write message here</string>
+    <string name="card_number">Card Number</string>
+    <string name="card_expiry">Card Expiry</string>
+    <string name="security_code">Security Code</string>
 </resources>

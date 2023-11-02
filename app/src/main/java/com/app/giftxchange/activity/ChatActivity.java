@@ -11,8 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.app.giftxchange.adapter.FirebaseListAdapter;
-import com.app.giftxchange.databinding.ActivityFirebaseBinding;
+import com.app.giftxchange.adapter.MessageListAdapter;
+import com.app.giftxchange.databinding.ActivityChatBinding;
 import com.app.giftxchange.model.MessageEntry;
 import com.app.giftxchange.model.MessageModel;
 import com.google.firebase.database.DataSnapshot;
@@ -26,23 +26,24 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 
-public class FirebaseActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
     String userId, clientId;
     String msg, status;
-    FirebaseListAdapter firebaseListAdapter;
+    MessageListAdapter firebaseListAdapter;
     private ArrayList<MessageEntry> messageList;
     private ArrayList<MessageModel> clientList;
 
-    ActivityFirebaseBinding binding;
+    ActivityChatBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityFirebaseBinding.inflate(getLayoutInflater());
+        binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
+            getSupportActionBar().setTitle("Chat");
         }
 
         getDataFromIntent();
@@ -51,7 +52,7 @@ public class FirebaseActivity extends AppCompatActivity {
 
         messageList = new ArrayList<>();
         clientList = new ArrayList<>();
-        firebaseListAdapter = new FirebaseListAdapter(messageList, FirebaseActivity.this, userId, clientId, status);
+        firebaseListAdapter = new MessageListAdapter(messageList, ChatActivity.this, userId, clientId, status);
         binding.rvMessage.setAdapter(firebaseListAdapter);
         binding.rvMessage.setLayoutManager(new LinearLayoutManager(this));
 
@@ -114,8 +115,8 @@ public class FirebaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (binding.textinput.getText().toString().equals("")) {
-                    setToast(FirebaseActivity.this, "Please Write Message!");
+                if (binding.textinput.getText().toString().equals("") || binding.textinput.getText().toString().length() == 0) {
+                    setToast(ChatActivity.this, "Please Write Message!");
                 } else {
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference("message");
@@ -141,6 +142,7 @@ public class FirebaseActivity extends AppCompatActivity {
                     }
 
                     myRef.child(path).child(ts).setValue(binding.textinput.getText().toString());
+                    binding.textinput.setText("");
                 }
             }
         });

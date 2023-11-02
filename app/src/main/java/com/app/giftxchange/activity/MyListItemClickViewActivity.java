@@ -62,6 +62,9 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         String date = intent.getStringExtra("date");
         String listID = intent.getStringExtra("listID");
         String listType = intent.getStringExtra("listType");
+        String cardNumber = intent.getStringExtra(getString(R.string.fs_cardNumber));
+        String cardCVV = intent.getStringExtra(getString(R.string.fs_cardCVV));
+        String cardExpiry = intent.getStringExtra(getString(R.string.fs_cardExpiryDate));
 
         String username = getSharedData(MyListItemClickViewActivity.this, getString(R.string.key_name), null);
         String userEmail = getSharedData(MyListItemClickViewActivity.this, getString(R.string.key_email), null);
@@ -84,12 +87,12 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditDialog(listID, price, title, listType);
+                showEditDialog(listID, price, title, listType, cardNumber, cardCVV, cardExpiry);
             }
         });
     }
 
-    private void showEditDialog(String listID, String price, String title, String listType) {
+    private void showEditDialog(String listID, String price, String title, String listType, String cardNumber, String cardCVV, String cardExpiry) {
 
         DialogAddgiftCardBinding dialogbinding = DialogAddgiftCardBinding.inflate(LayoutInflater.from(MyListItemClickViewActivity.this));
         AlertDialog.Builder builder = new AlertDialog.Builder(MyListItemClickViewActivity.this);
@@ -99,8 +102,11 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         dialogbinding.listprice.setText(price);
         dialogbinding.cardName.setText(title);
         dialogbinding.spinnerListType.setVisibility(View.VISIBLE);
+        dialogbinding.listcardCVV.setText(cardCVV);
+        dialogbinding.listgiftcardNumber.setText(cardNumber);
+        dialogbinding.listexpirydate.setText(cardExpiry);
 
-        String[] listTypes = {"Buy", "Exchange"};
+        String[] listTypes = {getString(R.string.buy), getString(R.string.exchange)};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -124,7 +130,7 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
                 .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        editGiftCardFirebase(listID, dialogbinding.listprice.getText().toString(), dialogbinding.cardName.getText().toString(), dialogbinding.spinnerListType.getSelectedItem().toString());
+                        editGiftCardFirebase(listID, dialogbinding.listprice.getText().toString(), dialogbinding.cardName.getText().toString(), dialogbinding.spinnerListType.getSelectedItem().toString(), dialogbinding.listgiftcardNumber.getText().toString(), dialogbinding.listcardCVV.getText().toString(), dialogbinding.listexpirydate.getText().toString());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -138,7 +144,7 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void editGiftCardFirebase(String listID, String price, String title, String listType) {
+    private void editGiftCardFirebase(String listID, String price, String title, String listType, String cardnumber, String cardCVV, String expiryDate) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (listID != null) {
@@ -147,6 +153,9 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
             updatedData.put(getString(R.string.fs_listprice), price);
             updatedData.put(getString(R.string.fs_listType), listType);
             updatedData.put(getString(R.string.fs_listDate), getCurrentDate());
+            updatedData.put(getString(R.string.fs_cardNumber), cardnumber);
+            updatedData.put(getString(R.string.fs_cardCVV), cardCVV);
+            updatedData.put(getString(R.string.fs_cardExpiryDate), expiryDate);
 
             db.collection(getString(R.string.c_giftcardlisting))
                     .document(listID)

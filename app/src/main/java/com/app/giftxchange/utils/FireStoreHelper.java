@@ -3,11 +3,13 @@ package com.app.giftxchange.utils;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.MainItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.model.Listing;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,10 +46,13 @@ public class FireStoreHelper {
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
                             String listID = document.getString("listID");
+                            String cardNumber = document.getString("cardNumber");
+                            String cardCVV = document.getString("cardCVV");
+                            String cardExpiry = document.getString("cardExpiryDate");
 
                             if (type.equals(tabType)) {
                                 String formattedPrice = "$" + cardPrice;
-                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
+                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, cardNumber, cardExpiry, cardCVV, listStatus, listID);
                                 list.add(newItem);
                             }
                             swipeRefreshLayout.setRefreshing(false);
@@ -84,10 +89,13 @@ public class FireStoreHelper {
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
                             String listID = document.getString("listID");
+                            String cardNumber = document.getString("cardNumber");
+                            String cardCVV = document.getString("cardCVV");
+                            String cardExpiry = document.getString("cardExpiryDate");
 
                             if (type.equals(tabType)) {
                                 String formattedPrice = "$" + cardPrice;
-                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
+                                Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, cardNumber, cardExpiry, cardCVV, listStatus, listID);
                                 list.add(newItem);
                             }
                             swipeRefreshLayout.setRefreshing(false);
@@ -127,9 +135,12 @@ public class FireStoreHelper {
                             String tabType = document.getString("listType");
                             String listStatus = document.getString("listStatus");
                             String listID = document.getString("listID");
+                            String cardNumber = document.getString("cardNumber");
+                            String cardCVV = document.getString("cardCVV");
+                            String cardExpiry = document.getString("cardExpiryDate");
 
                             String formattedPrice = "$" + cardPrice;
-                            Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, listStatus, listID);
+                            Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, cardNumber, cardExpiry, cardCVV, listStatus, listID);
                             list.add(newItem);
                             swipeRefreshLayout.setRefreshing(false);
                         }
@@ -147,7 +158,6 @@ public class FireStoreHelper {
                 });
     }
 
-    static String usernameget;
 
     public static void fetchUsernameFromFire(String userID, TextView userNameText, Context context) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -170,7 +180,6 @@ public class FireStoreHelper {
                             // You've got the username for the given userID
                             // Use the username as needed
                             String fetchedUsername = username;
-                            usernameget = fetchedUsername;
                             userNameText.setText(fetchedUsername);
                         } else {
                             // Handle the case where the username is not found
@@ -183,9 +192,5 @@ public class FireStoreHelper {
                 }
             }
         });
-    }
-
-    public static String username() {
-        return usernameget;
     }
 }

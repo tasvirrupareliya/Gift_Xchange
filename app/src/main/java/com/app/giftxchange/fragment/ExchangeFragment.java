@@ -82,7 +82,7 @@ public class ExchangeFragment extends Fragment implements ItemClickListenee {
     private void getIDfromItemList(Listing list) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("RegisterUser")
+        db.collection(getString(R.string.c_registeruser))
                 .whereEqualTo("userID", list.getUserID())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

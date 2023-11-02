@@ -1,23 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/_5sdp">
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/card_name"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:hint="@string/card_name" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/border"
+        android:hint="@string/card_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="@dimen/_18sdp"
+        android:textSize="@dimen/_12ssp" />
 
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/listprice"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/border"
         android:hint="@string/price"
-        android:inputType="number" />
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="@dimen/_18sdp"
+        android:textSize="@dimen/_12ssp" />
+
+<!--    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Note : "
+        android:layout_margin="@dimen/_10sdp"
+        />-->
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/listgiftcardNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/border"
+        android:hint="@string/card_number"
+        android:inputType="number"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:padding="@dimen/_18sdp"
+        android:textSize="@dimen/_12ssp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/listexpirydate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_weight="5"
+            android:background="@drawable/border"
+            android:hint="@string/card_expiry"
+            android:inputType="date"
+            android:maxLines="1"
+            android:padding="@dimen/_18sdp"
+            android:textSize="@dimen/_12ssp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/listcardCVV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_weight="5"
+            android:background="@drawable/border"
+            android:hint="@string/security_code"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:padding="@dimen/_18sdp"
+            android:textSize="@dimen/_12ssp" />
+
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spinner_listType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:paddingStart="@dimen/_5sdp"
+        android:paddingTop="@dimen/_18sdp"
+        android:paddingEnd="@dimen/_18sdp"
+        android:paddingBottom="@dimen/_18sdp"
+        android:visibility="gone" />
 
 </LinearLayout>

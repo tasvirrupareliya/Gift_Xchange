@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class FirebaseListAdapter extends RecyclerView.Adapter<FirebaseListAdapter.ViewHolder> {
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder> {
     private ArrayList<MessageEntry>  data;
     String clientId,userId;
     String status;
@@ -29,7 +29,7 @@ public class FirebaseListAdapter extends RecyclerView.Adapter<FirebaseListAdapte
 
     Context context;
 
-    public FirebaseListAdapter(ArrayList<MessageEntry> data, Context context, String ul, String cl, String status) {
+    public MessageListAdapter(ArrayList<MessageEntry> data, Context context, String ul, String cl, String status) {
         this.data =data;
         this.context = context;
         this.userId=ul;
@@ -40,13 +40,13 @@ public class FirebaseListAdapter extends RecyclerView.Adapter<FirebaseListAdapte
 
     @NonNull
     @Override
-    public FirebaseListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessageListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FirebaseListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageListAdapter.ViewHolder holder, int position) {
         MessageEntry item = data.get(position);
         if (item.getKey() != null && item.getValue() != null) {
             String uid;

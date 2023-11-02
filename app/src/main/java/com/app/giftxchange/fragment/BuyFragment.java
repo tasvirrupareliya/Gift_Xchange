@@ -2,6 +2,7 @@ package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -78,7 +79,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
     private void getIDfromItemList(Listing list) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("RegisterUser")
+        db.collection(getString(R.string.c_registeruser))
                 .whereEqualTo("userID", list.getUserID())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -97,7 +98,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
                             saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
                             saveSharedData(getActivity(), getString(R.string.ll_userID), userID);
 
-                            Intent intent = new Intent(getContext(), MainItemClickViewActivity.class);
+                            Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
                             startActivity(intent);
 
                             binding.swipeRefreshLayout.setRefreshing(false);

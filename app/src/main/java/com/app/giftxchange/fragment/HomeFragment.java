@@ -95,15 +95,6 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        /*if (id == R.id.action_logout) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-            editor.clear();
-            editor.apply();
-
-            startActivity(new Intent(getContext(), LoginActivity.class));
-            getActivity().finish();
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,12 +168,21 @@ public class HomeFragment extends Fragment {
 
                         String cardPrice = dialogbinding.listprice.getText().toString();
                         String cardName = dialogbinding.cardName.getText().toString();
+                        String cardNumber = dialogbinding.listgiftcardNumber.getText().toString();
+                        String cardCVV = dialogbinding.listcardCVV.getText().toString();
+                        String cardexpiryCard = dialogbinding.listexpirydate.getText().toString();
                         String listDate = getCurrentDate();
 
                         if (TextUtils.isEmpty(cardName)) {
-                            Toast.makeText(getContext(), "Please fill in the CardName", Toast.LENGTH_SHORT).show();
+                            setToast(getContext(), "Please fill in the CardName");
                         } else if (TextUtils.isEmpty(cardPrice)) {
-                            Toast.makeText(getContext(), "Please fill in the Amount", Toast.LENGTH_SHORT).show();
+                            setToast(getContext(), "Please fill in the Amount");
+                        } else if (TextUtils.isEmpty(cardNumber)) {
+                            setToast(getContext(), "Please fill in the Card Number");
+                        } else if (TextUtils.isEmpty(cardCVV)) {
+                            setToast(getContext(), "Please fill in the Card CVV");
+                        } else if (TextUtils.isEmpty(cardexpiryCard)) {
+                            setToast(getContext(), "Please fill in the Card Expiry");
                         } else {
                             String userID = getSharedData(getContext(), getString(R.string.key_userid), null);
 
@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment {
                             String listStatus = "Active";
 
                             String location = getSharedData(getContext(), getString(R.string.addressforGiftCard), null);
-                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, listStatus, "");
+                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, cardNumber, cardexpiryCard, cardCVV, listStatus, "");
 
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             db.collection(getString(R.string.c_giftcardlisting))
@@ -208,14 +208,13 @@ public class HomeFragment extends Fragment {
                                             String generatedDocumentID = documentReference.getId();
                                             newItem.setListID(generatedDocumentID);
                                             updateFirestoreDocument(db, generatedDocumentID, newItem);
-                                            Toast.makeText(getContext(), "Item added Successfully", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             // Handle error
-                                            Toast.makeText(getContext(), "Failed to add item", Toast.LENGTH_SHORT).show();
+                                            setToast(getContext(), "Failed to add item");
                                         }
                                     });
                         }
@@ -259,100 +258,4 @@ public class HomeFragment extends Fragment {
         Date currentDate = Calendar.getInstance().getTime();
         return sdf.format(currentDate);
     }
-
-    /*private class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            super.onReceiveResult(resultCode, resultData);
-            if (resultCode == Utils.SUCCESS_RESULT) {
-
-               *//* address.setText(resultData.getString(Utils.ADDRESS));
-                locaity.setText(resultData.getString(Utils.LOCAITY));
-                state.setText(resultData.getString(Utils.STATE));
-                district.setText(resultData.getString(Utils.DISTRICT));
-                country.setText(resultData.getString(Utils.COUNTRY));
-                postcode.setText(resultData.getString(Utils.POST_CODE));*//*
-
-                String city = resultData.getString(Utils.LOCAITY);
-                String street = resultData.getString(Utils.ADDRESS);
-                String state = resultData.getString(Utils.STATE);
-                String country = resultData.getString(Utils.COUNTRY);
-                String postalCode = resultData.getString(Utils.POST_CODE);
-
-                saveSharedData(getContext(), getString(R.string.fulladdress_street), street);
-                saveSharedData(getContext(), getString(R.string.fulladdress_city), city);
-                saveSharedData(getContext(), getString(R.string.fulladdress_state), state);
-                saveSharedData(getContext(), getString(R.string.fulladdress_country), country);
-                saveSharedData(getContext(), getString(R.string.fulladdress_postalcode_code), postalCode);
-
-                state = state.substring(0, 2);
-                country = country.substring(0, 2);
-
-                String address = city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
-                saveSharedData(getContext(), getString(R.string.addressforGiftCard), address);
-
-                //return city + ", " + state.toUpperCase() + ", " + country.toUpperCase();
-            } else {
-                Toast.makeText(getContext(), resultData.getString(Utils.RESULT_DATA_KEY), Toast.LENGTH_SHORT).show();
-            }
-            //hideProgressDialog(getActivity());
-        }
-    }
-
-
-    private void getCurrentLocation() {
-        //showProgressDialog(getActivity(), "Retrieve Current Location");
-
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.getFusedLocationProviderClient(getContext())
-                .requestLocationUpdates(locationRequest, new LocationCallback() {
-
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext())
-                                .removeLocationUpdates(this);
-                        if (locationResult != null && locationResult.getLocations().size() > 0) {
-                            //isLocationObtained = true;
-                            int latestlocIndex = locationResult.getLocations().size() - 1;
-                            double lati = locationResult.getLocations().get(latestlocIndex).getLatitude();
-                            double longi = locationResult.getLocations().get(latestlocIndex).getLongitude();
-
-                            Location location = new Location("providerNA");
-                            location.setLongitude(longi);
-                            location.setLatitude(lati);
-                            fetchaddressfromlocation(location);
-
-                        } else {
-                            //hideProgressDialog(getActivity());
-                        }
-                    }
-                }, Looper.getMainLooper());
-
-    }
-
-    private void fetchaddressfromlocation(Location location) {
-        Intent intent = new Intent(getContext(), FetchAddressIntentServices.class);
-        intent.putExtra(Utils.RECEVIER, resultReceiver);
-        intent.putExtra(Utils.LOCATION_DATA_EXTRA, location);
-        getContext().startService(intent);
-    }*/
 }

@@ -51,13 +51,19 @@ public class MainItemClickViewActivity extends AppCompatActivity {
         binding.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainItemClickViewActivity.this, FirebaseActivity.class);
+                Intent intent = new Intent(MainItemClickViewActivity.this, ChatActivity.class);
 
                 intent.putExtra("status", "User");
                 intent.putExtra("userId", currentuserID);
                 intent.putExtra("clientId", otheruserID);
                 startActivity(intent);
-                //startActivity(new Intent(MainItemClickViewActivity.this, ChatActivity.class));
+            }
+        });
+
+        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainItemClickViewActivity.this, PaymentActivity.class));
             }
         });
     }

@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.activity.FirebaseActivity;
+import com.app.giftxchange.activity.ChatActivity;
 import com.app.giftxchange.model.MessageModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,7 +39,7 @@ public class FirebaseMessageListAdapter extends RecyclerView.Adapter<FirebaseMes
     @NonNull
     @Override
     public FirebaseMessageListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.messagelist_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -49,13 +49,13 @@ public class FirebaseMessageListAdapter extends RecyclerView.Adapter<FirebaseMes
         if (item.getUserId() != null && item.getUserid2() != null) {
 
             holder.row_listinmsg.setVisibility(View.VISIBLE);
+            //holder.keyTextView.setText(item.getStatus()); // set status of user
             fetchUsernameFromFire(item.getUserid2(), holder.user_name_text, context);
-            // holder.keyTextView.setText(item.getStatus());
         }
         holder.row_listinmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, FirebaseActivity.class);
+                Intent intent = new Intent(context, ChatActivity.class);
 
                 intent.putExtra("status", item.getStatus());
                 intent.putExtra("userId", item.getUserId());
@@ -73,21 +73,24 @@ public class FirebaseMessageListAdapter extends RecyclerView.Adapter<FirebaseMes
     public class
     ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout lluser1, lluser2, row_listinmsg;
-        private TextView keyTextView, keyTextView1, user_name_text;
-        private TextView valueTextView, valueTextView2;
+        LinearLayout row_listinmsg;
+        TextView last_message_time_text, user_name_text;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            keyTextView = itemView.findViewById(R.id.keyTextView);
+            row_listinmsg = itemView.findViewById(R.id.row_listinmsg);
+            user_name_text = itemView.findViewById(R.id.user_name_text);
+            last_message_time_text = itemView.findViewById(R.id.last_message_time_text);
+
+           /* keyTextView = itemView.findViewById(R.id.keyTextView);
             valueTextView = itemView.findViewById(R.id.valueTextView);
             lluser1 = itemView.findViewById(R.id.lluser1);
             lluser2 = itemView.findViewById(R.id.lluser2);
             keyTextView1 = itemView.findViewById(R.id.keyTextView1);
             valueTextView2 = itemView.findViewById(R.id.valueTextView1);
             row_listinmsg = itemView.findViewById(R.id.row_listinmsg);
-            user_name_text = itemView.findViewById(R.id.user_name_text);
+            user_name_text = itemView.findViewById(R.id.user_name_text);*/
         }
     }
 }

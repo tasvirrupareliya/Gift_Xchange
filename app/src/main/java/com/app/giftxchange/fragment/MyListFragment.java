@@ -78,6 +78,9 @@ public class MyListFragment extends Fragment implements ItemClickListenee {
         intent.putExtra("date", item.getListDate());
         intent.putExtra("listID", item.getListID());
         intent.putExtra("listType", item.getListType());
+        intent.putExtra(getString(R.string.fs_cardNumber), item.getCardNumber());
+        intent.putExtra(getString(R.string.fs_cardExpiryDate), item.getCardExpiryDate());
+        intent.putExtra(getString(R.string.fs_cardCVV), item.getCardCVV());
         // Start the activity.
         startActivity(intent);
     }
