@@ -56,5 +56,12 @@ dependencies {
     implementation "com.airbnb.android:lottie:6.0.0"
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
-    implementation 'com.stripe:stripe-android:20.34.1'
+    implementation 'com.stripe:stripe-android:20.34.4'
+    // OkHttp (for making network requests)
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    // Google Places SDK (if you're using the Google Places API for address input)
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+
+
 }

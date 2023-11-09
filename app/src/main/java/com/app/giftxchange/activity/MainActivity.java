@@ -17,10 +17,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -230,16 +232,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         ExitViewBinding dialogbinding = ExitViewBinding.inflate(LayoutInflater.from(MainActivity.this));
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setView(dialogbinding.getRoot());
+        Dialog builder = new Dialog(MainActivity.this);
+        builder.setContentView(dialogbinding.getRoot());
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        AlertDialog exitDialog = builder.create();
-        dialogbinding.btnClose.setOnClickListener(new View.OnClickListener() {
+        dialogbinding.btnNotnow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitDialog.dismiss();
+                builder.dismiss();
             }
         });
 
@@ -250,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 clearSession();
             }
         });
-        exitDialog.show();
+        builder.show();
     }
 
     private class AddressResultReceiver extends ResultReceiver {

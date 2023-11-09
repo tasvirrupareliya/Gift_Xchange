@@ -23,7 +23,6 @@ public class MainItemClickViewActivity extends AppCompatActivity {
 
     ActivityMainItemClickViewBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +62,7 @@ public class MainItemClickViewActivity extends AppCompatActivity {
         binding.btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainItemClickViewActivity.this, PaymentActivity.class));
+                startActivity(new Intent(MainItemClickViewActivity.this, CheckOutActivity.class));
             }
         });
     }
@@ -112,4 +111,6 @@ public class MainItemClickViewActivity extends AppCompatActivity {
             return inputDate; // Return the original date if parsing fails
         }
     }
+
+
 }

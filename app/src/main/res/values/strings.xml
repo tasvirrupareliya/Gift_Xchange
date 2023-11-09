@@ -101,7 +101,7 @@
     <string name="search">Search</string>
     <string name="buy">Buy</string>
     <string name="exchange">Exchange</string>
-    <string name="payment">Payment</string>
+    <string name="checkout">Checkout</string>
     <string name="canada">Canada</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -120,4 +120,6 @@
     <string name="card_number">Card Number</string>
     <string name="card_expiry">Card Expiry</string>
     <string name="security_code">Security Code</string>
+    <string name="payment">Payment</string>
+    <string name="are_you_sure_you_want_to_exit_the_app">Are you sure you want to exit the app?</string>
 </resources>

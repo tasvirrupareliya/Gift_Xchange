@@ -58,22 +58,23 @@ public class ChatFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    hideProgressDialog(getActivity());
                     for (DataSnapshot mainKeyChild : dataSnapshot.getChildren()) {
                         String mainKey = mainKeyChild.getKey();
                         Log.d("TAG", "onDataChange: ............................1............." + mainKey);
                         System.out.println("MainKey: " + mainKey);
                         String[] parts = mainKey.split("\\|");
                         if (Objects.equals(parts[0], userId)) {
-                            hideProgressDialog(getActivity());
                             clientList.add(new MessageModel(parts[0], parts[1], "User"));
                         }
                         if (Objects.equals(parts[1], userId)) {
-                            hideProgressDialog(getActivity());
                             clientList.add(new MessageModel(parts[0], parts[1], "Client"));
                         }
                     }
                     Log.d("TAG", "onDataChange: ............................2............." + clientList.size());
                     messageListAdapter.notifyDataSetChanged();
+                } else {
+                    hideProgressDialog(getActivity());
                 }
             }
 

@@ -15,10 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -158,81 +160,81 @@ public class HomeFragment extends Fragment {
 
     public void showDialog() {
         DialogAddgiftCardBinding dialogbinding = DialogAddgiftCardBinding.inflate(LayoutInflater.from(getContext()));
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Dialog builder = new Dialog(getContext());
+        builder.setContentView(dialogbinding.getRoot());
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        builder.setView(dialogbinding.getRoot())
-                .setTitle("Add Gift Card")
-                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        dialogbinding.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String cardPrice = dialogbinding.listprice.getText().toString();
+                String cardName = dialogbinding.cardName.getText().toString();
+                String cardNumber = dialogbinding.listgiftcardNumber.getText().toString();
+                String cardCVV = dialogbinding.listcardCVV.getText().toString();
+                String cardexpiryCard = dialogbinding.listexpirydate.getText().toString();
+                String listDate = getCurrentDate();
 
-                        String cardPrice = dialogbinding.listprice.getText().toString();
-                        String cardName = dialogbinding.cardName.getText().toString();
-                        String cardNumber = dialogbinding.listgiftcardNumber.getText().toString();
-                        String cardCVV = dialogbinding.listcardCVV.getText().toString();
-                        String cardexpiryCard = dialogbinding.listexpirydate.getText().toString();
-                        String listDate = getCurrentDate();
+                if (TextUtils.isEmpty(cardName)) {
+                    setToast(getContext(), "Please fill in the CardName");
+                } else if (TextUtils.isEmpty(cardPrice)) {
+                    setToast(getContext(), "Please fill in the Amount");
+                } else if (TextUtils.isEmpty(cardNumber)) {
+                    setToast(getContext(), "Please fill in the Card Number");
+                } else if (TextUtils.isEmpty(cardCVV)) {
+                    setToast(getContext(), "Please fill in the Card CVV");
+                } else if (TextUtils.isEmpty(cardexpiryCard)) {
+                    setToast(getContext(), "Please fill in the Card Expiry");
+                } else {
+                    String userID = getSharedData(getContext(), getString(R.string.key_userid), null);
 
-                        if (TextUtils.isEmpty(cardName)) {
-                            setToast(getContext(), "Please fill in the CardName");
-                        } else if (TextUtils.isEmpty(cardPrice)) {
-                            setToast(getContext(), "Please fill in the Amount");
-                        } else if (TextUtils.isEmpty(cardNumber)) {
-                            setToast(getContext(), "Please fill in the Card Number");
-                        } else if (TextUtils.isEmpty(cardCVV)) {
-                            setToast(getContext(), "Please fill in the Card CVV");
-                        } else if (TextUtils.isEmpty(cardexpiryCard)) {
-                            setToast(getContext(), "Please fill in the Card Expiry");
-                        } else {
-                            String userID = getSharedData(getContext(), getString(R.string.key_userid), null);
-
-                            String tabType;
-                            int currentTabPosition = binding.tabLayout.getSelectedTabPosition();
-                            if (currentTabPosition == 0) {
-                                tabType = getString(R.string.buy);
-                            } else {
-                                tabType = getString(R.string.exchange);
-                            }
-                            String listStatus = "Active";
-
-                            String location = getSharedData(getContext(), getString(R.string.addressforGiftCard), null);
-                            Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, cardNumber, cardexpiryCard, cardCVV, listStatus, "");
-
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            db.collection(getString(R.string.c_giftcardlisting))
-                                    .add(newItem)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            // Item added successfully
-                                            String generatedDocumentID = documentReference.getId();
-                                            newItem.setListID(generatedDocumentID);
-                                            updateFirestoreDocument(db, generatedDocumentID, newItem);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // Handle error
-                                            setToast(getContext(), "Failed to add item");
-                                        }
-                                    });
-                        }
+                    String tabType;
+                    int currentTabPosition = binding.tabLayout.getSelectedTabPosition();
+                    if (currentTabPosition == 0) {
+                        tabType = getString(R.string.buy);
+                    } else {
+                        tabType = getString(R.string.exchange);
                     }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                    String listStatus = "Active";
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+                    String location = getSharedData(getContext(), getString(R.string.addressforGiftCard), null);
+                    Listing newItem = new Listing(userID, cardName, cardPrice, listDate, location, tabType, cardNumber, cardexpiryCard, cardCVV, listStatus, "");
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection(getString(R.string.c_giftcardlisting))
+                            .add(newItem)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    // Item added successfully
+                                    String generatedDocumentID = documentReference.getId();
+                                    newItem.setListID(generatedDocumentID);
+                                    updateFirestoreDocument(db, generatedDocumentID, newItem);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle error
+                                    setToast(getContext(), "Failed to add item");
+                                }
+                            });
+                }
+            }
+        });
+
+        dialogbinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.cancel();
+            }
+        });
+
+        builder.show();
     }
 
 
-    private void updateFirestoreDocument(FirebaseFirestore db, String documentId, Listing newItem) {
+    private void updateFirestoreDocument(FirebaseFirestore db, String documentId, Listing
+            newItem) {
         newItem.setListID(documentId);
 
         db.collection(getString(R.string.c_giftcardlisting))

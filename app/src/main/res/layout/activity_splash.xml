@@ -7,19 +7,20 @@
     tools:context=".activity.SplashActivity">
 
     <ImageView
-        android:id="@+id/slash_logo"
+        android:id="@+id/splash_logo"
         android:layout_width="@dimen/_150sdp"
         android:layout_height="@dimen/_150sdp"
         android:layout_centerInParent="true"
         android:src="@drawable/icon" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/slash_logo"
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_130sdp"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/_50sdp"
-        android:indeterminate="true" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loader" />
 
 </RelativeLayout>

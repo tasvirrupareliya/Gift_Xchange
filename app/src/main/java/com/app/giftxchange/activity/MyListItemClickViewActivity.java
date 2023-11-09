@@ -9,8 +9,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -95,7 +97,9 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
     private void showEditDialog(String listID, String price, String title, String listType, String cardNumber, String cardCVV, String cardExpiry) {
 
         DialogAddgiftCardBinding dialogbinding = DialogAddgiftCardBinding.inflate(LayoutInflater.from(MyListItemClickViewActivity.this));
-        AlertDialog.Builder builder = new AlertDialog.Builder(MyListItemClickViewActivity.this);
+        Dialog builder = new Dialog(MyListItemClickViewActivity.this);
+        builder.setContentView(dialogbinding.getRoot());
+        builder.getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
         price = price.replace("$", "");
 
@@ -124,24 +128,22 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
             dialogbinding.spinnerListType.setSelection(index);
         }
 
-        builder.setView(dialogbinding.getRoot())
-                .setCancelable(false)
-                .setTitle("Edit Gift Card")
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        editGiftCardFirebase(listID, dialogbinding.listprice.getText().toString(), dialogbinding.cardName.getText().toString(), dialogbinding.spinnerListType.getSelectedItem().toString(), dialogbinding.listgiftcardNumber.getText().toString(), dialogbinding.listcardCVV.getText().toString(), dialogbinding.listexpirydate.getText().toString());
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+        dialogbinding.btnAdd.setText(getString(R.string.edit));
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        dialogbinding.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editGiftCardFirebase(listID, dialogbinding.listprice.getText().toString(), dialogbinding.cardName.getText().toString(), dialogbinding.spinnerListType.getSelectedItem().toString(), dialogbinding.listgiftcardNumber.getText().toString(), dialogbinding.listcardCVV.getText().toString(), dialogbinding.listexpirydate.getText().toString());
+            }
+        });
+
+        dialogbinding.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.cancel();
+            }
+        });
+        builder.show();
     }
 
     private void editGiftCardFirebase(String listID, String price, String title, String listType, String cardnumber, String cardCVV, String expiryDate) {

@@ -16,5 +16,6 @@
     <color name="linecolor">#39817070</color>
     <color name="startcolor">#c4776f</color>
     <color name="endcolor">#df696a</color>
+    <color name="cancelbtncolor">#CAC6C5</color>
 
 </resources>

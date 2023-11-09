@@ -200,7 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_weight="1"
-            android:text="@string/payment"
+            android:text="@string/checkout"
             android:textSize="@dimen/_12ssp" />
     </LinearLayout>
 

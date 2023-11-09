@@ -81,7 +81,9 @@ public class ChatActivity extends AppCompatActivity {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.exists()) {
+                    hideProgressDialog(ChatActivity.this);
                     messageList.clear();
 
                     Map<String, String> messagesMap = (Map<String, String>) dataSnapshot.getValue();
@@ -102,6 +104,7 @@ public class ChatActivity extends AppCompatActivity {
                     });
                     firebaseListAdapter.notifyDataSetChanged();
                     scrollToBottom();
+                } else {
                     hideProgressDialog(ChatActivity.this);
                 }
             }
