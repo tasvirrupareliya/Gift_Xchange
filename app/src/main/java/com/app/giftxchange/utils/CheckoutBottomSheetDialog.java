@@ -68,8 +68,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         }
 
         binding.paymentButton.setOnClickListener(v -> {
-            initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID);)
-            ;
+            initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID));
+
         });
     }
 
@@ -77,7 +77,7 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         Payment newItem = new Payment("", binding.cardNumber.getText().toString(), binding.cardExpirydate.getText().toString(), binding.cardcvv.getText().toString(), binding.nameCard.getText().toString(), currentID, otherID);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(getString(R.string.c_giftcardlisting))
+        db.collection(getString(R.string.c_payment))
                 .add(newItem)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -100,19 +100,20 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     private void updateFirestoreDocument(FirebaseFirestore db, String generatedDocumentID, Payment newItem) {
         newItem.setPaymentID(generatedDocumentID);
 
-        db.collection(getString(R.string.c_giftcardlisting))
+        db.collection(getString(R.string.c_payment))
                 .document(generatedDocumentID)
                 .set(newItem)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        dismiss();
                         Toast.makeText(getContext(), "Document updated successfully", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        dismiss();
                         Toast.makeText(getContext(), "Failed to update document", Toast.LENGTH_SHORT).show();
                     }
                 });

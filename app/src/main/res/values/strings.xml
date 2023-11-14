@@ -96,6 +96,7 @@
     <string name="c_giftcardlisting">GiftCardListing</string>
     <string name="c_contactus">ContactUs</string>
     <string name="c_address">Address</string>
+    <string name="c_payment">Payment</string>
 
     <string name="done">Done</string>
     <string name="search">Search</string>
