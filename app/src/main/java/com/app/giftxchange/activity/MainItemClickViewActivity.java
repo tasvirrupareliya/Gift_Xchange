@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
+import com.app.giftxchange.utils.CheckoutBottomSheetDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,7 +63,15 @@ public class MainItemClickViewActivity extends AppCompatActivity {
         binding.btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainItemClickViewActivity.this, CheckOutActivity.class));
+                String subtotal = "Your calculated subtotal"; // Replace with your logic to calculate subtotal
+                String total = "Your calculated total"; // Replace with your logic to calculate total
+                String charge = "Your calculated charge";
+                // Replace with your logic to calculate charge
+
+                CheckoutBottomSheetDialog bottomSheetDialog =
+                        CheckoutBottomSheetDialog.newInstance(subtotal, total, charge, currentuserID, otheruserID);
+                bottomSheetDialog.show(getSupportFragmentManager(), bottomSheetDialog.getTag());
+                //startActivity(new Intent(MainItemClickViewActivity.this, CheckOutActivity.class));
             }
         });
     }

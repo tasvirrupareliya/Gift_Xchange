@@ -49,7 +49,6 @@ public class CheckOutActivity extends AppCompatActivity {
     private static final String BACKEND_URL = "http://10.0.2.2:4242";
     private String paymentIntentClientSecret;
     private PaymentSheet paymentSheet;
-    private PaymentLauncher paymentLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -233,8 +233,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void updateFirestoreDocument(FirebaseFirestore db, String documentId, Listing
-            newItem) {
+    private void updateFirestoreDocument(FirebaseFirestore db, String documentId, Listing newItem) {
         newItem.setListID(documentId);
 
         db.collection(getString(R.string.c_giftcardlisting))

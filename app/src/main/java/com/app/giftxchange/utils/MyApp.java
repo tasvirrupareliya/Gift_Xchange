@@ -9,6 +9,9 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        PaymentConfiguration.init(getApplicationContext(), "pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex");
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex"
+        );
     }
 }

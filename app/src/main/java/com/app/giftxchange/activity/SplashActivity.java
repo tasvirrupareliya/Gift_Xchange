@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.app.giftxchange.databinding.ActivitySplashBinding;
 import com.google.firebase.FirebaseApp;
+import com.stripe.android.PaymentConfiguration;
 
 import java.util.List;
 
@@ -38,6 +39,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         FirebaseApp.initializeApp(this);
+
+        PaymentConfiguration.init(
+                getApplicationContext(),
+                "pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex"  // Replace with your publishable key
+        );
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -55,8 +61,6 @@ public class SplashActivity extends AppCompatActivity {
                     // Location permission is not granted, request it.
                     requestLocationPermission();
                 }
-
-
             } else {
                 showErrorDialog("Please check your network connection");
             }
@@ -118,7 +122,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startLoginActivity() {
-        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
         finish();
 
     }

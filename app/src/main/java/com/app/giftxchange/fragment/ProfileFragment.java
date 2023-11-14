@@ -17,6 +17,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment {
 
     FragmentProfileBinding binding;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String policyUrl = "https://giftxchange06.blogspot.com/2023/11/privacy-policy.html";
 
     public ProfileFragment() {
     }
@@ -75,6 +77,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), ContactUsView.class));
+            }
+        });
+
+        binding.privacypolicyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(policyUrl));
+                startActivity(intent);
             }
         });
 
