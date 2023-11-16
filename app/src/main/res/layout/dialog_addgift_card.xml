@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:elevation="0dp"
+    android:orientation="vertical"
     app:cardCornerRadius="@dimen/_8sdp">
 
     <LinearLayout
@@ -75,6 +75,7 @@
                 android:background="@drawable/border"
                 android:hint="@string/card_expiry"
                 android:inputType="date"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:padding="@dimen/_18sdp"
                 android:textSize="@dimen/_12ssp" />
@@ -111,10 +112,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
             android:weightSum="2">
 
             <androidx.appcompat.widget.AppCompatButton

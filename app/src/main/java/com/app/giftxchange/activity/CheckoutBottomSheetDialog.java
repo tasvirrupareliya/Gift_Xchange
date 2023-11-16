@@ -1,5 +1,7 @@
 package com.app.giftxchange.activity;
 
+import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.hideProgressDialog;
 import static com.app.giftxchange.utils.Utils.setToast;
 
 import android.animation.Animator;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +30,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
 
@@ -56,6 +61,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        openDialogwithGiftcard();
 
         if (getArguments() != null) {
             String subtotal = getArguments().getString(ARG_SUBTOTAL);
@@ -160,8 +167,34 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void openDialogwithGiftcard() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        db.collection(getString(R.string.c_giftcardlisting))
+                .whereEqualTo("userID", getArguments().getString(ARG_OTHRID))
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        //hideProgressDialog(.this);
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String cardAmount = document.getString("cardAmount");
+                            String cardCVV = document.getString("cardCVV");
+                            String cardExpiryDate = document.getString("cardExpiryDate");
+                            String cardName = document.getString("cardName");
+                            String cardNumber = document.getString("cardNumber");
+
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        setToast(getActivity(), e.getMessage().toString());
+                    }
+                });
     }
+
 
     private void updateFirestoreDocument(FirebaseFirestore db, String generatedDocumentID, Payment newItem) {
         newItem.setPaymentID(generatedDocumentID);

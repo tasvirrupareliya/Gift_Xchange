@@ -153,7 +153,7 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         if (listID != null) {
             Map<String, Object> updatedData = new HashMap<>();
             updatedData.put(getString(R.string.fs_listname), title);
-            updatedData.put(getString(R.string.fs_listprice), price);
+            updatedData.put(getString(R.string.fs_cardAmount), price);
             updatedData.put(getString(R.string.fs_listType), listType);
             updatedData.put(getString(R.string.fs_listDate), getCurrentDate());
             updatedData.put(getString(R.string.fs_cardNumber), cardnumber);

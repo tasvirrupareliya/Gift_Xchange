@@ -40,7 +40,7 @@ public class FireStoreHelper {
 
                             String userID = document.getString("userID");
                             String cardName = document.getString("listTitle");
-                            String cardPrice = document.getString("listPrice");
+                            String cardPrice = document.getString("cardAmount");
                             String listDate = document.getString("listDate");
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");
@@ -83,7 +83,7 @@ public class FireStoreHelper {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             String userID = document.getString("userID");
                             String cardName = document.getString("listTitle");
-                            String cardPrice = document.getString("listPrice");
+                            String cardPrice = document.getString("cardAmount");
                             String listDate = document.getString("listDate");
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");
@@ -129,7 +129,7 @@ public class FireStoreHelper {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             String userID = document.getString("userID");
                             String cardName = document.getString("listTitle");
-                            String cardPrice = document.getString("listPrice");
+                            String cardPrice = document.getString("cardAmount");
                             String listDate = document.getString("listDate");
                             String location = document.getString("listLocation");
                             String tabType = document.getString("listType");

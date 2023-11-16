@@ -73,7 +73,7 @@
     <string name="fs_unitNo">unitNo</string>
     <string name="fs_password">userPassword</string>
     <string name="fs_listname">listTitle</string>
-    <string name="fs_listprice">listPrice</string>
+    <string name="fs_cardAmount">cardAmount</string>
     <string name="fs_listType">listType</string>
     <string name="fs_listDate">listDate</string>
     <string name="fs_userMessage">userMessage</string>
@@ -107,7 +107,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="card_name">Card Name</string>
-    <string name="price">Price</string>
+    <string name="price">Amount</string>
     <string name="close">Close</string>
     <string name="exit">Exit</string>
     <string name="your_name">Your Name</string>
@@ -119,7 +119,7 @@
     <string name="please_wait">Please Wait...</string>
     <string name="write_message_here">Write message here</string>
     <string name="card_number">Card Number</string>
-    <string name="card_expiry">Card Expiry</string>
+    <string name="card_expiry">Card Expiry (MMYY)</string>
     <string name="security_code">Security Code</string>
     <string name="payment">Payment</string>
     <string name="are_you_sure_you_want_to_exit_the_app">Are you sure you want to exit the app?</string>
