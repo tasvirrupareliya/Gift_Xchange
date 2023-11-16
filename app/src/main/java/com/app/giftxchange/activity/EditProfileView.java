@@ -1,6 +1,7 @@
 package com.app.giftxchange.activity;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
+import static com.app.giftxchange.utils.Utils.hideProgressDialog;
 import static com.app.giftxchange.utils.Utils.saveSharedData;
 import static com.app.giftxchange.utils.Utils.setToast;
 
@@ -14,6 +15,7 @@ import android.view.View;
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.EditProfileViewBinding;
 import com.app.giftxchange.model.Listing;
+import com.app.giftxchange.utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -104,6 +106,8 @@ public class EditProfileView extends AppCompatActivity {
     private void addressUpdate() {
         String userID = getSharedData(this, getString(R.string.key_userid), null);
 
+        Utils.showProgressDialog(this, getString(R.string.please_wait));
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (userID != null) {
@@ -113,6 +117,7 @@ public class EditProfileView extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            hideProgressDialog(EditProfileView.this);
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 String city = document.getString("city");
                                 String postalCode = document.getString("postalCode");
@@ -131,6 +136,7 @@ public class EditProfileView extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(Exception e) {
+                            hideProgressDialog(EditProfileView.this);
                             String street = getSharedData(EditProfileView.this, getString(R.string.fulladdress_street), null);
                             String city = getSharedData(EditProfileView.this, getString(R.string.fulladdress_city), null);
                             String state = getSharedData(EditProfileView.this, getString(R.string.fulladdress_state), null);

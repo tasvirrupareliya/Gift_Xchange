@@ -16,7 +16,7 @@
             android:layout_height="@dimen/_250sdp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/intro1" />
+            app:lottie_rawRes="@raw/intro3" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,9 +32,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text=""
+            android:text="GiftXchange as a pioneering force in an industry with considerable room for expansion, underscoring the platform's unique positioning in a relatively unexplored landscape."
             android:textAlignment="center"
-            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:textColor="@android:color/black"
             android:textSize="12dp" />
 

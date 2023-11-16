@@ -133,6 +133,7 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         dialogbinding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                builder.dismiss();
                 editGiftCardFirebase(listID, dialogbinding.listprice.getText().toString(), dialogbinding.cardName.getText().toString(), dialogbinding.spinnerListType.getSelectedItem().toString(), dialogbinding.listgiftcardNumber.getText().toString(), dialogbinding.listcardCVV.getText().toString(), dialogbinding.listexpirydate.getText().toString());
             }
         });

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 
@@ -40,7 +41,7 @@ import com.google.firebase.firestore.SetOptions;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
     ActivityLoginBinding binding;
     GoogleSignInClient mGoogleSignInClient;
     DocumentReference ref;
@@ -284,7 +285,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     setToast(LoginActivity.this, getString(R.string.user_is_not_exist));
                                                 }
                                             } else {
-                                                setToast(LoginActivity.this, getString(R.string.error_retrieving_user_document));
+                                                setToast(LoginActivity.this, task.getResult().toString() + getString(R.string.error_retrieving_user_document));
                                             }
                                         }
                                     });
@@ -374,7 +375,8 @@ public class LoginActivity extends AppCompatActivity {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                setToast(LoginActivity.this, getString(R.string.failed_to_create_user_document_in_firestore));
+                                                Log.e("111", e.getLocalizedMessage().toString());
+                                                setToast(LoginActivity.this, e.getMessage().toString() + getString(R.string.failed_to_create_user_document_in_firestore));
                                             }
                                         });
                             }

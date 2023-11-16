@@ -14,9 +14,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/_300sdp"
-            android:layout_height="@dimen/_300sdp"
+            android:layout_width="@dimen/_250sdp"
+            android:layout_height="@dimen/_250sdp"
             android:src="@drawable/icon"
+            android:padding="@dimen/_50sdp"
             />
 
         <TextView
@@ -36,7 +37,7 @@
             android:text="Highlight the concept of the platform as a dynamic space where individuals can seamlessly exchange, buy, or sell gift cards."
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:layout_marginHorizontal="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:textSize="12dp" />
 
     </LinearLayout>

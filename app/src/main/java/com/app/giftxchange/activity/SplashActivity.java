@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -40,10 +42,10 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
-        PaymentConfiguration.init(
+      /*  PaymentConfiguration.init(
                 getApplicationContext(),
                 "pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex"  // Replace with your publishable key
-        );
+        );*/
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -53,18 +55,23 @@ public class SplashActivity extends AppCompatActivity {
             NetworkInfo activeNetwork = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
             if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-
-                if (checkLocationPermission()) {
-                    // Location permission is granted. You can perform location-related actions here.
-                    startLoginActivity();
+                if (isFirstTime()) {
+                    // Show the intro and set the flag to indicate it has been shown
+                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                    setFirstTime(false);
                 } else {
-                    // Location permission is not granted, request it.
-                    requestLocationPermission();
+                    if (checkLocationPermission()) {
+                        // Location permission is granted. You can perform location-related actions here.
+                        startLoginActivity();
+                    } else {
+                        // Location permission is not granted, request it.
+                        requestLocationPermission();
+                    }
                 }
             } else {
                 showErrorDialog("Please check your network connection");
             }
-        }, 1200);
+        }, 2000);
     }
 
     private boolean checkLocationPermission() {
@@ -112,6 +119,20 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     }
+
+    private boolean isFirstTime() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getBoolean("first_time", true);
+    }
+
+    // Set the flag indicating the intro has been shown
+    private void setFirstTime(boolean isFirstTime) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("first_time", isFirstTime);
+        editor.apply();
+    }
+
     private void showErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
         builder.setTitle("Error")
@@ -122,7 +143,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startLoginActivity() {
-        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
         finish();
 
     }

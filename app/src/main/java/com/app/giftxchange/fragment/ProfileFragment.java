@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.AboutActivity;
 import com.app.giftxchange.activity.ContactUsView;
 import com.app.giftxchange.activity.EditProfileView;
 import com.app.giftxchange.activity.MyListItemClickViewActivity;
@@ -111,6 +112,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 builder.show();
+            }
+        });
+
+        binding.aboutbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), AboutActivity.class));
             }
         });
 

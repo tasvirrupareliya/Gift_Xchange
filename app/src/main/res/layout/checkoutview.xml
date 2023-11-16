@@ -1,98 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/card_number"
+    <FrameLayout
+        android:id="@+id/lottieContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/border"
-        android:hint="Card Number"
-        android:inputType="text"
-        android:maxLines="1"
-        android:padding="@dimen/_18sdp"
-        android:textSize="@dimen/_12ssp" />
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="gone">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fullScreenLottieAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            app:lottie_repeatMode="restart" />
+    </FrameLayout>
+
+
 
     <LinearLayout
+        android:id="@+id/checkOutView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/cardExpirydate"
-            android:layout_width="wrap_content"
+            android:id="@+id/card_number"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_10sdp"
-            android:layout_weight="5"
             android:background="@drawable/border"
-            android:hint="Expiry Date"
+            android:hint="Card Number"
             android:inputType="number"
+            android:maxLines="1"
+            android:maxLength="16"
+            android:padding="@dimen/_18sdp"
+            android:textSize="@dimen/_12ssp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/cardExpirydate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_weight="5"
+                android:background="@drawable/border"
+                android:hint="Expiry Date (MMYY)"
+                android:inputType="date"
+                android:maxLength="4"
+                android:padding="@dimen/_18sdp"
+                android:textSize="@dimen/_12ssp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/cardcvv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_weight="5"
+                android:background="@drawable/border"
+                android:hint="CVV"
+                android:inputType="number"
+                android:maxLength="3"
+                android:maxLines="1"
+                android:padding="@dimen/_18sdp"
+                android:textSize="@dimen/_12ssp" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/name_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@drawable/border"
+            android:hint="Card Name"
+            android:inputType="text"
             android:maxLines="1"
             android:padding="@dimen/_18sdp"
             android:textSize="@dimen/_12ssp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/cardcvv"
-            android:layout_width="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:layout_weight="5"
-            android:background="@drawable/border"
-            android:hint="CVV"
-            android:inputType="number"
-            android:maxLength="3"
-            android:maxLines="1"
-            android:padding="@dimen/_18sdp"
-            android:textSize="@dimen/_12ssp" />
+            android:padding="@dimen/_5sdp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/_5sdp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/subtotalTextView"
+                    style="@style/RatingMessageText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:text="Subtotal: $0.00" />
+
+                <TextView
+                    android:id="@+id/chargeTextView"
+                    style="@style/RatingMessageText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subtotalTextView"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:text="Charge: $0.00" />
+
+                <View
+                    android:id="@+id/blackstrip"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_below="@+id/chargeTextView"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:background="@color/black" />
+
+                <TextView
+                    android:id="@+id/totalTextView"
+                    style="@style/RatingMessageText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/blackstrip"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:text="Total: $0.00"
+                    android:textSize="@dimen/_17ssp"
+                    android:textStyle="bold" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/paymentButton"
+                    style="@style/AllButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/totalTextView"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/payment" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/name_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/border"
-        android:hint="Card Name"
-        android:inputType="text"
-        android:maxLines="1"
-        android:padding="@dimen/_18sdp"
-        android:textSize="@dimen/_12ssp" />
-
-    <TextView
-        android:id="@+id/subtotalTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Subtotal: $0.00" />
-
-    <TextView
-        android:id="@+id/chargeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Charge: $0.00" />
-
-    <TextView
-        android:id="@+id/totalTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Total: $0.00" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/paymentButton"
-        style="@style/AllButton"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_height="wrap_content"
-        android:text="@string/payment" />
-
-  <!--  <com.stripe.android.view.CardInputWidget
-        android:id="@+id/cardInputWidget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp" />-->
 </LinearLayout>

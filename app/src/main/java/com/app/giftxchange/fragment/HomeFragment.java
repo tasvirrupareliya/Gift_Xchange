@@ -205,6 +205,7 @@ public class HomeFragment extends Fragment {
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
+                                    builder.dismiss();
                                     // Item added successfully
                                     String generatedDocumentID = documentReference.getId();
                                     newItem.setListID(generatedDocumentID);
@@ -214,6 +215,7 @@ public class HomeFragment extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
+                                    builder.dismiss();
                                     // Handle error
                                     setToast(getContext(), "Failed to add item");
                                 }
