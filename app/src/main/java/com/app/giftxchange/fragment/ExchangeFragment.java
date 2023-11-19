@@ -100,6 +100,7 @@ public class ExchangeFragment extends Fragment implements ItemClickListenee {
                             saveSharedData(getActivity(), getString(R.string.ll_userEmail), userEmail);
                             saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
                             saveSharedData(getActivity(), getString(R.string.ll_userID), userID);
+                            saveSharedData(getActivity(), getString(R.string.ll_listID), list.getListID());
 
                             Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
                             startActivity(intent);

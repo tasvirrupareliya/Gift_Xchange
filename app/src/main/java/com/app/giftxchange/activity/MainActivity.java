@@ -119,15 +119,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_logout) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            editor.clear();
-            editor.apply();
-
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -141,16 +132,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        MenuItem logoutMenuItem = menu.findItem(R.id.action_logout);
+        MenuItem premiumMenuItem = menu.findItem(R.id.action_premium);
 
         if (isHomeFragmentVisible) {
             // Show the menu items in the home fragment
             searchMenuItem.setVisible(true);
-            logoutMenuItem.setVisible(true);
+            premiumMenuItem.setVisible(true);
         } else {
             // Hide the menu items in other fragments
             searchMenuItem.setVisible(false);
-            logoutMenuItem.setVisible(false);
+            premiumMenuItem.setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }

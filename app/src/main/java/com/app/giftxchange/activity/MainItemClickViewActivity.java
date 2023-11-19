@@ -63,8 +63,9 @@ public class MainItemClickViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String listID = getSharedData(getApplicationContext(), getString(R.string.ll_listID), null);
                 CheckoutBottomSheetDialog bottomSheetDialog =
-                        CheckoutBottomSheetDialog.newInstance(binding.tvItemPrice.getText().toString(), currentuserID, otheruserID);
+                        CheckoutBottomSheetDialog.newInstance(binding.tvItemPrice.getText().toString(), currentuserID, otheruserID, listID);
                 bottomSheetDialog.show(getSupportFragmentManager(), bottomSheetDialog.getTag());
                 //startActivity(new Intent(MainItemClickViewActivity.this, CheckOutActivity.class));
             }

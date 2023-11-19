@@ -78,8 +78,8 @@
                 android:layout_marginTop="20dp"
                 android:src="@drawable/icon"
                 app:civ_border_color="@color/white"
-                app:civ_border_width="@dimen/_2sdp"
-                app:civ_border_overlay="true"/>
+                app:civ_border_overlay="true"
+                app:civ_border_width="@dimen/_2sdp" />
         </RelativeLayout>
     </ScrollView>
 

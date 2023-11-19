@@ -16,8 +16,6 @@ public class Listing {
     private String listType;
     private String listStatus;
     private String listID;
-    private boolean isBuy;
-    private boolean isSell;
 
     public Listing(String userID, String cardName, String cardAmount, String listDate, String listLocation, String listType, String cardNumber, String cardExpiryDate, String cardCVV, String listStatus, String listID) {
         this.userID = userID;
@@ -136,4 +134,5 @@ public class Listing {
     public void setListStatus(String listStatus) {
         this.listStatus = listStatus;
     }
+
 }

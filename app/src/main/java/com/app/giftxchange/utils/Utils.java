@@ -46,7 +46,6 @@ public class Utils {
     public static final int FAILURE_RESULT = 0;
 
     public static int[] imageResources = {
-            R.drawable.g1,
             R.drawable.g2,
             R.drawable.g3,
             R.drawable.g4,

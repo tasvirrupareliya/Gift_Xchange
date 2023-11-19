@@ -60,6 +60,7 @@
     <string name="ll_userEmail">ll_userEmail</string>
     <string name="ll_userName">ll_userName</string>
     <string name="ll_userID">ll_userID</string>
+    <string name="ll_listID">ll_listID</string>
 
     <!--Firebase object Key-->
     <string name="fs_userid">userID</string>
@@ -76,6 +77,7 @@
     <string name="fs_cardAmount">cardAmount</string>
     <string name="fs_listType">listType</string>
     <string name="fs_listDate">listDate</string>
+    <string name="fs_listStatus">listStatus</string>
     <string name="fs_userMessage">userMessage</string>
     <string name="fs_cardCVV">cardCVV</string>
     <string name="fs_cardExpiryDate">cardExpiryDate</string>

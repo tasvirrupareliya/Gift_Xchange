@@ -1,10 +1,13 @@
 package com.app.giftxchange.adapter;
 
+import static com.app.giftxchange.utils.FireStoreHelper.loadDataSellFromFirestore;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.giftxchange.ItemClickListenee;
@@ -23,7 +26,6 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
     public List<Listing> itemList;
 
     private int[] imageResources = {
-            R.drawable.g1,
             R.drawable.g2,
             R.drawable.g3,
             R.drawable.g4,
@@ -59,7 +61,6 @@ public class giftcardAdapter extends RecyclerView.Adapter<giftcardAdapter.ViewHo
         holder.binding.lLocation.setText(item.getListLocation());
         holder.binding.listStatus.setText(item.getListStatus());
         // holder.binding.imageview.setImageResource(item.getDrawable());
-
 
         int randomImageResource = getRandomImageResource();
         holder.binding.imageview.setImageResource(randomImageResource);

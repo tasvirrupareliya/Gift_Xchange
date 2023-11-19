@@ -52,6 +52,7 @@ public class FireStoreHelper {
 
                             if (type.equals(tabType)) {
                                 String formattedPrice = "$" + cardPrice;
+
                                 Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, cardNumber, cardExpiry, cardCVV, listStatus, listID);
                                 list.add(newItem);
                             }

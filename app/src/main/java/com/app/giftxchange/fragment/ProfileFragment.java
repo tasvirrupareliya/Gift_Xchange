@@ -16,9 +16,11 @@ import androidx.fragment.app.FragmentManager;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -32,6 +34,8 @@ import com.app.giftxchange.R;
 import com.app.giftxchange.activity.AboutActivity;
 import com.app.giftxchange.activity.ContactUsView;
 import com.app.giftxchange.activity.EditProfileView;
+import com.app.giftxchange.activity.LoginActivity;
+import com.app.giftxchange.activity.MainActivity;
 import com.app.giftxchange.activity.MyListItemClickViewActivity;
 import com.app.giftxchange.databinding.DialogAddgiftCardBinding;
 import com.app.giftxchange.databinding.DialogRatingBinding;
@@ -115,10 +119,29 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        binding.aboutbutton.setOnClickListener(new View.OnClickListener() {
+        binding.aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getContext(), AboutActivity.class));
+            }
+        });
+
+        binding.premiumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        binding.logoutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                editor.clear();
+                editor.apply();
+
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
             }
         });
 
