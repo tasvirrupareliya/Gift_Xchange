@@ -61,7 +61,6 @@ public class SplashActivity extends AppCompatActivity {
                     setFirstTime(false);
                 } else {
                     if (checkLocationPermission()) {
-                        // Location permission is granted. You can perform location-related actions here.
                         startLoginActivity();
                     } else {
                         // Location permission is not granted, request it.

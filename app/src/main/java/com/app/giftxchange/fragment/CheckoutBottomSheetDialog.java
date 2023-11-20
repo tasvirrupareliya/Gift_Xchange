@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.EditProfileView;
 import com.app.giftxchange.activity.GiftcardView;
+import com.app.giftxchange.activity.PremiumView;
 import com.app.giftxchange.databinding.CheckoutviewBinding;
 import com.app.giftxchange.model.Payment;
 import com.app.giftxchange.utils.Utils;
@@ -81,24 +82,20 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         if (getArguments() != null) {
             String subtotal = getArguments().getString(ARG_SUBTOTAL);
 
-            binding.subtotalTextView.setText("Subtotal: " + getArguments().getString(ARG_SUBTOTAL));
-            binding.chargeTextView.setText("Charge: $1.50");
+            binding.subtotalTextView.setText(getArguments().getString(ARG_SUBTOTAL));
+            binding.chargeTextView.setText("$1.50");
             subtotal = subtotal.replace("$", "");
 
             try {
                 double subtotalValue = Double.parseDouble(subtotal);
+                // Apply 25% discount if premium is visible
+                double discount = (25 * subtotalValue) / 100;
+                // subtotalValue -= discount;
+                binding.premiumTextView.setText(String.format("-$" + discount));
 
-                // Check if premiumTextView is visible
-                if (binding.premiumTextView.getVisibility() == View.VISIBLE) {
-                    // Apply 25% discount if premium is visible
-                    double discount = 0.25 * subtotalValue;
-                    subtotalValue -= discount;
-                    binding.premiumTextView.setText(String.format("Discount: $%.2f", discount));
-                }
+                double totalValue = (subtotalValue + 1.5) - discount;
 
-                double totalValue = subtotalValue + 1.5;
-
-                binding.totalTextView.setText(String.format("Total: " + "$%.2f", totalValue));
+                binding.totalTextView.setText(String.format("$" + totalValue));
                 binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
                 binding.paymentButton.setTextSize(15);
             } catch (NumberFormatException e) {
@@ -112,28 +109,41 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void fetchpremiumCheck() {
+
+        String currentID = getSharedData(getContext(), getString(R.string.key_userid), null);
+
         Utils.showProgressDialog(getActivity(), getString(R.string.please_wait));
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(getString(R.string.c_premium))
-                .whereEqualTo("userID", getSharedData(getContext(), getString(R.string.key_userid), null))
+                .whereEqualTo("userID", currentID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         hideProgressDialog(getActivity());
 
-                        binding.premiumlabel.setVisibility(View.VISIBLE);
-                        binding.premiumTextView.setVisibility(View.VISIBLE);
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // User with current userID found in Premium collection
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                String premiumID = document.getId();
+                                binding.premiumlabel.setVisibility(View.VISIBLE);
+                                binding.premiumTextView.setVisibility(View.VISIBLE);
 
+                                Log.e("PremiumCheck", "PremiumID: " + premiumID);
+                            }
 
+                        } else {
+                            // User with current userID not found in Premium collection
+                            Log.e("PremiumCheck", "User is not a premium user");
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
                         hideProgressDialog(getActivity());
-                        Log.e("111", e.getMessage().toString());
+                        Log.e("PremiumCheck", "Error: " + e.getMessage());
                     }
                 });
     }

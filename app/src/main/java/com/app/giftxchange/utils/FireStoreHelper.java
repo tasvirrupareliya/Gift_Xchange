@@ -1,5 +1,6 @@
 package com.app.giftxchange.utils;
 
+import static com.app.giftxchange.utils.Utils.currentUserId;
 import static com.app.giftxchange.utils.Utils.getSharedData;
 
 import android.content.Context;
@@ -116,11 +117,13 @@ public class FireStoreHelper {
     }
 
 
-    public static void loadDataMyGiftcardFromFirestore(final List<MyGiftCards> list, final MyGiftCardAdapter adapter, final SwipeRefreshLayout swipeRefreshLayout) {
+    public static void loadDataMyGiftcardFromFirestore(final List<MyGiftCards> list, final MyGiftCardAdapter adapter, final SwipeRefreshLayout swipeRefreshLayout, Context context) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String userid = getSharedData(context, context.getString(R.string.key_userid), null);
 
         db.collection("MyGiftCard")
+                .whereEqualTo("userID", userid)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -134,7 +137,7 @@ public class FireStoreHelper {
                             String cardName = document.getString("cardName");
                             String cardAmount = document.getString("cardAmount");
 
-                            MyGiftCards newItem = new MyGiftCards(cardAmount, cardCVV, cardNumber, cardName, cardExpiry);
+                            MyGiftCards newItem = new MyGiftCards(cardAmount, cardCVV, cardNumber, cardName, cardExpiry, userid);
                             list.add(newItem);
                             swipeRefreshLayout.setRefreshing(false);
                         }

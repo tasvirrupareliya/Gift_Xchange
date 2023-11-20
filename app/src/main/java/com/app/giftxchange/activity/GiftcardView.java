@@ -66,7 +66,7 @@ public class GiftcardView extends AppCompatActivity {
                             binding.copyicon.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    copyToClipboard("",binding.textCardNumber.getText().toString());
+                                    copyToClipboard("", binding.textCardNumber.getText().toString());
                                 }
                             });
 
@@ -91,7 +91,8 @@ public class GiftcardView extends AppCompatActivity {
 
     private void saveinFirebase(String cardAmount, String cardCVV, String cardNumber, String cardName, String cardExpiryDate) {
 
-        Utils.showProgressDialog(GiftcardView.this,getString(R.string.please_wait));
+        String userid = getSharedData(GiftcardView.this, getString(R.string.key_userid), null);
+        Utils.showProgressDialog(GiftcardView.this, getString(R.string.please_wait));
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a data object with the user's information
@@ -101,6 +102,7 @@ public class GiftcardView extends AppCompatActivity {
         giftcardData.put(getString(R.string.fs_cardNumber), cardNumber);
         giftcardData.put(getString(R.string.fs_cardname), cardName);
         giftcardData.put(getString(R.string.fs_cardExpiryDate), cardExpiryDate);
+        giftcardData.put(getString(R.string.fs_userid), userid);
 
         // Add the user's contact information to FireStore
         db.collection(getString(R.string.c_mygiftcard))

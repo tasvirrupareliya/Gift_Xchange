@@ -38,19 +38,19 @@ public class MyGiftCardListActivity extends AppCompatActivity {
 
         adapter = new MyGiftCardAdapter(list);
 
-        loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout);
+        loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout, MyGiftCardListActivity.this);
 
         binding.swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(MyGiftCardListActivity.this, R.color.colorPrimary)
         );
 
         binding.swipeRefreshLayout.setRefreshing(true);
-        loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout);
+        loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout, MyGiftCardListActivity.this);
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout);
+                loadDataMyGiftcardFromFirestore(list, adapter, binding.swipeRefreshLayout, MyGiftCardListActivity.this);
             }
         });
 

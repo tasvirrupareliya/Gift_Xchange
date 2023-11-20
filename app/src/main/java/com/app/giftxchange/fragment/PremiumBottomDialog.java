@@ -83,7 +83,7 @@ public class PremiumBottomDialog extends BottomSheetDialogFragment {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 String generatedDocumentID = documentReference.getId();
-                                newItem.setPremiumID(generatedDocumentID);
+                                newItem.setUserID(generatedDocumentID);
                                 updateFirestoreDocument(db, generatedDocumentID, newItem);
                             }
                         })
@@ -104,7 +104,7 @@ public class PremiumBottomDialog extends BottomSheetDialogFragment {
     private void updateFirestoreDocument(FirebaseFirestore db, String generatedDocumentID, Premium newItem) {
         Utils.showProgressDialog(getActivity(), getString(R.string.please_wait));
 
-        newItem.setPremiumID(generatedDocumentID);
+        newItem.setUserID(generatedDocumentID);
 
         db.collection(getString(R.string.c_premium))
                 .document(generatedDocumentID)
