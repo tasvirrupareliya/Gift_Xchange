@@ -21,14 +21,23 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.AboutActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".fragment.ProfileFragment"
+            android:name=".activity.PremiumView"
             android:exported="false" />
+        <activity
+            android:name=".activity.MyGiftCardListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.GiftcardView"
+            android:exported="false" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:exported="false"
+            android:parentActivityName=".fragment.ProfileFragment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.IntroActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.CheckOutActivity"
             android:exported="false"

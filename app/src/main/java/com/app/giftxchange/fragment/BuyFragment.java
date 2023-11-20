@@ -21,7 +21,7 @@ import com.app.giftxchange.ItemClickListenee;
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.MainItemClickViewActivity;
 import com.app.giftxchange.adapter.giftcardAdapter;
-import com.app.giftxchange.databinding.FragmentBuyFragmentBinding;
+import com.app.giftxchange.databinding.FragmentBuyBinding;
 import com.app.giftxchange.model.Listing;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class BuyFragment extends Fragment implements ItemClickListenee {
-    FragmentBuyFragmentBinding binding;
+    FragmentBuyBinding binding;
     public static ArrayList<Listing> list = new ArrayList<>();
     giftcardAdapter adapter;
 
@@ -42,7 +42,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentBuyFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentBuyBinding.inflate(inflater, container, false);
 
         adapter = new giftcardAdapter(list, this);
 
@@ -97,6 +97,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
                             saveSharedData(getActivity(), getString(R.string.ll_userEmail), userEmail);
                             saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
                             saveSharedData(getActivity(), getString(R.string.ll_listID), list.getListID());
+                            saveSharedData(getActivity(), getString(R.string.ll_listStatus), list.getListStatus());
 
                             Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
                             startActivity(intent);

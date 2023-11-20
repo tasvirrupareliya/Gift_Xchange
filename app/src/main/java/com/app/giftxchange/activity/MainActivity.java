@@ -132,16 +132,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
-        MenuItem premiumMenuItem = menu.findItem(R.id.action_premium);
 
         if (isHomeFragmentVisible) {
             // Show the menu items in the home fragment
             searchMenuItem.setVisible(true);
-            premiumMenuItem.setVisible(true);
         } else {
             // Hide the menu items in other fragments
             searchMenuItem.setVisible(false);
-            premiumMenuItem.setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }

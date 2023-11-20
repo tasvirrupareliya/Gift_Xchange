@@ -1,30 +1,29 @@
-package com.app.giftxchange.activity;
+package com.app.giftxchange.fragment;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.hideProgressDialog;
+import static com.app.giftxchange.utils.Utils.saveSharedData;
 import static com.app.giftxchange.utils.Utils.setToast;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputFilter;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.app.giftxchange.R;
+import com.app.giftxchange.activity.EditProfileView;
+import com.app.giftxchange.activity.GiftcardView;
 import com.app.giftxchange.databinding.CheckoutviewBinding;
 import com.app.giftxchange.model.Payment;
-import com.app.giftxchange.utils.ExpiryDateInputFilter;
 import com.app.giftxchange.utils.Utils;
 import com.braintreepayments.cardform.view.CardForm;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,13 +31,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,6 +68,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fetchpremiumCheck();
+
         binding.cardForm.cardRequired(true)
                 .expirationRequired(true)
                 .cvvRequired(true)
@@ -89,7 +87,17 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
 
             try {
                 double subtotalValue = Double.parseDouble(subtotal);
+
+                // Check if premiumTextView is visible
+                if (binding.premiumTextView.getVisibility() == View.VISIBLE) {
+                    // Apply 25% discount if premium is visible
+                    double discount = 0.25 * subtotalValue;
+                    subtotalValue -= discount;
+                    binding.premiumTextView.setText(String.format("Discount: $%.2f", discount));
+                }
+
                 double totalValue = subtotalValue + 1.5;
+
                 binding.totalTextView.setText(String.format("Total: " + "$%.2f", totalValue));
                 binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
                 binding.paymentButton.setTextSize(15);
@@ -101,6 +109,33 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         binding.paymentButton.setOnClickListener(v -> {
             initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID));
         });
+    }
+
+    private void fetchpremiumCheck() {
+        Utils.showProgressDialog(getActivity(), getString(R.string.please_wait));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(getString(R.string.c_premium))
+                .whereEqualTo("userID", getSharedData(getContext(), getString(R.string.key_userid), null))
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        hideProgressDialog(getActivity());
+
+                        binding.premiumlabel.setVisibility(View.VISIBLE);
+                        binding.premiumTextView.setVisibility(View.VISIBLE);
+
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        hideProgressDialog(getActivity());
+                        Log.e("111", e.getMessage().toString());
+                    }
+                });
     }
 
     private void initiatePayment(String currentID, String otherID) {
@@ -139,35 +174,6 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         }
     }
 
-    private void openDialogwithGiftcard() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection(getString(R.string.c_giftcardlisting))
-                .whereEqualTo("listID", getArguments().getString(ARG_ListID))
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        //hideProgressDialog(.this);
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            String cardAmount = document.getString("cardAmount");
-                            String cardCVV = document.getString("cardCVV");
-                            String cardExpiryDate = document.getString("cardExpiryDate");
-                            String cardName = document.getString("cardName");
-                            String cardNumber = document.getString("cardNumber");
-
-
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        setToast(getActivity(), e.getMessage().toString());
-                    }
-                });
-    }
-
     private void updateListStatus(String listID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -199,7 +205,7 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Utils.hideProgressDialog(getActivity());
+                                            hideProgressDialog(getActivity());
                                             // Handle the failure
                                             setToast(getActivity(), "Failed to update ListStatus: " + e.getMessage());
                                         }
@@ -208,7 +214,7 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Utils.hideProgressDialog(getActivity());
+                                                hideProgressDialog(getActivity());
                                                 binding.checkOutView.setVisibility(View.GONE);
                                                 binding.lottieContainer.setVisibility(View.VISIBLE);
                                                 binding.fullScreenLottieAnimation.setAnimation(R.raw.success);
@@ -219,7 +225,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                                         super.onAnimationEnd(animation);
                                                         Toast.makeText(getContext(), "Payment successful", Toast.LENGTH_SHORT).show();
                                                         dismiss();
-                                                        openDialogwithGiftcard();
+                                                        saveSharedData(getContext(), "listID", getArguments().getString(ARG_ListID));
+                                                        startActivity(new Intent(getContext(), GiftcardView.class));
                                                     }
                                                 });
                                             } else {

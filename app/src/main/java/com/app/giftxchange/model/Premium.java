@@ -4,6 +4,11 @@ public class Premium {
     private String premiumID;
     private String userID;
 
+    public Premium(String premiumID, String userID) {
+        this.premiumID = premiumID;
+        this.userID = userID;
+    }
+
     public String getPremiumID() {
         return premiumID;
     }

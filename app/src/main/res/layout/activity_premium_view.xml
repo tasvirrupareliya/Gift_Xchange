@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.PremiumView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/first_premium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/loginBkColor"
+            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardElevation="@dimen/_10sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/rocket_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/rocket" />
+
+                <TextView
+                    android:id="@+id/titelPro"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rocket_view"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="PRO"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/Pricetext"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titelPro"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="$20.00/Month"
+                    android:textSize="@dimen/_22ssp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subscriptionlist1"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/Pricetext"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="- Subscription-based pricing attracts more customers"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/subscriptionlist2"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subscriptionlist1"
+                    android:layout_centerHorizontal="true"
+                    android:text="- Upgrade to Premium: Gift More, Save More! Get 25% Off on Every Gift Card You Purchase."
+                    android:textSize="@dimen/_11ssp" />
+
+                <Button
+                    android:id="@+id/buy_now"
+                    style="@style/fabButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subscriptionlist2"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:padding="@dimen/_10sdp"
+                    android:text="Buy Now"
+                    android:textSize="@dimen/_12ssp" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/first_premium"
+            android:layout_marginTop="@dimen/_20sdp"
+            app:cardBackgroundColor="@color/loginBkColor"
+            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardElevation="@dimen/_10sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10sdp">
+
+                <ImageView
+                    android:id="@+id/rocket_view2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/rocket" />
+
+                <TextView
+                    android:id="@+id/titelPro2"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rocket_view2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="EXPERT"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/Pricetext2"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titelPro2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="$35.00/Month"
+                    android:textSize="@dimen/_22ssp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subscriptionlist11"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/Pricetext2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="- Subscription-based pricing attracts more customers"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/subscriptionlist22"
+                    style="@style/RatingMessageText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subscriptionlist11"
+                    android:layout_centerHorizontal="true"
+                    android:text="- Upgrade to Premium: Gift More, Save More! Get 40% Off on Every Gift Card You Purchase."
+                    android:textSize="@dimen/_11ssp" />
+
+                <Button
+                    android:id="@+id/buy_now2"
+                    style="@style/fabButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/subscriptionlist22"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:padding="@dimen/_10sdp"
+                    android:text="Buy Now"
+                    android:textSize="@dimen/_12ssp" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</ScrollView>

@@ -2,16 +2,19 @@ package com.app.giftxchange.activity;
 
 import static com.app.giftxchange.utils.Utils.getSharedData;
 import static com.app.giftxchange.utils.Utils.imageResources;
+import static com.app.giftxchange.utils.Utils.setToast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityMainItemClickViewBinding;
+import com.app.giftxchange.fragment.CheckoutBottomSheetDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +50,13 @@ public class MainItemClickViewActivity extends AppCompatActivity {
             binding.btnPayment.setVisibility(View.GONE);
         }
 
+        String listStatus = getSharedData(this, getString(R.string.ll_listStatus), null);
+
+        if (listStatus.equals("Sold")) {
+            binding.btnChat.setVisibility(View.GONE);
+            binding.btnPayment.setVisibility(View.GONE);
+        }
+
         binding.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +66,26 @@ public class MainItemClickViewActivity extends AppCompatActivity {
                 intent.putExtra("userId", currentuserID);
                 intent.putExtra("clientId", otheruserID);
                 startActivity(intent);
+            }
+        });
+
+        binding.itemLocationmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String location = getSharedData(MainItemClickViewActivity.this, getString(R.string.ll_location), null);
+
+                // Create an intent to open Google Maps with the specified location
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(location));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+
+                // Verify that the intent can be resolved to avoid crashes
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    // Display a message if Google Maps is not installed
+                    setToast(MainItemClickViewActivity.this, "Google Maps not installed");
+                }
             }
         });
 
@@ -116,6 +146,4 @@ public class MainItemClickViewActivity extends AppCompatActivity {
             return inputDate; // Return the original date if parsing fails
         }
     }
-
-
 }

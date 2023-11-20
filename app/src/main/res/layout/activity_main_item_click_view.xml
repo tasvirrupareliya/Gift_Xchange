@@ -147,7 +147,7 @@
                     android:padding="@dimen/_5sdp">
 
                     <ImageView
-                        android:id="@+id/item_locationImg"
+                        android:id="@+id/item_locationmap"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_120sdp"
                         android:scaleType="centerCrop"
@@ -157,7 +157,7 @@
                         android:id="@+id/item_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/item_locationImg"
+                        android:layout_below="@+id/item_locationmap"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginEnd="@dimen/_10sdp"

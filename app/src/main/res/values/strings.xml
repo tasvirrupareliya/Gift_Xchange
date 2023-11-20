@@ -61,6 +61,7 @@
     <string name="ll_userName">ll_userName</string>
     <string name="ll_userID">ll_userID</string>
     <string name="ll_listID">ll_listID</string>
+    <string name="ll_listStatus">ll_listStatus</string>
 
     <!--Firebase object Key-->
     <string name="fs_userid">userID</string>
@@ -82,6 +83,7 @@
     <string name="fs_cardCVV">cardCVV</string>
     <string name="fs_cardExpiryDate">cardExpiryDate</string>
     <string name="fs_cardNumber">cardNumber</string>
+    <string name="fs_cardname">cardName</string>
 
     <string name="update_profile">Update Profile</string>
     <string name="postal_code">Postal Code</string>
@@ -99,6 +101,8 @@
     <string name="c_contactus">ContactUs</string>
     <string name="c_address">Address</string>
     <string name="c_payment">Payment</string>
+    <string name="c_premium">Premium</string>
+    <string name="c_mygiftcard">MyGiftCard</string>
 
     <string name="done">Done</string>
     <string name="search">Search</string>

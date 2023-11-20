@@ -10,8 +10,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.MainItemClickViewActivity;
+import com.app.giftxchange.adapter.MyGiftCardAdapter;
 import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.model.Listing;
+import com.app.giftxchange.model.MyGiftCards;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -99,6 +101,41 @@ public class FireStoreHelper {
                                 Listing newItem = new Listing(userID, cardName, formattedPrice, listDate, location, tabType, cardNumber, cardExpiry, cardCVV, listStatus, listID);
                                 list.add(newItem);
                             }
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                        // Notify the adapter that the data has changed
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+    }
+
+
+    public static void loadDataMyGiftcardFromFirestore(final List<MyGiftCards> list, final MyGiftCardAdapter adapter, final SwipeRefreshLayout swipeRefreshLayout) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("MyGiftCard")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        list.clear();
+
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String cardNumber = document.getString("cardNumber");
+                            String cardCVV = document.getString("cardCVV");
+                            String cardExpiry = document.getString("cardExpiryDate");
+                            String cardName = document.getString("cardName");
+                            String cardAmount = document.getString("cardAmount");
+
+                            MyGiftCards newItem = new MyGiftCards(cardAmount, cardCVV, cardNumber, cardName, cardExpiry);
+                            list.add(newItem);
                             swipeRefreshLayout.setRefreshing(false);
                         }
                         // Notify the adapter that the data has changed
