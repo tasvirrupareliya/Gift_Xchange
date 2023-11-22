@@ -19,6 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.app.giftxchange.R;
 import com.app.giftxchange.activity.EditProfileView;
 import com.app.giftxchange.activity.GiftcardView;
@@ -36,6 +43,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.stripe.android.PaymentConfiguration;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +60,10 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     private static final String ARG_OTHRID = "othrID";
     private static final String ARG_ListID = "ListID";
     CheckoutviewBinding binding;
+    private static final int REQUEST_CODE_LOCATION = 1;
+    PaymentSheet paymentSheet;
+    String paymentIntentClientSecret;
+    String CustomerID, Ephemeral_keys, ClientServerId;
 
     public static CheckoutBottomSheetDialog newInstance(String subtotal, String currentuserID, String otheruserID, String listID) {
         CheckoutBottomSheetDialog fragment = new CheckoutBottomSheetDialog();
@@ -71,40 +88,27 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
 
         fetchpremiumCheck();
 
-        binding.cardForm.cardRequired(true)
-                .expirationRequired(true)
-                .cvvRequired(true)
-                .cardholderName(CardForm.FIELD_REQUIRED)
-                .actionLabel("Purchase")
-                .setup(getActivity());
-
+        PaymentConfiguration.init(getContext(), getString(R.string.public_key));
+        paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
+            PaymentResults(paymentSheetResult);
+        });
 
         if (getArguments() != null) {
-            String subtotal = getArguments().getString(ARG_SUBTOTAL);
-
             binding.subtotalTextView.setText(getArguments().getString(ARG_SUBTOTAL));
-            binding.chargeTextView.setText("$1.50");
-            subtotal = subtotal.replace("$", "");
-
-            try {
-                double subtotalValue = Double.parseDouble(subtotal);
-                // Apply 25% discount if premium is visible
-                double discount = (25 * subtotalValue) / 100;
-                // subtotalValue -= discount;
-                binding.premiumTextView.setText(String.format("-$" + discount));
-
-                double totalValue = (subtotalValue + 1.5) - discount;
-
-                binding.totalTextView.setText(String.format("$" + totalValue));
-                binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
-                binding.paymentButton.setTextSize(15);
-            } catch (NumberFormatException e) {
-                // Handle the exception, e.g., show an error message or log it
-                binding.totalTextView.setText("Invalid Subtotal");
-            }
+            binding.chargeTextView.setText("$2");
         }
         binding.paymentButton.setOnClickListener(v -> {
-            initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID));
+            String totalprice = binding.totalTextView.getText().toString();
+            totalprice = totalprice.replace("$", "");
+            try {
+                double price = Double.parseDouble(totalprice);
+                int tp = (int) price * 100;
+
+                StartPayment(String.valueOf(tp));
+            } catch (Exception e) {
+                setToast(getContext(), e.getMessage().toString());
+            }
+            //initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID));
         });
     }
 
@@ -130,10 +134,41 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                 binding.premiumlabel.setVisibility(View.VISIBLE);
                                 binding.premiumTextView.setVisibility(View.VISIBLE);
 
+                                try {
+                                    String subtotal = getArguments().getString(ARG_SUBTOTAL);
+                                    subtotal = subtotal.replace("$", "");
+                                    double subtotalValue = Double.parseDouble(subtotal);
+                                    // Apply 25% discount if premium is visible
+                                    double discount = (25 * subtotalValue) / 100;
+                                    // subtotalValue -= discount;
+                                    binding.premiumTextView.setText(String.format("-$" + discount));
+
+                                    double totalValue = (subtotalValue + 2) - discount;
+
+                                    binding.totalTextView.setText(String.format("$" + totalValue));
+                                    binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
+                                    binding.paymentButton.setTextSize(15);
+                                } catch (NumberFormatException e) {
+                                    binding.totalTextView.setText("Invalid Subtotal");
+                                }
+
                                 Log.e("PremiumCheck", "PremiumID: " + premiumID);
                             }
 
                         } else {
+                            String subtotal = getArguments().getString(ARG_SUBTOTAL);
+                            subtotal = subtotal.replace("$", "");
+                            double subtotalValue = Double.parseDouble(subtotal);
+                            // Apply 25% discount if premium is visible
+                            // double discount = (25 * subtotalValue) / 100;
+                            // subtotalValue -= discount;
+                            //binding.premiumTextView.setText(String.format("-$" + discount));
+
+                            double totalValue = (subtotalValue + 2);
+
+                            binding.totalTextView.setText(String.format("$" + totalValue));
+                            binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
+                            binding.paymentButton.setTextSize(15);
                             // User with current userID not found in Premium collection
                             Log.e("PremiumCheck", "User is not a premium user");
                         }
@@ -225,20 +260,9 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 hideProgressDialog(getActivity());
-                                                binding.checkOutView.setVisibility(View.GONE);
-                                                binding.lottieContainer.setVisibility(View.VISIBLE);
-                                                binding.fullScreenLottieAnimation.setAnimation(R.raw.success);
-                                                binding.fullScreenLottieAnimation.playAnimation();
-                                                binding.fullScreenLottieAnimation.addAnimatorListener(new AnimatorListenerAdapter() {
-                                                    @Override
-                                                    public void onAnimationEnd(Animator animation) {
-                                                        super.onAnimationEnd(animation);
-                                                        Toast.makeText(getContext(), "Payment successful", Toast.LENGTH_SHORT).show();
-                                                        dismiss();
-                                                        saveSharedData(getContext(), "listID", getArguments().getString(ARG_ListID));
-                                                        startActivity(new Intent(getContext(), GiftcardView.class));
-                                                    }
-                                                });
+                                                dismiss();
+                                                saveSharedData(getContext(), "listID", getArguments().getString(ARG_ListID));
+                                                startActivity(new Intent(getContext(), GiftcardView.class));
                                             } else {
                                                 dismiss();
                                                 // If failed, you may handle it accordingly
@@ -279,5 +303,150 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                         Toast.makeText(getContext(), "Failed to update document", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void PaymentResults(PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            //AppManager.StatusDialog(getContext(),true,"Payments was Successfully");
+            setToast(getContext(), "Payments was Successfully");
+        }
+        if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
+            //AppManager.StatusDialog(getContext(),false,"Payments was Failed");
+            setToast(getContext(), "Payments was Failed");
+        }
+
+        if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
+            //AppManager.StatusDialog(getContext(),false,"Payments was Canceled");
+            setToast(getContext(), "Payments was Canceled");
+        }
+    }
+
+    private void StartPayment(String totalprice) {
+        createCustomer(totalprice);
+    }
+
+    private void createCustomer(String totalprice) {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    CustomerID = jsonObject.getString("id");
+                    getEphemeralKey(CustomerID, totalprice);
+
+                } catch (JSONException e) {
+                    Log.e("error", e.toString());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", "Error: " + error.toString());
+                if (error.networkResponse != null) {
+                    Log.e("Volley Error", "Status Code: " + error.networkResponse.statusCode);
+                    Log.e("Volley Error", "Response Data: " + new String(error.networkResponse.data));
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + getString(R.string.private_key));
+                return header;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
+    private void getEphemeralKey(String customerID, String totalprice) {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/ephemeral_keys", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Ephemeral_keys = jsonObject.getString("id");
+                    getPaymentSecret(customerID, Ephemeral_keys, totalprice);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", "Error: " + error.toString());
+                if (error.networkResponse != null) {
+                    Log.e("Volley Error", "Status Code: " + error.networkResponse.statusCode);
+                    Log.e("Volley Error", "Response Data: " + new String(error.networkResponse.data));
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + getString(R.string.private_key));
+                header.put("Stripe-Version", "2023-10-16");
+                return header;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("customer", customerID);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    private void getPaymentSecret(String customerID, String ephemeral_keys, String totalprice) {
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/payment_intents", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    ClientServerId = jsonObject.getString("client_secret");
+
+                    MakePayments();
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle error
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<>();
+                header.put("Authorization", "Bearer " + getString(R.string.private_key));
+                header.put("Stripe-Version", "2023-10-16");
+                return header;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("customer", customerID);
+                params.put("amount", totalprice);
+                params.put("currency", "cad");
+                // Check the Stripe API documentation for the correct parameters
+                // params.put("some_other_parameter", "value");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    private void MakePayments() {
+        paymentSheet.presentWithPaymentIntent(ClientServerId, new PaymentSheet.Configuration("GiftXchange Company", new PaymentSheet.CustomerConfiguration(CustomerID, Ephemeral_keys)));
     }
 }
