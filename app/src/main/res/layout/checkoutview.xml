@@ -14,13 +14,6 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <com.braintreepayments.cardform.view.CardForm
-            android:id="@+id/card_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/cardForm"
-            android:layout_marginBottom="@dimen/_15sdp" />
-
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +77,7 @@
                     android:layout_below="@+id/chargelabel"
                     android:layout_alignParentStart="true"
                     android:gravity="center"
-                    android:text="Premium Discount"
+                    android:text="Premium Discount (25%)"
                     android:textSize="@dimen/_12ssp"
                     android:visibility="gone" />
 

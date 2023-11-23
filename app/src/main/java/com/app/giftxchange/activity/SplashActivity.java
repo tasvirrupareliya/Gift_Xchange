@@ -42,11 +42,6 @@ public class SplashActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
 
-      /*  PaymentConfiguration.init(
-                getApplicationContext(),
-                "pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex"  // Replace with your publishable key
-        );*/
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }

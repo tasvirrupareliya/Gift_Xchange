@@ -69,16 +69,9 @@ public class LoginActivity extends AppCompatActivity {
         String userid = getSharedData(this, getString(R.string.key_userid), null);
         String useremail = getSharedData(this, getString(R.string.key_email), null);
 
-
         if (useremail != null && userid != null) {
             reload_nextActivity();
         }
-
-       /* if (currentUser != null) {
-            reload_nextActivity();
-            saveSharedData(LoginActivity.this, getString(R.string.key_userid), currentUser.getUid());
-            saveSharedData(LoginActivity.this, getString(R.string.key_email), currentUser. ());
-        }*/
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))

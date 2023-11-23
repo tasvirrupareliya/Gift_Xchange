@@ -50,6 +50,9 @@ import com.stripe.android.paymentsheet.PaymentSheetResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,16 +89,16 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fetchpremiumCheck();
-
         PaymentConfiguration.init(getContext(), getString(R.string.public_key));
         paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
             PaymentResults(paymentSheetResult);
         });
 
+        fetchpremiumCheck();
+
         if (getArguments() != null) {
             binding.subtotalTextView.setText(getArguments().getString(ARG_SUBTOTAL));
-            binding.chargeTextView.setText("$2");
+            binding.chargeTextView.setText("$2.00");
         }
         binding.paymentButton.setOnClickListener(v -> {
             String totalprice = binding.totalTextView.getText().toString();
@@ -131,23 +134,38 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                             // User with current userID found in Premium collection
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 String premiumID = document.getId();
-                                binding.premiumlabel.setVisibility(View.VISIBLE);
-                                binding.premiumTextView.setVisibility(View.VISIBLE);
 
                                 try {
-                                    String subtotal = getArguments().getString(ARG_SUBTOTAL);
-                                    subtotal = subtotal.replace("$", "");
-                                    double subtotalValue = Double.parseDouble(subtotal);
-                                    // Apply 25% discount if premium is visible
-                                    double discount = (25 * subtotalValue) / 100;
-                                    // subtotalValue -= discount;
-                                    binding.premiumTextView.setText(String.format("-$" + discount));
+                                    String purchaseDateStr = document.getString("purchaseDate");
 
-                                    double totalValue = (subtotalValue + 2) - discount;
+                                    if (isOneMonthPassed(purchaseDateStr)) {
+                                        // One month has passed, update UI accordingly
+                                        String subtotal = getArguments().getString(ARG_SUBTOTAL);
+                                        subtotal = subtotal.replace("$", "");
+                                        double subtotalValue = Double.parseDouble(subtotal);
+                                        double totalValue = (subtotalValue + 2);
 
-                                    binding.totalTextView.setText(String.format("$" + totalValue));
-                                    binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
-                                    binding.paymentButton.setTextSize(15);
+                                        binding.totalTextView.setText(String.format("$" + totalValue));
+                                        binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
+                                        binding.paymentButton.setTextSize(15);
+                                    } else {
+                                        binding.premiumlabel.setVisibility(View.VISIBLE);
+                                        binding.premiumTextView.setVisibility(View.VISIBLE);
+
+                                        String subtotal = getArguments().getString(ARG_SUBTOTAL);
+                                        subtotal = subtotal.replace("$", "");
+                                        double subtotalValue = Double.parseDouble(subtotal);
+                                        // Apply 25% discount if premium is visible
+                                        double discount = (25 * subtotalValue) / 100;
+                                        // subtotalValue -= discount;
+                                        binding.premiumTextView.setText(String.format("-$" + discount));
+
+                                        double totalValue = (subtotalValue + 2) - discount;
+
+                                        binding.totalTextView.setText(String.format("$" + totalValue));
+                                        binding.paymentButton.setText(String.format("Payment($%.2f)", totalValue));
+                                        binding.paymentButton.setTextSize(15);
+                                    }
                                 } catch (NumberFormatException e) {
                                     binding.totalTextView.setText("Invalid Subtotal");
                                 }
@@ -159,11 +177,6 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                             String subtotal = getArguments().getString(ARG_SUBTOTAL);
                             subtotal = subtotal.replace("$", "");
                             double subtotalValue = Double.parseDouble(subtotal);
-                            // Apply 25% discount if premium is visible
-                            // double discount = (25 * subtotalValue) / 100;
-                            // subtotalValue -= discount;
-                            //binding.premiumTextView.setText(String.format("-$" + discount));
-
                             double totalValue = (subtotalValue + 2);
 
                             binding.totalTextView.setText(String.format("$" + totalValue));
@@ -184,39 +197,52 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void initiatePayment(String currentID, String otherID) {
-
         Utils.showProgressDialog(getActivity(), getString(R.string.please_wait));
 
-        if (binding.cardForm.isValid()) {
-            new Handler().postDelayed(() -> {
+        Payment newItem = new Payment("", currentID, otherID);
 
-                String cardexpirtdate = binding.cardForm.getExpirationMonth() + "/" + binding.cardForm.getExpirationYear();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(getString(R.string.c_payment))
+                .add(newItem)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String generatedDocumentID = documentReference.getId();
+                        newItem.setPaymentID(generatedDocumentID);
+                        updateFirestoreDocument(db, generatedDocumentID, newItem);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dismiss();
+                        Utils.hideProgressDialog(getActivity());
+                        //setToast(getContext(), "Failed to payment");
+                    }
+                });
+    }
 
-                Payment newItem = new Payment("", binding.cardForm.getCardNumber(), cardexpirtdate, binding.cardForm.getCvv(), binding.cardForm.getCardholderName(), currentID, otherID);
+    private void updateFirestoreDocument(FirebaseFirestore db, String generatedDocumentID, Payment newItem) {
+        newItem.setPaymentID(generatedDocumentID);
 
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection(getString(R.string.c_payment))
-                        .add(newItem)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                String generatedDocumentID = documentReference.getId();
-                                newItem.setPaymentID(generatedDocumentID);
-                                updateFirestoreDocument(db, generatedDocumentID, newItem);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                dismiss();
-                                //setToast(getContext(), "Failed to payment");
-                            }
-                        });
-            }, 3700);
-        } else {
-            Utils.hideProgressDialog(getActivity());
-            binding.cardForm.validate();
-        }
+        db.collection(getString(R.string.c_payment))
+                .document(generatedDocumentID)
+                .set(newItem)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        updateListStatus(getArguments().getString(ARG_ListID));
+                        //Toast.makeText(getContext(), "Document updated successfully", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dismiss();
+                        Utils.hideProgressDialog(getActivity());
+                        Toast.makeText(getContext(), "Failed to update document", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void updateListStatus(String listID) {
@@ -259,8 +285,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                hideProgressDialog(getActivity());
                                                 dismiss();
+                                                Utils.hideProgressDialog(getActivity());
                                                 saveSharedData(getContext(), "listID", getArguments().getString(ARG_ListID));
                                                 startActivity(new Intent(getContext(), GiftcardView.class));
                                             } else {
@@ -282,41 +308,16 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                 });
     }
 
-
-    private void updateFirestoreDocument(FirebaseFirestore db, String generatedDocumentID, Payment newItem) {
-        newItem.setPaymentID(generatedDocumentID);
-
-        db.collection(getString(R.string.c_payment))
-                .document(generatedDocumentID)
-                .set(newItem)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        updateListStatus(getArguments().getString(ARG_ListID));
-                        //Toast.makeText(getContext(), "Document updated successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        dismiss();
-                        Toast.makeText(getContext(), "Failed to update document", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
     private void PaymentResults(PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-            //AppManager.StatusDialog(getContext(),true,"Payments was Successfully");
+            initiatePayment(getArguments().getString(ARG_CURRID), getArguments().getString(ARG_OTHRID));
             setToast(getContext(), "Payments was Successfully");
         }
         if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-            //AppManager.StatusDialog(getContext(),false,"Payments was Failed");
             setToast(getContext(), "Payments was Failed");
         }
 
         if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            //AppManager.StatusDialog(getContext(),false,"Payments was Canceled");
             setToast(getContext(), "Payments was Canceled");
         }
     }
@@ -326,6 +327,7 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void createCustomer(String totalprice) {
+        Utils.showProgressDialog(getActivity(), getString(R.string.please_wait));
         RequestQueue queue = Volley.newRequestQueue(getContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://api.stripe.com/v1/customers", new Response.Listener<String>() {
             @Override
@@ -345,8 +347,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Volley Error", "Error: " + error.toString());
                 if (error.networkResponse != null) {
+                    Utils.hideProgressDialog(getActivity());
                     Log.e("Volley Error", "Status Code: " + error.networkResponse.statusCode);
                     Log.e("Volley Error", "Response Data: " + new String(error.networkResponse.data));
                 }
@@ -359,7 +361,6 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                 return header;
             }
         };
-
         queue.add(stringRequest);
     }
 
@@ -381,6 +382,7 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley Error", "Error: " + error.toString());
                 if (error.networkResponse != null) {
+                    Utils.hideProgressDialog(getActivity());
                     Log.e("Volley Error", "Status Code: " + error.networkResponse.statusCode);
                     Log.e("Volley Error", "Response Data: " + new String(error.networkResponse.data));
                 }
@@ -422,6 +424,8 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // Handle error
+                Utils.hideProgressDialog(getActivity());
+                Log.e("Volley Error", "Status Code: " + error.networkResponse.statusCode);
             }
         }) {
             @Override
@@ -447,6 +451,27 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     private void MakePayments() {
+        Utils.hideProgressDialog(getActivity());
         paymentSheet.presentWithPaymentIntent(ClientServerId, new PaymentSheet.Configuration("GiftXchange Company", new PaymentSheet.CustomerConfiguration(CustomerID, Ephemeral_keys)));
+    }
+
+    private boolean isOneMonthPassed(String purchaseDateStr) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date purchaseDate = sdf.parse(purchaseDateStr);
+
+            Calendar currentCalendar = Calendar.getInstance();
+            Calendar purchaseCalendar = Calendar.getInstance();
+            purchaseCalendar.setTime(purchaseDate);
+
+            // Add one month to the purchase date
+            purchaseCalendar.add(Calendar.MONTH, 1);
+
+            // Compare with the current date
+            return currentCalendar.after(purchaseCalendar);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
