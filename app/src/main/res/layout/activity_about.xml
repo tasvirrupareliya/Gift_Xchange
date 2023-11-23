@@ -1,44 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AboutActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="@dimen/margin_big"
-        android:layout_marginBottom="@dimen/margin_normal"
-        android:src="@drawable/icon"
-        app:layout_constraintBottom_toTopOf="@id/titleTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/titleTextView"
-        style="@style/RatingTitleText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/_14ssp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtversion"
-        style="@style/RatingTitleText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/_11ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:src="@drawable/icon" />
 
+        <TextView
+            android:id="@+id/titleTextView"
+            style="@style/RatingTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/txtversion"
+            style="@style/RatingTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txtdesc"
+            style="@style/RatingTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textSize="@dimen/_11ssp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/share_btn"
+            style="@style/AllButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableStart="@drawable/baseline_share_24"
+            android:padding="@dimen/_10sdp"
+            android:text="  Share" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:background="@color/grey" />
+
+        <TextView
+            style="@style/RatingTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="Powered By"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/rateus_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:paddingEnd="10dp">
+
+            <ImageView
+                android:id="@+id/StImage1"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile" />
+
+            <TextView
+                android:id="@+id/St_1"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="15dp"
+                android:layout_toEndOf="@+id/StImage1"
+                android:gravity="start"
+                android:text="GiftXchange"
+                android:textColor="#444"
+                android:textSize="@dimen/_11ssp" />
+
+            <TextView
+                android:id="@+id/d_1"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_below="@+id/St_1"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_toEndOf="@+id/StImage1"
+                android:gravity="start"
+                android:text="GiftCard Exchange App"
+                android:textColor="#777"
+                android:textSize="@dimen/_11ssp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@color/grey" />
+
+        <RelativeLayout
+            android:id="@+id/contactus"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/icon_contactus"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:src="@drawable/baseline_email_24"
+                android:textSize="@dimen/_12ssp" />
+
+            <TextView
+                android:id="@+id/totalTextView"
+                style="@style/RatingMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_toEndOf="@+id/icon_contactus"
+                android:gravity="center"
+                android:text="Contact Us"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/privacypolicy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/icon_privacypolicy"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:src="@drawable/baseline_policy_24"
+                android:textSize="@dimen/_12ssp"
+                app:tint="@color/selected_color" />
+
+            <TextView
+                android:id="@+id/privacypolicyTextView"
+                style="@style/RatingMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_toEndOf="@+id/icon_privacypolicy"
+                android:gravity="center"
+                android:text="Privacy Policy"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

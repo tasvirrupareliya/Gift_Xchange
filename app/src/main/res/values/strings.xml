@@ -131,4 +131,6 @@
     <string name="are_you_sure_you_want_to_exit_the_app">Are you sure you want to exit the app?</string>
     <string name="public_key">pk_test_51O70fMKlHXuDjdRG8t2AOZKFqd8iaQ5Fkm9iTF1pylHHCmdOTGNXWBFyYkcFqO5wHGMSLCXna6dSCVPeHV6Bqj5w00jhH9c4ex</string>
     <string name="private_key">sk_test_51O70fMKlHXuDjdRG3BhlwtBloc1TXFxchzl1GAQ3kMwL8ftMg8wR5n4PyWTdCrTpXN2cayVo6st0dnOpJc37LwrT00cixxm1Y2</string>
+    <string name="policyUrl">https://giftxchange06.blogspot.com/2023/11/privacy-policy.html</string>
+
 </resources>

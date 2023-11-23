@@ -34,7 +34,6 @@ public class ProfileFragment extends Fragment {
 
     FragmentProfileBinding binding;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String policyUrl = "https://giftxchange06.blogspot.com/2023/11/privacy-policy.html";
 
     public ProfileFragment() {
     }
@@ -76,7 +75,7 @@ public class ProfileFragment extends Fragment {
         binding.privacypolicyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(policyUrl));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.policyUrl)));
                 startActivity(intent);
             }
         });
