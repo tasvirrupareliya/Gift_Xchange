@@ -98,6 +98,7 @@ public class BuyFragment extends Fragment implements ItemClickListenee {
                             saveSharedData(getActivity(), getString(R.string.ll_userName), userName);
                             saveSharedData(getActivity(), getString(R.string.ll_listID), list.getListID());
                             saveSharedData(getActivity(), getString(R.string.ll_listStatus), list.getListStatus());
+                            saveSharedData(getActivity(), getString(R.string.ll_userID), userID);
 
                             Intent intent = new Intent(requireContext(), MainItemClickViewActivity.class);
                             startActivity(intent);

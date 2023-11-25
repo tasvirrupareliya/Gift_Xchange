@@ -134,7 +134,6 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
                             // User with current userID found in Premium collection
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 String premiumID = document.getId();
-
                                 try {
                                     String purchaseDateStr = document.getString("purchaseDate");
 
@@ -463,7 +462,6 @@ public class CheckoutBottomSheetDialog extends BottomSheetDialogFragment {
             Calendar currentCalendar = Calendar.getInstance();
             Calendar purchaseCalendar = Calendar.getInstance();
             purchaseCalendar.setTime(purchaseDate);
-
             // Add one month to the purchase date
             purchaseCalendar.add(Calendar.MONTH, 1);
 

@@ -28,7 +28,6 @@ import java.util.Map;
 public class GiftcardView extends AppCompatActivity {
 
     GiftcardViewBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

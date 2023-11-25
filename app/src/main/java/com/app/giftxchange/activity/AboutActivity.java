@@ -24,9 +24,8 @@ public class AboutActivity extends AppCompatActivity {
         binding = ActivityAboutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("About Us");
 
         binding.txtversion.setText("Version : " + getVersionName());
         binding.txtdesc.setText("Experience a seamless exchange of heartfelt gifts, making every occasion a celebration of connection");

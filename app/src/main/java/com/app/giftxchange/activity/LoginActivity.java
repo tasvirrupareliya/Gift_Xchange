@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void resetPassword() {
+    public void resetPassword() {
         String email = binding.fitLogin.lEmail.getText().toString().trim();
 
         if (email.isEmpty()) {
@@ -307,7 +307,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private boolean isValidEmail(String email) {
+    public boolean isValidEmail(String email) {
         // Define a regular expression pattern for a strong password
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
