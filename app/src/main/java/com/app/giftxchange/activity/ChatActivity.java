@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
-    String userId, clientId;
+    String userId, clientId,usernameid;
     String msg, status;
     MessageListAdapter firebaseListAdapter;
     private ArrayList<MessageEntry> messageList;
@@ -162,7 +162,8 @@ public class ChatActivity extends AppCompatActivity {
             status = intent.getStringExtra("status");
             userId = intent.getStringExtra("userId");
             clientId = intent.getStringExtra("clientId");
-            fetchUsernameFromFire(clientId, binding.otherUsername, this);
+            usernameid = intent.getStringExtra("usernameid");
+            fetchUsernameFromFire(usernameid, binding.otherUsername, this);
             Log.d("TAG", "getDataFromIntent:............................. " + status + "..........." + userId + "............" + clientId);
 
         }

@@ -7,37 +7,26 @@ import static com.app.giftxchange.utils.Utils.setToast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.app.giftxchange.R;
-import com.app.giftxchange.adapter.giftcardAdapter;
 import com.app.giftxchange.databinding.ActivityMyitemClickViewBinding;
 import com.app.giftxchange.databinding.DialogAddgiftCardBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -260,5 +249,18 @@ public class MyListItemClickViewActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date currentDate = Calendar.getInstance().getTime();
         return sdf.format(currentDate);
+    }
+
+    private boolean isValidExpiryDate(String expiryDate) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMyy");
+            Date enteredDate = sdf.parse(expiryDate);
+            Date currentDate = Calendar.getInstance().getTime();
+
+            return enteredDate != null && enteredDate.after(currentDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

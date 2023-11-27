@@ -22,26 +22,26 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder> {
-    private ArrayList<MessageEntry>  data;
-    String clientId,userId;
+    private ArrayList<MessageEntry> data;
+    String clientId, userId;
     String status;
     //private final Fragment eventFragment;
 
     Context context;
 
     public MessageListAdapter(ArrayList<MessageEntry> data, Context context, String ul, String cl, String status) {
-        this.data =data;
+        this.data = data;
         this.context = context;
-        this.userId=ul;
-        this.clientId=cl;
-        this.status=status;
+        this.userId = ul;
+        this.clientId = cl;
+        this.status = status;
 
     }
 
     @NonNull
     @Override
     public MessageListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -50,19 +50,18 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         MessageEntry item = data.get(position);
         if (item.getKey() != null && item.getValue() != null) {
             String uid;
-            if (status.equals("User")){
-                uid= String.valueOf(userId);
-            }
-            else {
-                uid= String.valueOf(clientId);
+            if (status.equals("User")) {
+                uid = String.valueOf(userId);
+            } else {
+                uid = String.valueOf(clientId);
             }
 
-            Log.d("TAG", "onBindViewHolder:..................... "+uid);
-            Log.d("TAG", "onBindViewHolder:..............1....... "+userId);
-            Log.d("TAG", "onBindViewHolder:.........2............ "+clientId);
-            Log.d("TAG", "onBindViewHolder:.........3............ "+status);
-            Log.d("TAG", "onBindViewHolder:.........4............ "+item.getKey());
-            if (item.getKey().equals(uid)){
+            Log.d("TAG", "onBindViewHolder:..................... " + uid);
+            Log.d("TAG", "onBindViewHolder:..............1....... " + userId);
+            Log.d("TAG", "onBindViewHolder:.........2............ " + clientId);
+            Log.d("TAG", "onBindViewHolder:.........3............ " + status);
+            Log.d("TAG", "onBindViewHolder:.........4............ " + item.getKey());
+            if (item.getKey().equals(uid)) {
                 // Convert the timestamp to a ZonedDateTime
                 Instant instant = Instant.ofEpochSecond(item.getTimestamp());
                 ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
@@ -77,8 +76,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 holder.valueTextView.setText(item.getValue().toString());
                 holder.lluser1.setVisibility(View.VISIBLE);
                 holder.lluser2.setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 // Convert the timestamp to a ZonedDateTime
                 Instant instant = Instant.ofEpochSecond(item.getTimestamp());
                 ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
@@ -103,12 +101,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return data.size();
     }
 
-    public class
-    ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout lluser1,lluser2;
-        private TextView keyTextView,keyTextView1;
-        private TextView valueTextView,valueTextView2;
+        LinearLayout lluser1, lluser2;
+        private TextView keyTextView, keyTextView1;
+        private TextView valueTextView, valueTextView2;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 

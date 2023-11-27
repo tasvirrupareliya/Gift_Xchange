@@ -50,17 +50,17 @@ public class SplashActivity extends AppCompatActivity {
             NetworkInfo activeNetwork = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
             if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
-                if (isFirstTime()) {
-                    // Show the intro and set the flag to indicate it has been shown
-                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
-                    setFirstTime(false);
-                } else {
-                    if (checkLocationPermission()) {
-                        startLoginActivity();
+                if (checkLocationPermission()) {
+                    if (isFirstTime()) {
+                        // Show the intro and set the flag to indicate it has been shown
+                        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                        setFirstTime(false);
                     } else {
-                        // Location permission is not granted, request it.
-                        requestLocationPermission();
+                        startLoginActivity();
                     }
+                } else {
+                    // Location permission is not granted, request it.
+                    requestLocationPermission();
                 }
             } else {
                 showErrorDialog("Please check your network connection");
@@ -106,7 +106,13 @@ public class SplashActivity extends AppCompatActivity {
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Location permission is granted. Continue with your location-related actions.
-                startLoginActivity();
+                if (isFirstTime()) {
+                    // Show the intro and set the flag to indicate it has been shown
+                    startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                    setFirstTime(false);
+                } else {
+                    startLoginActivity();
+                }
             } else {
                 //requestLocationPermission();
                 showPermissionRationaleDialog();

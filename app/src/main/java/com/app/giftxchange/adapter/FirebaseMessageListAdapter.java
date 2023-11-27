@@ -48,18 +48,28 @@ public class FirebaseMessageListAdapter extends RecyclerView.Adapter<FirebaseMes
         MessageModel item = data.get(position);
         if (item.getUserId() != null && item.getUserid2() != null) {
 
+
             holder.row_listinmsg.setVisibility(View.VISIBLE);
             //holder.keyTextView.setText(item.getStatus()); // set status of user
-            fetchUsernameFromFire(item.getUserid2(), holder.user_name_text, context);
+            //fetchUsernameFromFire(item.getUserid2(), holder.user_name_text, context);
+            if (item.getUserId().equals(userId)) {
+                // If getUserId is equal to the current userId, set the username from getUserId2
+                fetchUsernameFromFire(item.getUserid2(), holder.user_name_text, context);
+            } else if (item.getUserid2().equals(userId)) {
+                // If getUserid2 is equal to the current userId, set the username from getUserId
+                fetchUsernameFromFire(item.getUserId(), holder.user_name_text, context);
+            }
         }
         holder.row_listinmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChatActivity.class);
+                String selectedUserId = (item.getUserId().equals(userId)) ? item.getUserid2() : item.getUserId();
 
                 intent.putExtra("status", item.getStatus());
                 intent.putExtra("userId", item.getUserId());
                 intent.putExtra("clientId", item.getUserid2());
+                intent.putExtra("usernameid", selectedUserId);
                 context.startActivity(intent);
             }
         });
@@ -82,15 +92,6 @@ public class FirebaseMessageListAdapter extends RecyclerView.Adapter<FirebaseMes
             row_listinmsg = itemView.findViewById(R.id.row_listinmsg);
             user_name_text = itemView.findViewById(R.id.user_name_text);
             last_message_time_text = itemView.findViewById(R.id.last_message_time_text);
-
-           /* keyTextView = itemView.findViewById(R.id.keyTextView);
-            valueTextView = itemView.findViewById(R.id.valueTextView);
-            lluser1 = itemView.findViewById(R.id.lluser1);
-            lluser2 = itemView.findViewById(R.id.lluser2);
-            keyTextView1 = itemView.findViewById(R.id.keyTextView1);
-            valueTextView2 = itemView.findViewById(R.id.valueTextView1);
-            row_listinmsg = itemView.findViewById(R.id.row_listinmsg);
-            user_name_text = itemView.findViewById(R.id.user_name_text);*/
         }
     }
 }

@@ -57,6 +57,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -178,12 +179,16 @@ public class HomeFragment extends Fragment {
                     setToast(getContext(), "Please fill in the CardName");
                 } else if (TextUtils.isEmpty(cardPrice)) {
                     setToast(getContext(), "Please fill in the Amount");
+                } else if (!isValidGiftCardNumber(cardNumber)) {
+                    setToast(getContext(), "Gift Card Number Must be 16 Digit");
                 } else if (TextUtils.isEmpty(cardNumber)) {
                     setToast(getContext(), "Please fill in the Card Number");
                 } else if (TextUtils.isEmpty(cardCVV)) {
                     setToast(getContext(), "Please fill in the Card CVV");
                 } else if (TextUtils.isEmpty(cardexpiryCard)) {
-                    setToast(getContext(), "Please fill in the Card Expiry");
+                    setToast(getContext(), "Please fill in the Card Expiry Date");
+                } else if (!isValidExpiryDate(cardexpiryCard)) {
+                    setToast(getContext(), "Invalid Expiry Date");
                 } else {
                     String userID = getSharedData(getContext(), getString(R.string.key_userid), null);
 
@@ -260,5 +265,22 @@ public class HomeFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date currentDate = Calendar.getInstance().getTime();
         return sdf.format(currentDate);
+    }
+
+    private boolean isValidExpiryDate(String expiryDate) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMyy");
+            Date enteredDate = sdf.parse(expiryDate);
+            Date currentDate = Calendar.getInstance().getTime();
+
+            return enteredDate != null && enteredDate.after(currentDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean isValidGiftCardNumber(String giftCardNumber) {
+        return giftCardNumber.length() == 16 && TextUtils.isDigitsOnly(giftCardNumber);
     }
 }
