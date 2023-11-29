@@ -65,6 +65,7 @@ public class MainItemClickViewActivity extends AppCompatActivity {
                 intent.putExtra("status", "User");
                 intent.putExtra("userId", currentuserID);
                 intent.putExtra("clientId", otheruserID);
+                intent.putExtra("usernameid", otheruserID);
                 startActivity(intent);
             }
         });
