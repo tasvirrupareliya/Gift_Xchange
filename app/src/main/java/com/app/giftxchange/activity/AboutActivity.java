@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.view.View;
 import com.app.giftxchange.R;
 import com.app.giftxchange.databinding.ActivityAboutBinding;
 import com.app.giftxchange.databinding.ActivityLoginBinding;
+
+import java.util.List;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -28,7 +31,7 @@ public class AboutActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("About Us");
 
         binding.txtversion.setText("Version : " + getVersionName());
-        binding.txtdesc.setText("Experience a seamless exchange of heartfelt gifts, making every occasion a celebration of connection");
+        binding.txtdesc.setText(R.string.experience_a_seamless_exchange_of_heartfelt_gifts_making_every_occasion_a_celebration_of_connection);
 
         binding.shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +43,7 @@ public class AboutActivity extends AppCompatActivity {
         binding.contactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openEmail();
+                openContactUS();
             }
         });
 
@@ -72,21 +75,9 @@ public class AboutActivity extends AppCompatActivity {
         startActivity(shareIntent);
     }
 
-    private void openEmail() {
-        String[] emailAddresses = {"giftxchange6@gmail.com"};
-        String subject = "Contact Us"; // You can customize the subject
-
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, emailAddresses);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-
-        if (emailIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(emailIntent);
-        } else {
-            // Handle the case where no email client is installed on the device
-            // You can show a toast or alert dialog to inform the user
-        }
+    private void openContactUS() {
+        Intent intent = new Intent(AboutActivity.this, ContactUsView.class);
+        startActivity(intent);
     }
 
     private void openPrivacyPolicy() {

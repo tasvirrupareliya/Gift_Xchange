@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Query query = FirebaseFirestore.getInstance().collection(getString(R.string.c_registeruser))
-                .whereEqualTo("Email", email);
+                .whereEqualTo("userEmail", email);
 
         query.get().addOnCompleteListener(task -> {
             showProgressDialog(this, getString(R.string.please_wait));
